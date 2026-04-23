@@ -29,3 +29,4 @@ docs/superpowers/
 
 # environment variables (extended)
 .env.*
+lighthouse.json
