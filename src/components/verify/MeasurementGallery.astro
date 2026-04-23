@@ -1,0 +1,42 @@
+---
+interface Shot {
+  key: string;
+  label: string;
+  caption: string;
+  src?: string;
+  setup?: string;
+  vpp?: string;
+}
+
+interface Props { shots: Shot[] }
+const { shots } = Astro.props;
+---
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  {shots.map((s) => (
+    <figure class="rounded-lg border border-slate-200 bg-white overflow-hidden">
+      <div class="aspect-video bg-slate-950 flex items-center justify-center relative">
+        {s.src ? (
+          <img src={s.src} alt={s.caption} class="w-full h-full object-cover" />
+        ) : (
+          <div class="text-center p-4">
+            <div class="font-mono text-xs text-emerald-400">{s.label}</div>
+            <div class="mt-2 text-[10px] text-slate-500">실측 이미지 준비중</div>
+          </div>
+        )}
+      </div>
+      <figcaption class="p-3 text-sm">
+        <div class="font-mono text-xs text-slate-500">{s.label}</div>
+        <div class="mt-1 text-slate-800">{s.caption}</div>
+        {s.setup && <div class="mt-1 font-mono text-[10px] text-slate-500">{s.setup}</div>}
+        {s.vpp && <div class="mt-1 font-mono text-xs text-sky-700">Vpp = {s.vpp}</div>}
+      </figcaption>
+    </figure>
+  ))}
+</div>
+
+<aside class="not-prose my-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+  <div class="font-mono text-xs tracking-widest text-amber-800">DIY</div>
+  <div class="mt-1">
+    오실로스코프가 있으면 직접 측정해 비교해보세요 — Load step은 FET 스위칭 회로 또는 간단한 LED 토글로. <code>public/verify/</code>에 PNG를 추가하고 <code>shots</code> 배열에 경로를 넣으면 갤러리에 표시됩니다.
+  </div>
+</aside>

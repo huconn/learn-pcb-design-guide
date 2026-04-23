@@ -8,6 +8,7 @@ import CurrentWaveAnimation from '../components/concept/CurrentWaveAnimation.ast
 import FrequencyBandMap from '../components/concept/FrequencyBandMap.astro';
 import TimeDomainScope from '../components/sim/TimeDomainScope.svelte';
 import PdnImpedance from '../components/sim/PdnImpedance.svelte';
+import MeasurementGallery from '../components/verify/MeasurementGallery.astro';
 
 export const topic = TOPICS.find((t) => t.slug === 'decoupling-capacitor');
 
@@ -49,7 +50,12 @@ $$Z_\text{cap}(f) = \text{ESR} + j\omega L_\text{ESL} + \frac{1}{j\omega C}$$
 
 아래는 실제 기판에서 찍은 오실로스코프 캡처입니다. 0개 / 1개 / 4개 / 4개+bulk 비교.
 
-{/* MeasurementGallery 컴포넌트는 Phase 5에서 삽입. 초기엔 placeholder */}
+<MeasurementGallery shots={[
+  { key: 'none', label: '0 caps', caption: 'cap 없음 — 기준' },
+  { key: 'one',  label: '1 cap',  caption: '100 nF × 1' },
+  { key: 'four', label: '4 caps', caption: '100 nF × 4' },
+  { key: 'full', label: '4 + bulk', caption: '100 nF × 4 + 10 μF + 100 μF bulk' },
+]} />
 
 <SectionHeader id="checklist" label="§6 · 설계 리뷰 체크리스트" title="실무에서 확인할 것" />
 
