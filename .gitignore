@@ -22,3 +22,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# project-local tool state
+.superpowers/
+docs/superpowers/
+
+# environment variables (extended)
+.env.*
