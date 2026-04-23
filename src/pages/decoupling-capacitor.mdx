@@ -6,6 +6,7 @@ import { TOPICS } from '../lib/content/topics';
 import ReservoirAnalogy from '../components/concept/ReservoirAnalogy.astro';
 import CurrentWaveAnimation from '../components/concept/CurrentWaveAnimation.astro';
 import FrequencyBandMap from '../components/concept/FrequencyBandMap.astro';
+import TimeDomainScope from '../components/sim/TimeDomainScope.svelte';
 
 export const topic = TOPICS.find((t) => t.slug === 'decoupling-capacitor');
 
@@ -33,7 +34,7 @@ IC는 일종의 "샤워기" 다. 물(전류)을 쓸 때, 먼 댐(VRM)에서 긴 
 
 아래 시뮬레이션에서 cap 개수와 값, load step 크기를 조절해보세요. Vdd 전압이 얼마나 출렁이는지 실시간으로 확인할 수 있습니다.
 
-{/* TimeDomainScope 컴포넌트는 Phase 4에서 삽입 */}
+<TimeDomainScope client:visible />
 
 <SectionHeader id="frequency-domain" label="§4 · 탐색 2" title="주파수영역 — 왜 여러 값을 섞는가 (PDN Z(f))" />
 
