@@ -12,8 +12,15 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^5.0.4",
+    "@astrojs/svelte": "^8.0.5",
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^6.1.9",
-    "tailwindcss": "^4.2.4"
+    "katex": "^0.16.45",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "svelte": "^5.55.4",
+    "tailwindcss": "^4.2.4",
+    "typescript": "^5.9.3"
   }
 }
