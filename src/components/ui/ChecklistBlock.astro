@@ -1,0 +1,15 @@
+---
+interface Item { text: string; anchor?: string }
+interface Props { items: Item[] }
+const { items } = Astro.props;
+---
+<ul class="not-prose my-4 space-y-2">
+  {items.map((it) => (
+    <li class="flex items-start gap-3">
+      <input type="checkbox" class="mt-1 h-4 w-4 accent-sky-600" />
+      <span class="text-slate-800">
+        {it.anchor ? <a href={`#${it.anchor}`} class="underline decoration-slate-300 hover:decoration-sky-600">{it.text}</a> : it.text}
+      </span>
+    </li>
+  ))}
+</ul>

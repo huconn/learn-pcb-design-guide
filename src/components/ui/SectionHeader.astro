@@ -1,0 +1,12 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  title: string;
+}
+const { id, label, title } = Astro.props;
+---
+<header id={id} class="mt-16 mb-6 scroll-mt-20">
+  <div class="font-mono text-xs tracking-widest text-slate-500">{label}</div>
+  <h2 class="mt-1 text-2xl font-semibold text-slate-900">{title}</h2>
+</header>
