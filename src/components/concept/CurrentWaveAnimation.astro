@@ -1,0 +1,55 @@
+---
+---
+<figure class="not-prose my-8 rounded-lg border border-slate-200 bg-white p-4">
+  <svg viewBox="0 0 600 240" class="w-full" role="img" aria-label="전류 파동 애니메이션: IC 순간 전류 수요 시 cap이 먼저 응답, VRM이 뒤따름">
+    <!-- Horizontal rail -->
+    <line x1="40" y1="80" x2="560" y2="80" stroke="#475569" stroke-width="2"/>
+
+    <!-- VRM symbol -->
+    <circle cx="60" cy="80" r="18" fill="white" stroke="#475569" stroke-width="2"/>
+    <text x="60" y="85" text-anchor="middle" font-family="ui-monospace" font-size="12" fill="#475569">V</text>
+    <text x="60" y="125" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#475569">VRM</text>
+
+    <!-- Inductor (pipe) -->
+    <path d="M 100 80 C 108 60, 118 60, 126 80 C 134 60, 144 60, 152 80 C 160 60, 170 60, 178 80 C 186 60, 196 60, 204 80" fill="none" stroke="#475569" stroke-width="2"/>
+    <text x="152" y="55" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#64748b">L (trace)</text>
+
+    <!-- Vdd node label -->
+    <circle cx="340" cy="80" r="4" fill="#475569"/>
+    <text x="340" y="65" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#475569">Vdd</text>
+
+    <!-- Cap -->
+    <line x1="340" y1="80" x2="340" y2="140" stroke="#475569" stroke-width="2"/>
+    <line x1="320" y1="140" x2="360" y2="140" stroke="#0284c7" stroke-width="3"/>
+    <line x1="320" y1="150" x2="360" y2="150" stroke="#0284c7" stroke-width="3"/>
+    <line x1="340" y1="150" x2="340" y2="180" stroke="#475569" stroke-width="2"/>
+    <line x1="320" y1="180" x2="360" y2="180" stroke="#475569" stroke-width="3"/>
+    <line x1="325" y1="185" x2="355" y2="185" stroke="#475569" stroke-width="2"/>
+    <line x1="330" y1="190" x2="350" y2="190" stroke="#475569" stroke-width="1"/>
+    <text x="380" y="150" font-family="ui-monospace" font-size="11" fill="#0284c7">cap</text>
+
+    <!-- IC block -->
+    <rect x="460" y="55" width="80" height="50" fill="#fde68a" stroke="#b45309" stroke-width="2" rx="4"/>
+    <text x="500" y="85" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#b45309">IC</text>
+    <line x1="460" y1="80" x2="340" y2="80" stroke="#475569" stroke-width="2"/>
+
+    <!-- Animated current arrows -->
+    <g>
+      <circle r="5" fill="#db2777">
+        <animateMotion dur="0.6s" repeatCount="indefinite" path="M 340 80 L 460 80" keyTimes="0;1" keySplines="0.1 0.9 0.2 1" calcMode="spline"/>
+      </circle>
+    </g>
+    <g>
+      <circle r="5" fill="#0284c7">
+        <animateMotion dur="2.4s" repeatCount="indefinite" path="M 60 80 L 340 80"/>
+      </circle>
+      <circle r="5" fill="#0284c7">
+        <animateMotion dur="2.4s" begin="0.8s" repeatCount="indefinite" path="M 60 80 L 340 80"/>
+      </circle>
+      <circle r="5" fill="#0284c7">
+        <animateMotion dur="2.4s" begin="1.6s" repeatCount="indefinite" path="M 60 80 L 340 80"/>
+      </circle>
+    </g>
+  </svg>
+  <figcaption class="mt-2 text-xs text-slate-500 text-center">IC 수요에 먼저 응답하는 cap (핑크) · 늦게 따라오는 VRM 공급 (파랑)</figcaption>
+</figure>
