@@ -1,0 +1,44 @@
+---
+---
+<figure class="not-prose my-8 rounded-lg border border-slate-200 bg-white p-4">
+  <svg viewBox="0 0 600 220" class="w-full" role="img" aria-label="저수지 비유: 댐(VRM)에서 파이프(트레이스)를 통해 물탱크(cap)를 거쳐 샤워기(IC)로 흐르는 구조">
+    <!-- Dam (VRM) -->
+    <rect x="20" y="70" width="80" height="80" fill="#cbd5e1" stroke="#475569" stroke-width="2" rx="4"/>
+    <text x="60" y="175" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#475569">VRM (댐)</text>
+
+    <!-- Long pipe -->
+    <rect x="100" y="100" width="260" height="20" fill="#94a3b8" stroke="#475569" stroke-width="1"/>
+    <text x="230" y="145" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#475569">PCB trace — inductive</text>
+
+    <!-- Tank (cap) -->
+    <rect x="360" y="40" width="60" height="80" fill="#bae6fd" stroke="#0284c7" stroke-width="2" rx="4"/>
+    <text x="390" y="175" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#0284c7">cap (물탱크)</text>
+
+    <!-- Short pipe to IC -->
+    <rect x="420" y="100" width="60" height="20" fill="#94a3b8" stroke="#475569" stroke-width="1"/>
+
+    <!-- Shower (IC) -->
+    <path d="M 480 80 L 540 80 L 540 120 L 480 120 Z" fill="#fde68a" stroke="#b45309" stroke-width="2"/>
+    <text x="510" y="175" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#b45309">IC (샤워기)</text>
+
+    <!-- Flow particles — slow from VRM -->
+    <circle r="4" fill="#0284c7">
+      <animateMotion dur="5s" repeatCount="indefinite" path="M 100 110 L 360 110"/>
+    </circle>
+    <circle r="4" fill="#0284c7">
+      <animateMotion dur="5s" begin="1.6s" repeatCount="indefinite" path="M 100 110 L 360 110"/>
+    </circle>
+    <circle r="4" fill="#0284c7">
+      <animateMotion dur="5s" begin="3.3s" repeatCount="indefinite" path="M 100 110 L 360 110"/>
+    </circle>
+
+    <!-- Fast bursts from cap -->
+    <circle r="4" fill="#db2777">
+      <animateMotion dur="1s" repeatCount="indefinite" path="M 420 110 L 480 110"/>
+    </circle>
+    <circle r="4" fill="#db2777">
+      <animateMotion dur="1s" begin="0.3s" repeatCount="indefinite" path="M 420 110 L 480 110"/>
+    </circle>
+  </svg>
+  <figcaption class="mt-2 text-xs text-slate-500 text-center">느린 VRM 공급 (파랑) vs IC 근처 cap의 빠른 응답 (핑크)</figcaption>
+</figure>
