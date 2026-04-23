@@ -1,0 +1,42 @@
+<h2>시뮬레이션을 어디까지 갈까요?</h2>
+<p class="subtitle">독자가 "만져보면서 깨닫게 하는" 내용의 범위입니다. 깊어질수록 교육 효과는 커지지만 구현/학습곡선이 올라갑니다.</p>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>시간 영역만 (Time domain)</h3>
+      <p>IC가 갑자기 전류를 땡길 때 Vdd 전압이 어떻게 출렁이는지 파형으로. 슬라이더로 <b>cap 개수, cap 값, load step 크기</b>를 바꾸면 파형 갱신.</p>
+      <p class="label">쉽게 이해됨 · "왜 필요한가"에 집중 · 구현 가벼움</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>시간 + 주파수 영역 (PDN 임피던스 Z(f))</h3>
+      <p>위 시간영역 + "왜 여러 값의 cap을 섞어 쓰는가" 를 주파수 영역으로. <b>100nF + 10uF + bulk</b> 를 껐다 켰다 하면서 임피던스 곡선의 딥/피크가 어떻게 움직이는지 관찰. <b>anti-resonance</b> 개념까지.</p>
+      <p class="label">정석 PDN 설계의 사고방식 · 구현 중 · 교육 효과 최상</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>B + 배치/기생 (parasitic) 효과</h3>
+      <p>B에 추가로 <b>cap과 IC 사이 거리(via, trace length → ESL 증가)</b> 를 슬라이더로. "cap 개수만큼 중요한 게 배치 거리다" 를 체감.</p>
+      <p class="label">실무 설계의 함정까지 · 구현 상 · 욕심낼 가치 있음</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="d" onclick="toggleSelect(this)">
+    <div class="letter">D</div>
+    <div class="content">
+      <h3>시뮬레이션 미니멀 + 콘텐츠 서술 강화</h3>
+      <p>시뮬레이션은 A 정도만. 대신 글/그림/비디오로 배치·ESL·anti-resonance를 설명. 만드는 속도가 최우선일 때.</p>
+      <p class="label">빠른 출시 · 인터랙티브성 약함</p>
+    </div>
+  </div>
+
+</div>

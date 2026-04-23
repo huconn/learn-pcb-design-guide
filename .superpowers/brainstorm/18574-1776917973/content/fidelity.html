@@ -1,0 +1,99 @@
+<h2>파형과 측정 데이터를 어떤 방식으로 보여줄까요?</h2>
+<p class="subtitle">Decoupling cap 개수를 바꿨을 때의 개선을 "어떻게" 보여줄지에 따라 사이트 성격과 구현 난이도가 크게 달라집니다.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0b0f1a;padding:20px">
+      <svg viewBox="0 0 300 160" style="width:100%">
+        <rect width="300" height="160" fill="#0b0f1a"/>
+        <g stroke="#1a2238" stroke-width="0.5">
+          <line x1="0" y1="40" x2="300" y2="40"/>
+          <line x1="0" y1="80" x2="300" y2="80"/>
+          <line x1="0" y1="120" x2="300" y2="120"/>
+          <line x1="60" y1="0" x2="60" y2="160"/>
+          <line x1="120" y1="0" x2="120" y2="160"/>
+          <line x1="180" y1="0" x2="180" y2="160"/>
+          <line x1="240" y1="0" x2="240" y2="160"/>
+        </g>
+        <path d="M 0 80 Q 40 80 60 30 T 120 80 Q 160 80 180 30 T 240 80 L 300 80" fill="none" stroke="#facc15" stroke-width="2">
+          <animate attributeName="stroke-dasharray" values="0 500;500 0" dur="2s" repeatCount="indefinite"/>
+        </path>
+      </svg>
+    </div>
+    <div class="card-body">
+      <h3>A. 일러스트레이션 중심</h3>
+      <p>개념을 설명하는 손으로 그린 듯한 SVG 애니메이션. "이런 느낌으로 움직인다"는 직관을 전달. 실제 수치는 아님.</p>
+      <p class="label" style="margin-top:8px">구현 가볍 · 교육 명확 · 실증성 낮음</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0b0f1a;padding:20px">
+      <svg viewBox="0 0 300 160" style="width:100%">
+        <rect width="300" height="160" fill="#0b0f1a"/>
+        <g stroke="#1a2238" stroke-width="0.5">
+          <line x1="0" y1="40" x2="300" y2="40"/>
+          <line x1="0" y1="80" x2="300" y2="80"/>
+          <line x1="0" y1="120" x2="300" y2="120"/>
+          <line x1="60" y1="0" x2="60" y2="160"/>
+          <line x1="120" y1="0" x2="120" y2="160"/>
+          <line x1="180" y1="0" x2="180" y2="160"/>
+          <line x1="240" y1="0" x2="240" y2="160"/>
+        </g>
+        <path d="M 0 80 L 50 80 L 55 30 C 70 30 85 120 100 80 C 115 60 130 95 150 80 L 200 80 L 205 40 C 220 40 235 115 250 80 L 300 80" fill="none" stroke="#22d3ee" stroke-width="1.5"/>
+        <path d="M 0 80 L 50 80 L 55 55 C 70 55 85 100 100 80 L 200 80 L 205 60 C 220 60 235 98 250 80 L 300 80" fill="none" stroke="#f472b6" stroke-width="1.5" opacity="0.7"/>
+        <g font-family="monospace" font-size="9" fill="#94a3b8">
+          <text x="6" y="14">Vdd ripple · live sim</text>
+          <text x="6" y="152">slider → C, L, ESR → 즉시 재계산</text>
+        </g>
+      </svg>
+    </div>
+    <div class="card-body">
+      <h3>B. 브라우저 내 실시간 시뮬레이션</h3>
+      <p>간단한 RLC/PDN 회로 방정식을 JS로 풀어서, 독자가 cap 개수·ESR·L을 슬라이더로 바꾸면 파형이 즉시 갱신. 수치는 근사이지만 물리적으로 타당.</p>
+      <p class="label" style="margin-top:8px">구현 중상 · 인터랙션 최강 · 학습 효과 큼</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0b0f1a;padding:20px;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 300 160" style="width:100%">
+        <rect width="300" height="160" fill="#000"/>
+        <g stroke="#065f46" stroke-width="0.5">
+          <line x1="0" y1="40" x2="300" y2="40"/>
+          <line x1="0" y1="80" x2="300" y2="80"/>
+          <line x1="0" y1="120" x2="300" y2="120"/>
+          <line x1="60" y1="0" x2="60" y2="160"/>
+          <line x1="120" y1="0" x2="120" y2="160"/>
+          <line x1="180" y1="0" x2="180" y2="160"/>
+          <line x1="240" y1="0" x2="240" y2="160"/>
+        </g>
+        <path d="M 0 80 L 20 80 L 22 78 L 25 84 L 27 79 L 45 81 L 48 45 L 52 78 L 55 92 L 58 80 L 100 80 L 103 82 L 140 79 L 143 50 L 147 82 L 150 95 L 153 78 L 200 80 L 230 79 L 235 48 L 240 90 L 245 78 L 300 80" fill="none" stroke="#10b981" stroke-width="1.2"/>
+        <g font-family="monospace" font-size="9" fill="#10b981">
+          <text x="6" y="14">● TEK · MSO · 20ns/div · 50mV/div</text>
+        </g>
+      </svg>
+    </div>
+    <div class="card-body">
+      <h3>C. 실측 데이터 갤러리</h3>
+      <p>실제 기판 위에서 오실로스코프로 찍은 스크린샷/CSV를 갤러리로. "Cap 0개 / 1개 / 4개 / 4+bulk" 비교 사진. 가장 설득력 있음.</p>
+      <p class="label" style="margin-top:8px">구현 쉬움 · 실증성 최강 · 제작(실측) 부담 있음</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#0b0f1a 0%,#1a2238 100%);padding:20px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px">
+      <div style="color:#facc15;font-family:monospace;font-size:11px">A. 개념 (일러스트)</div>
+      <div style="color:#22d3ee;font-family:monospace;font-size:11px">B. 탐색 (시뮬레이션)</div>
+      <div style="color:#10b981;font-family:monospace;font-size:11px">C. 검증 (실측)</div>
+      <div style="color:#e2e8f0;font-family:monospace;font-size:10px;margin-top:8px;opacity:0.7">세 레이어가 같은 페이지에</div>
+    </div>
+    <div class="card-body">
+      <h3>D. 3단 레이어 하이브리드 (추천)</h3>
+      <p>페이지를 "개념 → 탐색 → 검증" 세 섹션으로 구성. 일러스트로 직관을, 시뮬레이션으로 "내가 만져봄"을, 실측으로 "실제로도 그렇다"를. 각 층이 서로를 보강.</p>
+      <p class="label" style="margin-top:8px">구현 중 · 교육 효과 최상 · 실측은 있으면 추가, 없어도 A+B로 완결</p>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,91 @@
+<h2>Decoupling Cap 페이지 · 스크롤 구조</h2>
+<p class="subtitle">위에서 아래로 읽을 때의 독자의 여정. 각 섹션은 "왜 이걸 지금 보여주나"라는 학습 목표가 있습니다.</p>
+
+<div class="mockup">
+  <div class="mockup-header">hardware-guide.dev / decoupling-capacitor</div>
+  <div class="mockup-body" style="padding:0">
+
+    <!-- HERO -->
+    <div style="padding:32px 28px;background:linear-gradient(180deg,#0b0f1a 0%,#1a2238 100%);color:#e2e8f0">
+      <div style="font-family:monospace;font-size:11px;color:#22d3ee;letter-spacing:0.1em">01 · POWER INTEGRITY</div>
+      <h3 style="color:#fff;font-size:24px;margin:8px 0 12px">디커플링 커패시터 (Decoupling Capacitor)</h3>
+      <p style="color:#94a3b8;font-size:14px;margin:0">IC 옆에 작은 커패시터 하나 붙이는 그 관행. 왜 필요한가, 몇 개면 충분한가, 어디에 놓아야 하는가.</p>
+      <div style="margin-top:16px;display:flex;gap:8px;font-family:monospace;font-size:11px">
+        <span style="background:#1e293b;padding:4px 8px;border-radius:4px;color:#22d3ee">⏱ 12분</span>
+        <span style="background:#1e293b;padding:4px 8px;border-radius:4px;color:#facc15">★ 초급~중급</span>
+      </div>
+    </div>
+
+    <!-- §1 TL;DR -->
+    <div style="padding:20px 28px;border-bottom:1px solid #e5e7eb">
+      <div style="font-family:monospace;font-size:10px;color:#64748b;letter-spacing:0.1em">§1 · TL;DR</div>
+      <p style="font-size:13px;margin:6px 0 0">"바쁜 사람은 이것만" · 3줄 요약 + 체크리스트 프리뷰</p>
+    </div>
+
+    <!-- §2 개념 (LAYER 1: 일러스트) -->
+    <div style="padding:20px 28px;border-bottom:1px solid #e5e7eb;background:#fef9c3">
+      <div style="font-family:monospace;font-size:10px;color:#a16207;letter-spacing:0.1em">§2 · 개념 · LAYER 1 (일러스트)</div>
+      <p style="font-size:13px;margin:6px 0 10px"><b>왜 필요한가?</b> · IC가 갑자기 전류를 땡기면 전선(inductance) 때문에 전원에서 늦게 도착 → IC 근처 "전하 저장소"가 순간에 공급. 애니메이션 SVG로 전류 파동을 시각화.</p>
+      <div style="display:flex;gap:8px;font-size:11px">
+        <div class="placeholder" style="flex:1;height:80px;display:flex;align-items:center;justify-content:center;background:#fde68a;border:1px dashed #a16207">전류 파동 애니메이션</div>
+        <div class="placeholder" style="flex:1;height:80px;display:flex;align-items:center;justify-content:center;background:#fde68a;border:1px dashed #a16207">저수지 비유 다이어그램</div>
+      </div>
+    </div>
+
+    <!-- §3 탐색 1 (시간 영역) -->
+    <div style="padding:20px 28px;border-bottom:1px solid #e5e7eb;background:#cffafe">
+      <div style="font-family:monospace;font-size:10px;color:#0e7490;letter-spacing:0.1em">§3 · 탐색 1 · LAYER 2 (시간 영역 시뮬레이션)</div>
+      <p style="font-size:13px;margin:6px 0 10px"><b>내가 만져본다.</b> · 슬라이더로 cap 개수(0~8), 값(100nF/1μF/10μF), load step 크기를 바꾸면 Vdd 파형이 실시간 업데이트.</p>
+      <div style="display:flex;gap:8px;font-size:11px">
+        <div class="placeholder" style="flex:2;height:110px;background:#0b0f1a;color:#22d3ee;display:flex;align-items:center;justify-content:center;font-family:monospace">🌊 live Vdd ripple scope</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+          <div class="placeholder" style="height:24px;background:#a5f3fc;border:1px dashed #0e7490">cap 개수: ▬▬▬○</div>
+          <div class="placeholder" style="height:24px;background:#a5f3fc;border:1px dashed #0e7490">cap 값</div>
+          <div class="placeholder" style="height:24px;background:#a5f3fc;border:1px dashed #0e7490">load step</div>
+          <div class="placeholder" style="height:24px;background:#a5f3fc;border:1px dashed #0e7490">프리셋 적용</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- §4 탐색 2 (주파수 영역) -->
+    <div style="padding:20px 28px;border-bottom:1px solid #e5e7eb;background:#e0f2fe">
+      <div style="font-family:monospace;font-size:10px;color:#075985;letter-spacing:0.1em">§4 · 탐색 2 · LAYER 2 (주파수 영역 · PDN Z(f))</div>
+      <p style="font-size:13px;margin:6px 0 10px"><b>왜 여러 값을 섞는가?</b> · 100nF만 / 10μF만 / bulk만 / 섞어쓰기를 토글하면서 Z(f) 곡선의 딥·피크(anti-resonance) 관찰. "값 하나로는 한 주파수만 커버 가능" 을 눈으로.</p>
+        <div class="placeholder" style="height:120px;background:#0b0f1a;color:#f472b6;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:11px">📈 Z(f) bode · multi-cap toggles · anti-resonance highlight</div>
+    </div>
+
+    <!-- §5 검증 (실측) -->
+    <div style="padding:20px 28px;border-bottom:1px solid #e5e7eb;background:#dcfce7">
+      <div style="font-family:monospace;font-size:10px;color:#166534;letter-spacing:0.1em">§5 · 검증 · LAYER 3 (실측 갤러리) · 선택적</div>
+      <p style="font-size:13px;margin:6px 0 10px"><b>현실에서도 그렇다.</b> · 실제 보드에서 찍은 오실로스코프 이미지 · 0개 / 1개 / 4개 / 4+bulk 비교. 장비 있으면 채우고, 없으면 출처 데이터셋 큐레이션.</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+        <div class="placeholder" style="height:60px;background:#000;color:#10b981;font-family:monospace;font-size:9px;display:flex;align-items:center;justify-content:center">0 caps</div>
+        <div class="placeholder" style="height:60px;background:#000;color:#10b981;font-family:monospace;font-size:9px;display:flex;align-items:center;justify-content:center">1 cap</div>
+        <div class="placeholder" style="height:60px;background:#000;color:#10b981;font-family:monospace;font-size:9px;display:flex;align-items:center;justify-content:center">4 caps</div>
+        <div class="placeholder" style="height:60px;background:#000;color:#10b981;font-family:monospace;font-size:9px;display:flex;align-items:center;justify-content:center">4+bulk</div>
+      </div>
+    </div>
+
+    <!-- §6 설계 체크리스트 -->
+    <div style="padding:20px 28px;border-bottom:1px solid #e5e7eb">
+      <div style="font-family:monospace;font-size:10px;color:#64748b;letter-spacing:0.1em">§6 · 설계 리뷰 체크리스트</div>
+      <p style="font-size:13px;margin:6px 0 10px"><b>실제 설계할 때.</b> · 체크박스 리스트. 각 항목은 위 섹션으로 앵커 링크.</p>
+      <div style="font-size:12px;line-height:1.8;font-family:monospace;color:#475569">
+        ☐ 각 전원핀마다 0.1μF · IC 옆에<br>
+        ☐ 다른 값 혼용 (100nF + 10μF + bulk)<br>
+        ☐ via/trace 최단거리 · 같은 층 우선<br>
+        ☐ ground return 경로 확인<br>
+        <span style="color:#94a3b8">...</span>
+      </div>
+    </div>
+
+    <!-- §7 더 깊이 / 다음 -->
+    <div style="padding:20px 28px;background:#f8fafc">
+      <div style="font-family:monospace;font-size:10px;color:#64748b;letter-spacing:0.1em">§7 · 더 깊이 / 다음 토픽</div>
+      <p style="font-size:13px;margin:6px 0 0">참고자료 · 다음 토픽 (PDN, SI, GND bounce) · 피드백</p>
+    </div>
+
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:16px">이 구조가 말이 되면 다음 섹션(각 레이어의 상세 설계)로 넘어갑니다. 섹션을 <b>빼거나 추가</b> 하고 싶으면 알려주세요.</p>
