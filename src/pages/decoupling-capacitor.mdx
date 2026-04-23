@@ -7,6 +7,7 @@ import ReservoirAnalogy from '../components/concept/ReservoirAnalogy.astro';
 import CurrentWaveAnimation from '../components/concept/CurrentWaveAnimation.astro';
 import FrequencyBandMap from '../components/concept/FrequencyBandMap.astro';
 import TimeDomainScope from '../components/sim/TimeDomainScope.svelte';
+import PdnImpedance from '../components/sim/PdnImpedance.svelte';
 
 export const topic = TOPICS.find((t) => t.slug === 'decoupling-capacitor');
 
@@ -42,7 +43,7 @@ IC는 일종의 "샤워기" 다. 물(전류)을 쓸 때, 먼 댐(VRM)에서 긴 
 
 $$Z_\text{cap}(f) = \text{ESR} + j\omega L_\text{ESL} + \frac{1}{j\omega C}$$
 
-{/* PdnImpedance 컴포넌트는 Phase 4에서 삽입 */}
+<PdnImpedance client:visible />
 
 <SectionHeader id="verify" label="§5 · 검증" title="실측 — 현실에서도 그런가" />
 

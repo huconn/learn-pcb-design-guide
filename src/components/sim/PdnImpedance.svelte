@@ -1,0 +1,154 @@
+<script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
+  import * as echarts from 'echarts';
+  import ChartCard from './shared/ChartCard.svelte';
+  import Slider from './shared/Slider.svelte';
+  import { capImpedance, parallelImpedance, magnitude, type Complex } from '../../lib/pdn/impedance';
+  import { CAP_100NF, CAP_10UF, CAP_100UF_BULK } from '../../lib/pdn/presets';
+
+  let chartEl: HTMLDivElement;
+  let chart: echarts.ECharts | null = null;
+
+  let onBulk = true, onMid = true, onHf = true;
+  let nMid = 1, nHf = 4;
+  let Ztarget = 0.05; // 50 mΩ
+
+  // VRM output impedance: low-freq flat at Rvrm, rises at very high freq
+  function vrmImpedance(freq: number): Complex {
+    const Rvrm = 0.02;
+    const Lvrm = 500e-9;
+    const w = 2 * Math.PI * freq;
+    return { re: Rvrm, im: w * Lvrm };
+  }
+
+  function buildCurves() {
+    const freqs: number[] = [];
+    for (let e = 1; e <= 9; e += 0.02) freqs.push(Math.pow(10, e));
+
+    const bulkLine: number[] = [];
+    const midLine: number[] = [];
+    const hfLine: number[] = [];
+    const totalLine: number[] = [];
+    const vrmLine: number[] = [];
+
+    for (const f of freqs) {
+      const zs: Complex[] = [];
+      const bulkZ = capImpedance(CAP_100UF_BULK, f);
+      const midZ = parallelImpedance(Array(nMid).fill(capImpedance(CAP_10UF, f)));
+      const hfZ = parallelImpedance(Array(nHf).fill(capImpedance(CAP_100NF, f)));
+      const vrmZ = vrmImpedance(f);
+
+      if (onBulk) zs.push(bulkZ);
+      if (onMid && nMid > 0) zs.push(midZ);
+      if (onHf && nHf > 0) zs.push(hfZ);
+      zs.push(vrmZ);
+
+      bulkLine.push(magnitude(bulkZ));
+      midLine.push(magnitude(midZ));
+      hfLine.push(magnitude(hfZ));
+      vrmLine.push(magnitude(vrmZ));
+      totalLine.push(magnitude(parallelImpedance(zs)));
+    }
+    return { freqs, bulkLine, midLine, hfLine, vrmLine, totalLine };
+  }
+
+  function findPeaks(freqs: number[], mags: number[]) {
+    const peaks: { f: number; z: number }[] = [];
+    for (let i = 2; i < mags.length - 2; i++) {
+      if (mags[i] > mags[i - 1] && mags[i] > mags[i + 1] && mags[i] > mags[i - 2] && mags[i] > mags[i + 2]) {
+        if (mags[i] > Ztarget * 0.8) peaks.push({ f: freqs[i], z: mags[i] });
+      }
+    }
+    peaks.sort((a, b) => b.z - a.z);
+    return peaks.slice(0, 2);
+  }
+
+  function updateChart() {
+    if (!chart) return;
+    const { freqs, bulkLine, midLine, hfLine, vrmLine, totalLine } = buildCurves();
+    const peaks = findPeaks(freqs, totalLine);
+
+    chart.setOption({
+      animation: false,
+      grid: { top: 30, bottom: 60, left: 60, right: 30 },
+      xAxis: {
+        type: 'log',
+        name: 'frequency (Hz)',
+        nameLocation: 'middle',
+        nameGap: 32,
+        nameTextStyle: { color: '#94a3b8' },
+        axisLabel: { color: '#94a3b8' },
+        axisLine: { lineStyle: { color: '#475569' } },
+        splitLine: { lineStyle: { color: '#1e293b' } },
+        min: 10,
+        max: 1e9,
+      },
+      yAxis: {
+        type: 'log',
+        name: '|Z| (Ω)',
+        nameTextStyle: { color: '#94a3b8' },
+        axisLabel: { color: '#94a3b8' },
+        axisLine: { lineStyle: { color: '#475569' } },
+        splitLine: { lineStyle: { color: '#1e293b' } },
+      },
+      legend: { textStyle: { color: '#cbd5e1' }, top: 0 },
+      tooltip: { trigger: 'axis', backgroundColor: '#0f172a', borderColor: '#334155', textStyle: { color: '#e2e8f0' }, valueFormatter: (v: any) => `${(v * 1000).toFixed(2)} mΩ` },
+      series: [
+        { name: 'Bulk 100μF', type: 'line', showSymbol: false, lineStyle: { color: '#10b981', type: 'dashed', width: 1 }, data: freqs.map((f, i) => [f, bulkLine[i]]) },
+        { name: `10μF × ${nMid}`, type: 'line', showSymbol: false, lineStyle: { color: '#0284c7', type: 'dashed', width: 1 }, data: freqs.map((f, i) => [f, midLine[i]]) },
+        { name: `100nF × ${nHf}`, type: 'line', showSymbol: false, lineStyle: { color: '#db2777', type: 'dashed', width: 1 }, data: freqs.map((f, i) => [f, hfLine[i]]) },
+        { name: 'VRM', type: 'line', showSymbol: false, lineStyle: { color: '#64748b', type: 'dashed', width: 1 }, data: freqs.map((f, i) => [f, vrmLine[i]]) },
+        {
+          name: 'Total (합성)',
+          type: 'line',
+          showSymbol: false,
+          lineStyle: { color: '#e2e8f0', width: 2.5 },
+          data: freqs.map((f, i) => [f, totalLine[i]]),
+          markLine: {
+            symbol: 'none',
+            data: [{ yAxis: Ztarget, lineStyle: { color: '#facc15', type: 'solid', width: 1.5 }, label: { color: '#facc15', formatter: `타겟 ${(Ztarget * 1000).toFixed(0)} mΩ` } }],
+          },
+          markPoint: {
+            symbol: 'pin',
+            symbolSize: 40,
+            itemStyle: { color: '#f87171' },
+            label: { color: '#fff', fontSize: 10, formatter: ({ data }: any) => `${data.coord[1] * 1000 >= 1 ? (data.coord[1] * 1000).toFixed(0) + 'm' : (data.coord[1] * 1e6).toFixed(0) + 'μ'}Ω` },
+            data: peaks.map((p) => ({ coord: [p.f, p.z], name: 'anti-resonance' })),
+          },
+        },
+      ],
+    });
+  }
+
+  onMount(() => {
+    chart = echarts.init(chartEl);
+    updateChart();
+    const ro = new ResizeObserver(() => chart?.resize());
+    ro.observe(chartEl);
+    return () => ro.disconnect();
+  });
+
+  $: if (chart) updateChart();
+  $: [onBulk, onMid, onHf, nMid, nHf, Ztarget]; // reactive trigger
+
+  onDestroy(() => chart?.dispose());
+</script>
+
+<div class="not-prose my-8 space-y-4">
+  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 rounded-lg border border-slate-200 bg-white p-4">
+    <label class="flex items-center gap-2"><input type="checkbox" class="accent-emerald-600" bind:checked={onBulk} /> <span class="text-sm">Bulk 100 μF</span></label>
+    <div class="flex items-center gap-2">
+      <label class="flex items-center gap-2"><input type="checkbox" class="accent-sky-600" bind:checked={onMid} /> <span class="text-sm">10 μF ×</span></label>
+      <input type="number" min="0" max="8" step="1" class="w-16 rounded border-slate-300" bind:value={nMid} />
+    </div>
+    <div class="flex items-center gap-2">
+      <label class="flex items-center gap-2"><input type="checkbox" class="accent-pink-600" bind:checked={onHf} /> <span class="text-sm">100 nF ×</span></label>
+      <input type="number" min="0" max="16" step="1" class="w-16 rounded border-slate-300" bind:value={nHf} />
+    </div>
+    <Slider id="ztarget" label="타겟 임피던스" bind:value={Ztarget} min={0.01} max={0.5} step={0.005} format={(v) => `${(v * 1000).toFixed(0)} mΩ`} />
+  </div>
+
+  <ChartCard title="PDN |Z(f)| · Bode plot · markers = anti-resonance" aria="PDN 임피던스 주파수 응답">
+    <div bind:this={chartEl} class="h-[420px] w-full"></div>
+  </ChartCard>
+</div>
