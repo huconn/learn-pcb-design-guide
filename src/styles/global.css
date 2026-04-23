@@ -1,2 +1,25 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
+
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-trace-primary: #0284c7;
+  --color-trace-warn: #db2777;
+  --color-trace-ok: #059669;
+  --color-scope-bg: #020617;
+  --color-scope-grid: #1e293b;
+  --color-scope-axis: #64748b;
+  --font-mono: ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --trace-primary: #0284c7;
+  --trace-warn: #db2777;
+  --trace-ok: #059669;
+  --scope-bg: #020617;
+  --scope-grid: #1e293b;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif; }
