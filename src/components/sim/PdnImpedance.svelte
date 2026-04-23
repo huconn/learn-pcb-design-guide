@@ -139,11 +139,11 @@
     <label class="flex items-center gap-2"><input type="checkbox" class="accent-emerald-600" bind:checked={onBulk} /> <span class="text-sm">Bulk 100 μF</span></label>
     <div class="flex items-center gap-2">
       <label class="flex items-center gap-2"><input type="checkbox" class="accent-sky-600" bind:checked={onMid} /> <span class="text-sm">10 μF ×</span></label>
-      <input type="number" min="0" max="8" step="1" class="w-16 rounded border-slate-300" bind:value={nMid} />
+      <input type="number" min="0" max="8" step="1" class="w-16 rounded border-slate-300" bind:value={nMid} aria-label="10 μF 커패시터 개수" />
     </div>
     <div class="flex items-center gap-2">
       <label class="flex items-center gap-2"><input type="checkbox" class="accent-pink-600" bind:checked={onHf} /> <span class="text-sm">100 nF ×</span></label>
-      <input type="number" min="0" max="16" step="1" class="w-16 rounded border-slate-300" bind:value={nHf} />
+      <input type="number" min="0" max="16" step="1" class="w-16 rounded border-slate-300" bind:value={nHf} aria-label="100 nF 커패시터 개수" />
     </div>
     <Slider id="ztarget" label="타겟 임피던스" bind:value={Ztarget} min={0.01} max={0.5} step={0.005} format={(v) => `${(v * 1000).toFixed(0)} mΩ`} />
   </div>
