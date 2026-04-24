@@ -173,14 +173,14 @@
         <input type="checkbox" class="accent-violet-600" bind:checked={onMid} />
         <span class="text-sm">10 μF ×</span>
       </label>
-      <input type="number" min="0" max="8" step="1" class="w-16 rounded border-slate-300" bind:value={nMid} />
+      <input type="number" min="0" max="8" step="1" class="w-16 rounded border-slate-300" bind:value={nMid} aria-label="10 μF cap count" />
     </div>
     <div class="flex items-center gap-2">
       <label class="flex items-center gap-2">
         <input type="checkbox" class="accent-sky-600" bind:checked={onHf} />
         <span class="text-sm">100 nF ×</span>
       </label>
-      <input type="number" min="0" max="16" step="1" class="w-16 rounded border-slate-300" bind:value={nHf} />
+      <input type="number" min="0" max="16" step="1" class="w-16 rounded border-slate-300" bind:value={nHf} aria-label="100 nF cap count" />
     </div>
     <Slider id="ztarget" label="타겟 임피던스" bind:value={Ztarget} min={0.01} max={0.5} step={0.005} format={(v) => `${(v * 1000).toFixed(0)} mΩ`} />
   </div>
@@ -192,12 +192,12 @@
         <span class="font-mono text-[10px] tracking-widest text-slate-500 uppercase">Advanced</span>
         <span>ESR · ESL 튜닝</span>
       </span>
-      <div class="flex items-center gap-3">
-        <button type="button" class="font-mono text-[11px] text-slate-500 hover:text-slate-900 underline" on:click|preventDefault={reset}>reset</button>
-        <span class="text-slate-400 text-sm">▼</span>
-      </div>
+      <span class="text-slate-400 text-sm">▼</span>
     </summary>
-    <div class="mt-4 grid gap-4 sm:grid-cols-3">
+    <div class="mt-3 flex justify-end">
+      <button type="button" class="font-mono text-[11px] text-slate-500 hover:text-slate-900 underline" on:click={reset}>reset</button>
+    </div>
+    <div class="mt-2 grid gap-4 sm:grid-cols-3">
       <div class="space-y-2">
         <div class="font-mono text-[10px] tracking-widest text-emerald-700 uppercase">Bulk 100μF</div>
         <Slider id="bulk-esr" label="ESR"  bind:value={bulkESR} min={0.001} max={0.05}  step={0.001}  format={fmtESR} />

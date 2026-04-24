@@ -43,10 +43,10 @@
   <div class="rounded-lg border border-slate-200 bg-slate-50 p-5 space-y-3">
     <div class="flex items-baseline justify-between">
       <div class="font-mono text-[10px] tracking-widest text-slate-500 uppercase">Target Impedance</div>
-      <div class="font-mono text-[10px] text-slate-400">log scale</div>
+      <div class="font-mono text-[10px] text-slate-500">log scale</div>
     </div>
     <div class="text-4xl font-semibold font-mono text-indigo-700">
-      {(Ztarget * 1000).toFixed(1)} <span class="text-2xl text-indigo-400">mΩ</span>
+      {(Ztarget * 1000).toFixed(1)} <span class="text-2xl text-indigo-600">mΩ</span>
     </div>
 
     <div class={"rounded-md border px-3 py-3 " + colorMap[recommendation.color]}>

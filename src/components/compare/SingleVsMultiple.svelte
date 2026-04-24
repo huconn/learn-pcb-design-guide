@@ -79,7 +79,7 @@
   <div class="rounded-lg border border-rose-200 bg-rose-50/30 p-4">
     <div class="mb-2 flex items-baseline justify-between">
       <span class="font-mono text-[10px] tracking-widest text-rose-700">SINGLE CAPACITOR</span>
-      <span class="font-mono text-[10px] text-rose-600">100 nF × 1</span>
+      <span class="font-mono text-[10px] text-rose-700">100 nF × 1</span>
     </div>
     <div bind:this={leftEl} class="h-[220px] w-full"></div>
     <p class="mt-3 text-sm text-slate-700">한 값만 쓰면 SRF 근처에서는 낮지만 그 밖에선 타겟 위로 솟음. 저주파·고주파 모두 커버 불가.</p>
