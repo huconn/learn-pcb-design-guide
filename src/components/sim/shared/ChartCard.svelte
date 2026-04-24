@@ -3,11 +3,13 @@
   export let aria: string = '';
 </script>
 
-<div class="rounded-lg bg-slate-950 text-slate-200 p-4 shadow-sm" aria-label={aria || title}>
+<div class="rounded-lg border border-slate-200 bg-slate-50 p-4" aria-label={aria || title}>
   {#if title}
-    <div class="mb-2 font-mono text-xs tracking-widest text-slate-400">{title}</div>
+    <div class="mb-2 flex items-baseline justify-between">
+      <span class="font-mono text-[10px] tracking-widest text-slate-500">{title}</span>
+    </div>
   {/if}
-  <div class="bg-slate-950">
+  <div>
     <slot />
   </div>
 </div>

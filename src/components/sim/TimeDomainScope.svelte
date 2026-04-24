@@ -9,8 +9,8 @@
   let chartEl: HTMLDivElement;
   let chart: echarts.ECharts | null = null;
 
-  let mixIdx = 2; // default: 0.1μF ×4 + 10μF ×1
-  let loadIdx = 1; // typical
+  let mixIdx = 2;
+  let loadIdx = 1;
   let Vtarget = 3.3;
 
   $: mix = MIX_PRESETS[mixIdx].mix;
@@ -20,7 +20,6 @@
     let C = 0, L = Infinity, ESR = Infinity;
     for (const { cap, count } of caps) {
       C += cap.C * count;
-      // parallel inductance: 1/L_tot = Σ count/L_i
       const Ltot = 1 / (count / cap.ESL);
       L = L === Infinity ? Ltot : 1 / (1 / L + 1 / Ltot);
       const ESRtot = cap.ESR / count;
@@ -51,7 +50,7 @@
 
   $: vpp = (() => {
     const arr = Array.from(result.V);
-    return (Math.max(...arr) - Math.min(...arr)) * 1000; // mV
+    return (Math.max(...arr) - Math.min(...arr)) * 1000;
   })();
 
   function updateChart() {
@@ -59,20 +58,33 @@
     const tUs = Array.from(result.t).map((x) => x * 1e6);
     const V = Array.from(result.V);
     const I = Array.from(result.Iload);
+    const axisColor = '#94a3b8';
+    const splitColor = '#e2e8f0';
+    const lineColor = '#cbd5e1';
+    const nameColor = '#64748b';
     chart.setOption({
       animation: false,
-      grid: [{ top: 30, height: '45%', left: 50, right: 30 }, { top: '60%', height: '30%', left: 50, right: 30 }],
+      grid: [
+        { top: 30, height: '45%', left: 56, right: 20 },
+        { top: '62%', height: '28%', left: 56, right: 20 },
+      ],
       xAxis: [
-        { type: 'value', gridIndex: 0, name: '', axisLabel: { color: '#94a3b8' }, axisLine: { lineStyle: { color: '#475569' } }, splitLine: { lineStyle: { color: '#1e293b' } } },
-        { type: 'value', gridIndex: 1, name: 't (μs)', nameTextStyle: { color: '#94a3b8' }, axisLabel: { color: '#94a3b8' }, axisLine: { lineStyle: { color: '#475569' } }, splitLine: { lineStyle: { color: '#1e293b' } } },
+        { type: 'value', gridIndex: 0, name: '', axisLabel: { color: axisColor }, axisLine: { lineStyle: { color: lineColor } }, splitLine: { lineStyle: { color: splitColor } } },
+        { type: 'value', gridIndex: 1, name: 't (μs)', nameTextStyle: { color: nameColor }, axisLabel: { color: axisColor }, axisLine: { lineStyle: { color: lineColor } }, splitLine: { lineStyle: { color: splitColor } } },
       ],
       yAxis: [
-        { type: 'value', gridIndex: 0, name: 'Vdd (V)', nameTextStyle: { color: '#94a3b8' }, axisLabel: { color: '#94a3b8' }, axisLine: { lineStyle: { color: '#475569' } }, splitLine: { lineStyle: { color: '#1e293b' } }, scale: true },
-        { type: 'value', gridIndex: 1, name: 'I_load (A)', nameTextStyle: { color: '#94a3b8' }, axisLabel: { color: '#94a3b8' }, axisLine: { lineStyle: { color: '#475569' } }, splitLine: { lineStyle: { color: '#1e293b' } } },
+        { type: 'value', gridIndex: 0, name: 'Vdd (V)', nameTextStyle: { color: nameColor }, axisLabel: { color: axisColor }, axisLine: { lineStyle: { color: lineColor } }, splitLine: { lineStyle: { color: splitColor } }, scale: true },
+        { type: 'value', gridIndex: 1, name: 'I_load (A)', nameTextStyle: { color: nameColor }, axisLabel: { color: axisColor }, axisLine: { lineStyle: { color: lineColor } }, splitLine: { lineStyle: { color: splitColor } } },
       ],
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#ffffff',
+        borderColor: '#e2e8f0',
+        textStyle: { color: '#0f172a' },
+      },
       series: [
-        { type: 'line', xAxisIndex: 0, yAxisIndex: 0, showSymbol: false, data: tUs.map((t, i) => [t, V[i]]), lineStyle: { color: '#0284c7', width: 1.5 } },
-        { type: 'line', xAxisIndex: 1, yAxisIndex: 1, showSymbol: false, data: tUs.map((t, i) => [t, I[i]]), lineStyle: { color: '#db2777', width: 1.5 } },
+        { type: 'line', xAxisIndex: 0, yAxisIndex: 0, showSymbol: false, data: tUs.map((t, i) => [t, V[i]]), lineStyle: { color: '#4f46e5', width: 1.5 } },
+        { type: 'line', xAxisIndex: 1, yAxisIndex: 1, showSymbol: false, data: tUs.map((t, i) => [t, I[i]]), lineStyle: { color: '#f43f5e', width: 1.5 } },
       ],
     });
   }
@@ -90,7 +102,7 @@
   onDestroy(() => chart?.dispose());
 </script>
 
-<div class="not-prose my-8 space-y-4">
+<div class="not-prose space-y-4">
   <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 rounded-lg border border-slate-200 bg-white p-4">
     <label class="block">
       <span class="text-sm text-slate-700">프리셋 (cap 조합)</span>
@@ -108,10 +120,10 @@
         {/each}
       </select>
     </label>
-    <Slider id="vtarget" label="V_target" bind:value={Vtarget} min={1.8} max={5.0} step={0.1} format={(v) => `${v.toFixed(1)} V`} />
+    <Slider id="vtarget-td" label="V_target" bind:value={Vtarget} min={1.8} max={5.0} step={0.1} format={(v) => `${v.toFixed(1)} V`} />
     <div class="rounded bg-slate-50 p-2 text-sm">
       <div class="text-slate-500">현재 리플 (peak-peak)</div>
-      <div class="font-mono text-lg text-sky-700">{vpp.toFixed(1)} mV</div>
+      <div class="font-mono text-lg text-indigo-700">{vpp.toFixed(1)} mV</div>
     </div>
   </div>
 
