@@ -1,0 +1,50 @@
+---
+// Shows a source -> transmission line -> load, with a wavefront traveling
+// rightward. Illustrates that a signal is a wave propagating at finite speed.
+---
+<figure class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <svg viewBox="0 0 560 220" class="w-full" role="img" aria-label="Transmission line — wave propagation">
+    <rect x="1" y="1" width="558" height="218" fill="#fafaf9" stroke="#e2e8f0" />
+    <text x="10" y="18" font-size="11" font-family="ui-monospace, monospace" fill="#0f172a">신호 = 유한 속도로 달리는 파동</text>
+
+    <!-- Source -->
+    <rect x="20" y="80" width="50" height="40" fill="#0f172a" />
+    <text x="26" y="105" font-size="10" fill="#fff" font-family="ui-monospace, monospace">SRC</text>
+    <text x="10" y="142" font-size="9" fill="#64748b" font-family="ui-monospace, monospace">Z_s</text>
+
+    <!-- Transmission line (two conductors forming the line) -->
+    <line x1="70"  y1="90" x2="490" y2="90" stroke="#334155" stroke-width="3" />
+    <line x1="70"  y1="110" x2="490" y2="110" stroke="#334155" stroke-width="3" />
+    <!-- shading between -->
+    <rect x="70" y="90" width="420" height="20" fill="#e2e8f0" opacity="0.5" />
+
+    <text x="240" y="84" font-size="10" fill="#475569" font-family="ui-monospace, monospace">transmission line (Z₀ = 50 Ω)</text>
+    <text x="240" y="132" font-size="10" fill="#475569" font-family="ui-monospace, monospace">one-way delay T_d = length / v_prop</text>
+
+    <!-- Load -->
+    <rect x="490" y="80" width="50" height="40" fill="#0f172a" />
+    <text x="498" y="105" font-size="10" fill="#fff" font-family="ui-monospace, monospace">LOAD</text>
+    <text x="500" y="142" font-size="9" fill="#64748b" font-family="ui-monospace, monospace">Z_L</text>
+
+    <!-- Wavefront traveling right -->
+    <g>
+      <rect x="240" y="75" width="10" height="50" fill="#4f46e5" opacity="0.5" />
+      <path d="M 250 100 L 270 100" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+    </g>
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f46e5" />
+      </marker>
+    </defs>
+
+    <text x="240" y="68" font-size="10" fill="#4f46e5" font-family="ui-monospace, monospace">wavefront → v ≈ 15 cm/ns</text>
+
+    <!-- Z0 annotation -->
+    <g>
+      <line x1="150" y1="170" x2="410" y2="170" stroke="#059669" stroke-width="1" />
+      <text x="160" y="188" font-size="10" fill="#065f46" font-family="ui-monospace, monospace">파동이 "보는" 순간 임피던스 = Z₀ (geometry 가 결정)</text>
+      <text x="160" y="202" font-size="9" fill="#64748b" font-family="ui-monospace, monospace">— Z₀ 가 변하는 지점 = 반사 발생</text>
+    </g>
+  </svg>
+</figure>

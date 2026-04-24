@@ -50,7 +50,21 @@ export const RETURN_PATHS: Topic = {
   ],
 };
 
-export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR, RETURN_PATHS];
+export const IMPEDANCE_MATCHING: Topic = {
+  slug: 'impedance-matching',
+  title: 'Impedance Matching',
+  subtitle: '신호는 파동 — Z 가 변하는 지점에서 반사한다',
+  category: '02 · SIGNAL INTEGRITY',
+  readingMinutes: 9,
+  level: '중급',
+  status: 'published',
+  subpages: [
+    { slug: 'basics', label: '기초 · 개념',  href: '/impedance-matching/basics' },
+    { slug: 'lab',    label: '실험실 · 반사', href: '/impedance-matching' },
+  ],
+};
+
+export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING];
 
 /** Sidebar navigation tree — includes planned/coming-soon topics for visual richness */
 export const CATEGORIES: Category[] = [
@@ -75,7 +89,7 @@ export const CATEGORIES: Category[] = [
     id: 'signal-integrity',
     name: 'Signal Integrity',
     topics: [
-      { slug: 'impedance-matching', title: 'Impedance Matching', subtitle: '', category: '02 · SIGNAL INTEGRITY', readingMinutes: 12, level: '중급',   status: 'coming-soon' },
+      IMPEDANCE_MATCHING,
       { slug: 'crosstalk',          title: 'Crosstalk',          subtitle: '', category: '02 · SIGNAL INTEGRITY', readingMinutes: 10, level: '중급~고급', status: 'coming-soon' },
     ],
   },

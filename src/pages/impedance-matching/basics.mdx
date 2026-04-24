@@ -1,0 +1,138 @@
+import TopicLayout from '../../layouts/TopicLayout.astro';
+import { IMPEDANCE_MATCHING } from '../../lib/content/topics';
+import Card from '../../components/ui/Card.astro';
+import TipBanner from '../../components/ui/TipBanner.astro';
+import TransmissionLineConcept from '../../components/concept/TransmissionLineConcept.astro';
+import ReflectionScenarios from '../../components/concept/ReflectionScenarios.astro';
+import TerminationTopologies from '../../components/concept/TerminationTopologies.astro';
+
+<TopicLayout topic={IMPEDANCE_MATCHING} activeSubSlug="basics">
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{IMPEDANCE_MATCHING.category} · 기초편</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    Impedance Matching
+    <span class="block mt-1 text-slate-500 text-xl font-normal">신호는 파동 — Z 가 변하는 곳에서 반사한다</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    짧은 트레이스에서는 신호를 "점 A 에서 점 B 로 즉시 전달" 로 생각해도 됩니다. 
+    하지만 신호가 <b>충분히 빠르고 트레이스가 충분히 길면</b> 신호는 <b>파동</b> 처럼 행동합니다 — 
+    유한한 속도로 전파하고, 임피던스가 달라지는 경계에서 <span class="text-rose-600 font-semibold">반사</span>합니다.
+  </p>
+  <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 8분 읽기</span>
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">★ 중급</span>
+    <span class="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-700">그림 중심</span>
+  </div>
+</section>
+
+<TipBanner>
+  <b>판단 기준</b> — 트레이스 <span class="font-mono">length &gt; (rise time × v_prop) / 6</span> 이면 전송선으로 취급하세요. 예: rise time 1 ns 라면 2.5 cm 이상부터 반사가 보입니다.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="wave" title="1. 신호는 빛 속도의 절반으로 달리는 파동">
+    <TransmissionLineConcept />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        PCB 트레이스 위에서 신호는 진공의 빛 속도(c ≈ 30 cm/ns) 의 <b>절반 정도 (≈15 cm/ns)</b> 로 전파합니다. 즉 10 cm 트레이스는 약 0.7 ns 의 지연(T_d) 이 있습니다.
+      </p>
+      <p>
+        신호가 "지금 보는 임피던스" 는 <b>저항도, 커패시턴스도, 인덕턴스도 아닌</b> <span class="font-semibold text-indigo-700">특성 임피던스 Z₀</span> 입니다. 
+        Z₀ 는 트레이스의 <b>기하(폭·두께·유전체·plane 거리)</b> 가 결정하는 값으로, PCB 는 보통 <span class="font-mono">50 Ω</span> 또는 차동에서는 <span class="font-mono">100 Ω</span> 으로 설계합니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="reflection" title="2. Z 가 변하는 경계 = 반사">
+    <ReflectionScenarios />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        파동이 Z₀ 인 선을 달리다가 끝에서 <b>Z_L</b> 인 다른 임피던스를 만나면, 반사 계수 <b>Γ</b> 만큼의 파동이 되돌아갑니다:
+      </p>
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
+        Γ = (Z_L − Z₀) / (Z_L + Z₀)
+      </p>
+      <ul>
+        <li><b>Matched</b> (Z_L = Z₀) → Γ = 0, 반사 없음 · 이상적</li>
+        <li><b>Open</b> (Z_L = ∞)  → Γ = +1, 전파 반사 · 로드 전압이 2배로 튐</li>
+        <li><b>Short</b> (Z_L = 0) → Γ = −1, 반전 반사 · 로드 전압 0</li>
+      </ul>
+      <p>
+        실제 IC 입력은 CMOS 게이트 → 거의 open (수 kΩ 이상). 종단 없이 연결하면 <b>거의 완전 반사</b> 가 일어납니다. 
+        반사는 source 까지 돌아갔다가 다시 반사되며 <span class="text-rose-600 font-semibold">ring · overshoot · undershoot</span> 를 만듭니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="when" title="3. 언제부터 신경써야 하나?">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        모든 트레이스가 전송선은 아닙니다. 경험 규칙:
+      </p>
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
+        length &gt; (t_rise × v_prop) / 6
+      </p>
+      <p>
+        즉, 신호의 <b>상승 시간(rise time) 동안 전파하는 거리</b> 의 <b>1/6</b> 보다 트레이스가 길면 전송선 효과가 중요해집니다. 
+        v_prop ≈ 15 cm/ns 를 대입하면:
+      </p>
+      <ul>
+        <li>t_rise = 5 ns → length &gt; 12.5 cm 부터 문제</li>
+        <li>t_rise = 1 ns → length &gt; 2.5 cm 부터 문제 (대부분의 디지털 보드가 여기)</li>
+        <li>t_rise = 0.2 ns → length &gt; 5 mm 부터 문제 (DDR · SerDes · RF)</li>
+      </ul>
+      <p>
+        클럭 속도가 아니라 <b>rise time</b> 이 기준임에 주의. 100 kHz 클럭이라도 rise time 이 1 ns 라면 전송선으로 취급해야 합니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="termination" title="4. 반사 방지 — Termination 세 가지">
+    <TerminationTopologies />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        반사를 막는 방법은 <b>임피던스가 바뀌는 지점에 매칭 저항을 두는 것</b>. 어디에 두느냐에 따라 세 가지 계열:
+      </p>
+      <ul>
+        <li><b>Series (source)</b> — 드라이버 출력에 직렬 R. 대부분의 CMOS 드라이버 + 고 Z 로드 조합에서 최선. 전력 0 소비.</li>
+        <li><b>Parallel (load)</b> — 로드에 Z₀ 저항을 GND 로. 가장 깨끗하지만 DC 전류 흐름(전력).</li>
+        <li><b>AC (RC)</b> — R + C 직렬로 로드 측에. DC 안 흐르게 하면서 AC 매칭. 클럭에 자주 씀.</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="tldr" title="핵심 요약 (TL;DR)">
+    <ul class="list-disc pl-5 space-y-1.5 text-slate-700 [&>li]:leading-relaxed">
+      <li>트레이스는 임피던스(<b>Z₀</b>) 를 가진 전송선 — 보통 50 Ω 로 설계</li>
+      <li>Z₀ 가 바뀌는 경계(로드, via, 커넥터, stub) 에서 <b>반사</b> 가 생긴다: Γ = (Z_L−Z₀)/(Z_L+Z₀)</li>
+      <li>기준: length &gt; t_rise × 15 cm/ns / 6 이면 종단 필요</li>
+      <li>CMOS 로드(고 Z)는 source series 가 보통 정답 · 고속 점대점은 parallel</li>
+      <li>via 개수, stub 길이, 커넥터도 모두 Z₀ 이탈점 — 최소화</li>
+    </ul>
+  </Card>
+</div>
+
+<div class="mt-8 mb-12">
+  <a href="/impedance-matching" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+    <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
+    <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — 반사 시뮬레이터</div>
+    <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+      Zs, Z₀, Z_L, 트레이스 길이, rise time 을 조작하면서 source 와 load 에서의 파형이 어떻게 변하는지 실시간으로 확인해보세요. 
+      "무종단 CMOS 로드" 프리셋으로 시작해 보세요 — ring 이 선명하게 보입니다.
+    </p>
+    <div class="mt-3 inline-flex items-center gap-2 text-indigo-600 text-sm font-medium">
+      실험실로 이동 <span class="group-hover:translate-x-1 transition-transform">→</span>
+    </div>
+  </a>
+</div>
+
+</TopicLayout>
