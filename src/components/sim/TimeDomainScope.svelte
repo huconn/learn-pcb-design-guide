@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import * as echarts from 'echarts';
+  import { echarts, type ECharts } from '../../lib/echarts/setup';
   import Slider from './shared/Slider.svelte';
   import ChartCard from './shared/ChartCard.svelte';
   import { simulateTimeDomain } from '../../lib/pdn/timeDomain';
   import { MIX_PRESETS, LOAD_PRESETS, type NamedCap } from '../../lib/pdn/presets';
 
   let chartEl: HTMLDivElement;
-  let chart: echarts.ECharts | null = null;
+  let chart: ECharts | null = null;
 
   let mixIdx = 2;
   let loadIdx = 1;

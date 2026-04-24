@@ -33,3 +33,4 @@ lighthouse.json
 
 # vercel
 .vercel/
+.vercel

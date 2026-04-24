@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import * as echarts from 'echarts';
+  import { echarts, type ECharts } from '../../lib/echarts/setup';
   import ChartCard from './shared/ChartCard.svelte';
   import Slider from './shared/Slider.svelte';
   import { capImpedance, parallelImpedance, magnitude, type Cap, type Complex } from '../../lib/pdn/impedance';
   import { CAP_100NF, CAP_10UF, CAP_100UF_BULK } from '../../lib/pdn/presets';
 
   let chartEl: HTMLDivElement;
-  let chart: echarts.ECharts | null = null;
+  let chart: ECharts | null = null;
 
   let onBulk = true, onMid = true, onHf = true;
   let nMid = 1, nHf = 4;

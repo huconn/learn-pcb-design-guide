@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import * as echarts from 'echarts';
+  import { echarts, type ECharts } from '../../lib/echarts/setup';
   import { capImpedance, parallelImpedance, magnitude, type Complex } from '../../lib/pdn/impedance';
   import { CAP_100NF, CAP_10UF, CAP_100UF_BULK } from '../../lib/pdn/presets';
 
   let chartEl: HTMLDivElement;
-  let chart: echarts.ECharts | null = null;
+  let chart: ECharts | null = null;
 
   function vrmImpedance(freq: number): Complex {
     const Rvrm = 0.02, Lvrm = 500e-9;

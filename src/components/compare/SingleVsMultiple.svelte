@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import * as echarts from 'echarts';
+  import { echarts, type ECharts } from '../../lib/echarts/setup';
   import { capImpedance, parallelImpedance, magnitude, type Complex } from '../../lib/pdn/impedance';
   import { CAP_100NF, CAP_10UF, CAP_100UF_BULK } from '../../lib/pdn/presets';
 
   let leftEl: HTMLDivElement;
   let rightEl: HTMLDivElement;
-  let leftChart: echarts.ECharts | null = null;
-  let rightChart: echarts.ECharts | null = null;
+  let leftChart: ECharts | null = null;
+  let rightChart: ECharts | null = null;
 
   function vrm(f: number): Complex {
     return { re: 0.02, im: 2 * Math.PI * f * 500e-9 };
