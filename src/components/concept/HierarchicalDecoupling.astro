@@ -1,0 +1,81 @@
+---
+---
+<figure class="not-prose my-2 rounded-lg border border-slate-200 bg-white p-5">
+  <div class="mb-4 flex items-baseline justify-between">
+    <div>
+      <div class="font-mono text-[10px] tracking-widest text-slate-500 uppercase">Hierarchical Decoupling</div>
+      <div class="mt-1 text-sm text-slate-600">각 계층의 cap이 담당하는 주파수 대역이 다르다. 전 대역을 커버하려면 계층 전부 필요.</div>
+    </div>
+  </div>
+  <svg viewBox="0 0 720 300" class="w-full" role="img" aria-label="4-tier decoupling hierarchy: VRM → Bulk → Mid → HF with frequency coverage bands">
+    <!-- columns: source on left, freq axis on right -->
+    <!-- left source stack -->
+    <g font-family="ui-monospace" font-size="11">
+      <text x="20" y="22" fill="#64748b" font-size="10" letter-spacing="0.08em">SOURCE TIER</text>
+
+      <!-- VRM -->
+      <rect x="20" y="40" width="200" height="44" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="36" y="58" fill="#475569">VRM</text>
+      <text x="36" y="74" fill="#64748b" font-size="10">출력 임피던스 · kHz 이하</text>
+
+      <!-- Bulk -->
+      <rect x="20" y="100" width="200" height="44" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+      <text x="36" y="118" fill="#065f46">Bulk  100 μF</text>
+      <text x="36" y="134" fill="#059669" font-size="10">수 kHz ~ 수 MHz</text>
+
+      <!-- Mid -->
+      <rect x="20" y="160" width="200" height="44" rx="6" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="36" y="178" fill="#5b21b6">Mid  10 μF</text>
+      <text x="36" y="194" fill="#8b5cf6" font-size="10">수 MHz ~ 수십 MHz</text>
+
+      <!-- HF -->
+      <rect x="20" y="220" width="200" height="44" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="1.5"/>
+      <text x="36" y="238" fill="#075985">HF  100 nF ×4</text>
+      <text x="36" y="254" fill="#0ea5e9" font-size="10">수십 MHz ~ GHz</text>
+
+      <!-- arrow hints between tiers -->
+      <path d="M 120 86 L 120 98" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <path d="M 120 146 L 120 158" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <path d="M 120 206 L 120 218" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow)"/>
+    </g>
+
+    <!-- arrow marker -->
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+
+    <!-- right: frequency coverage band -->
+    <g font-family="ui-monospace" font-size="10">
+      <text x="260" y="22" fill="#64748b" letter-spacing="0.08em">FREQUENCY COVERAGE</text>
+
+      <!-- freq axis -->
+      <line x1="280" y1="270" x2="690" y2="270" stroke="#475569" stroke-width="1.2"/>
+      <g fill="#64748b">
+        <text x="280" y="288">1 kHz</text>
+        <text x="380" y="288">100 kHz</text>
+        <text x="480" y="288">10 MHz</text>
+        <text x="580" y="288">100 MHz</text>
+        <text x="660" y="288">1 GHz</text>
+      </g>
+
+      <!-- VRM band (very low freq) -->
+      <rect x="280" y="44" width="100" height="30" fill="#94a3b8" fill-opacity="0.2" stroke="#94a3b8" stroke-width="1"/>
+      <text x="290" y="63" fill="#475569">VRM</text>
+
+      <!-- Bulk band -->
+      <rect x="280" y="104" width="190" height="30" fill="#059669" fill-opacity="0.18" stroke="#059669" stroke-width="1"/>
+      <text x="290" y="123" fill="#065f46">Bulk 100μF</text>
+
+      <!-- Mid band -->
+      <rect x="360" y="164" width="230" height="30" fill="#8b5cf6" fill-opacity="0.18" stroke="#8b5cf6" stroke-width="1"/>
+      <text x="370" y="183" fill="#5b21b6">10 μF (×n)</text>
+
+      <!-- HF band -->
+      <rect x="460" y="224" width="230" height="30" fill="#0ea5e9" fill-opacity="0.18" stroke="#0ea5e9" stroke-width="1"/>
+      <text x="470" y="243" fill="#075985">100 nF (×n)</text>
+    </g>
+  </svg>
+  <p class="mt-3 text-xs text-slate-500">각 타일의 오른쪽 바는 해당 cap이 주로 담당하는 주파수 대역. 어느 하나라도 빠지면 그 대역에서 임피던스가 솟아 anti-resonance 피크 발생.</p>
+</figure>
