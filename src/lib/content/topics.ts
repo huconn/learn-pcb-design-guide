@@ -36,7 +36,21 @@ export const DECOUPLING_CAPACITOR: Topic = {
   ],
 };
 
-export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR];
+export const RETURN_PATHS: Topic = {
+  slug: 'return-paths',
+  title: 'Return Paths · Ground Bounce',
+  subtitle: '전류는 항상 루프로 돌아온다 — 돌아올 길을 설계하자',
+  category: '03 · GROUNDING',
+  readingMinutes: 8,
+  level: '초급~중급',
+  status: 'published',
+  subpages: [
+    { slug: 'basics', label: '기초 · 개념',  href: '/return-paths/basics' },
+    { slug: 'lab',    label: '실험실 · 계산', href: '/return-paths' },
+  ],
+};
+
+export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR, RETURN_PATHS];
 
 /** Sidebar navigation tree — includes planned/coming-soon topics for visual richness */
 export const CATEGORIES: Category[] = [
@@ -69,7 +83,7 @@ export const CATEGORIES: Category[] = [
     id: 'grounding-emc',
     name: 'Grounding & EMC',
     topics: [
-      { slug: 'return-paths', title: 'Return Paths / GND Bounce', subtitle: '', category: '03 · GROUNDING', readingMinutes: 12, level: '중급', status: 'coming-soon' },
+      RETURN_PATHS,
       { slug: 'esd',          title: 'ESD Protection',            subtitle: '', category: '03 · GROUNDING', readingMinutes: 8,  level: '초급~중급', status: 'coming-soon' },
     ],
   },

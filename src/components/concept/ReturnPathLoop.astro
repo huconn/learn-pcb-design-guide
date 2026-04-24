@@ -1,0 +1,79 @@
+---
+// Side-by-side: loose loop (no nearby plane) vs tight loop (return hugs signal)
+---
+<div class="not-prose grid gap-4 sm:grid-cols-2">
+  <figure class="rounded-lg border border-rose-200 bg-rose-50 p-3">
+    <svg viewBox="0 0 300 180" class="w-full" role="img" aria-label="큰 루프 — 나쁜 예">
+      <rect x="1" y="1" width="298" height="178" fill="#fff5f5" stroke="#fecaca" />
+      <text x="8" y="16" font-size="10" font-family="ui-monospace, monospace" fill="#9f1239">BAD — 넓은 루프</text>
+
+      <!-- driver -->
+      <rect x="20" y="55" width="36" height="22" fill="#0f172a" />
+      <text x="24" y="70" font-size="9" fill="#fff" font-family="ui-monospace, monospace">DRV</text>
+      <!-- receiver -->
+      <rect x="244" y="55" width="36" height="22" fill="#0f172a" />
+      <text x="248" y="70" font-size="9" fill="#fff" font-family="ui-monospace, monospace">RX</text>
+
+      <!-- signal trace (top) -->
+      <line x1="56" y1="66" x2="244" y2="66" stroke="#ef4444" stroke-width="2" />
+      <polygon points="240,62 246,66 240,70" fill="#ef4444" />
+      <text x="130" y="58" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">signal →</text>
+
+      <!-- return path (far below) -->
+      <line x1="244" y1="150" x2="56" y2="150" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 3" />
+      <polygon points="60,146 54,150 60,154" fill="#ef4444" />
+      <text x="120" y="145" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">← return (detour)</text>
+
+      <!-- verticals closing the loop -->
+      <line x1="56" y1="77" x2="56" y2="150" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="4 3" />
+      <line x1="244" y1="77" x2="244" y2="150" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="4 3" />
+
+      <!-- loop area highlight -->
+      <rect x="56" y="66" width="188" height="84" fill="#fecaca" opacity="0.35" />
+      <text x="135" y="112" font-size="10" fill="#9f1239" font-family="ui-monospace, monospace">large loop = large L</text>
+    </svg>
+    <figcaption class="mt-2 text-xs text-slate-700">
+      나쁜 예 — return 경로가 멀어 루프 면적이 크다. <b>L ∝ loop area</b> 이므로 고주파에서 크로스톡·EMI 폭발.
+    </figcaption>
+  </figure>
+
+  <figure class="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+    <svg viewBox="0 0 300 180" class="w-full" role="img" aria-label="작은 루프 — 좋은 예">
+      <rect x="1" y="1" width="298" height="178" fill="#f0fdf4" stroke="#bbf7d0" />
+      <text x="8" y="16" font-size="10" font-family="ui-monospace, monospace" fill="#065f46">GOOD — 얇은 루프</text>
+
+      <rect x="20" y="55" width="36" height="22" fill="#0f172a" />
+      <text x="24" y="70" font-size="9" fill="#fff" font-family="ui-monospace, monospace">DRV</text>
+      <rect x="244" y="55" width="36" height="22" fill="#0f172a" />
+      <text x="248" y="70" font-size="9" fill="#fff" font-family="ui-monospace, monospace">RX</text>
+
+      <!-- signal (top of dielectric) -->
+      <line x1="56" y1="66" x2="244" y2="66" stroke="#059669" stroke-width="2" />
+      <polygon points="240,62 246,66 240,70" fill="#059669" />
+      <text x="130" y="58" font-size="9" fill="#065f46" font-family="ui-monospace, monospace">signal →</text>
+
+      <!-- reference plane -->
+      <rect x="16" y="86" width="268" height="14" fill="#a7f3d0" stroke="#34d399" />
+      <text x="120" y="96" font-size="9" fill="#065f46" font-family="ui-monospace, monospace">GND plane (solid)</text>
+
+      <!-- return path — hugs signal (inside plane) -->
+      <line x1="244" y1="93" x2="56" y2="93" stroke="#059669" stroke-width="1.5" stroke-dasharray="4 3" />
+      <polygon points="60,89 54,93 60,97" fill="#059669" />
+
+      <!-- loop area highlight — very thin -->
+      <rect x="56" y="66" width="188" height="27" fill="#86efac" opacity="0.35" />
+      <text x="125" y="130" font-size="10" fill="#065f46" font-family="ui-monospace, monospace">tiny loop = tiny L</text>
+
+      <!-- vertical field lines indicating coupling -->
+      <g stroke="#34d399" stroke-width="0.7" opacity="0.7">
+        <line x1="90"  y1="68" x2="90"  y2="86" />
+        <line x1="130" y1="68" x2="130" y2="86" />
+        <line x1="170" y1="68" x2="170" y2="86" />
+        <line x1="210" y1="68" x2="210" y2="86" />
+      </g>
+    </svg>
+    <figcaption class="mt-2 text-xs text-slate-700">
+      좋은 예 — 신호 바로 아래 plane 에서 return 이 따라온다. 루프 면적 ≈ 트레이스 × 유전체 두께 (0.1 mm 급).
+    </figcaption>
+  </figure>
+</div>
