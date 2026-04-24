@@ -1,0 +1,60 @@
+---
+---
+<figure class="not-prose my-2 rounded-lg border border-slate-200 bg-white p-5">
+  <div class="mb-4">
+    <div class="font-mono text-[10px] tracking-widest text-slate-500 uppercase">Placement Matters</div>
+    <div class="mt-1 text-sm text-slate-600">같은 cap도 어디 놓느냐에 따라 효과가 10× 달라짐. 루프 면적이 인덕턴스를 결정.</div>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="rounded-lg border border-rose-200 bg-rose-50/30 p-4">
+      <div class="mb-2 font-mono text-[10px] tracking-widest text-rose-700">BAD — LONG LOOP</div>
+      <svg viewBox="0 0 360 200" class="w-full" role="img" aria-label="나쁜 배치: cap이 IC에서 멀리, 긴 루프 면적">
+        <rect x="0" y="0" width="360" height="200" fill="#fff7f7"/>
+        <!-- IC -->
+        <rect x="260" y="60" width="70" height="70" fill="#fde68a" stroke="#b45309" stroke-width="2" rx="4"/>
+        <text x="295" y="100" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#b45309">IC</text>
+        <text x="295" y="116" text-anchor="middle" font-family="ui-monospace" font-size="9" fill="#b45309">Vdd · GND</text>
+        <!-- cap placed far -->
+        <rect x="30" y="30" width="40" height="18" fill="#bae6fd" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="50" y="22" text-anchor="middle" font-family="ui-monospace" font-size="9" fill="#0284c7">100nF</text>
+        <!-- trace: Vdd -->
+        <path d="M 70 34 L 260 72" stroke="#f43f5e" stroke-width="2" fill="none"/>
+        <!-- trace: GND -->
+        <path d="M 30 50 L 30 170 L 330 170 L 330 130" stroke="#f43f5e" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+        <!-- loop shading -->
+        <path d="M 70 34 L 260 72 L 330 130 L 330 170 L 30 170 L 30 50 Z" fill="#f43f5e" fill-opacity="0.08" stroke="none"/>
+        <!-- annotation -->
+        <text x="180" y="195" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#9f1239">loop ≈ 큰 영역 · ESL ≈ 수 nH</text>
+      </svg>
+      <p class="mt-3 text-xs text-rose-900/80">
+        cap이 IC 전원 핀에서 수 cm 떨어져 있으면 리턴까지 돌아가는 루프 면적이 커져 인덕턴스 ↑. 고주파에선 이 cap이 무용지물.
+      </p>
+    </div>
+
+    <div class="rounded-lg border border-emerald-200 bg-emerald-50/30 p-4">
+      <div class="mb-2 font-mono text-[10px] tracking-widest text-emerald-700">GOOD — TIGHT LOOP</div>
+      <svg viewBox="0 0 360 200" class="w-full" role="img" aria-label="좋은 배치: cap이 IC 전원 핀 바로 옆, 짧은 루프">
+        <rect x="0" y="0" width="360" height="200" fill="#f7fefa"/>
+        <!-- IC -->
+        <rect x="150" y="60" width="110" height="80" fill="#fde68a" stroke="#b45309" stroke-width="2" rx="4"/>
+        <text x="205" y="95" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#b45309">IC</text>
+        <text x="205" y="112" text-anchor="middle" font-family="ui-monospace" font-size="9" fill="#b45309">Vdd · GND</text>
+        <!-- cap right next to IC -->
+        <rect x="268" y="90" width="30" height="14" fill="#bae6fd" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="283" y="86" text-anchor="middle" font-family="ui-monospace" font-size="8" fill="#0284c7">100nF</text>
+        <!-- short via to Vdd pin -->
+        <path d="M 268 97 L 260 97" stroke="#059669" stroke-width="2.5"/>
+        <!-- short GND return -->
+        <path d="M 298 104 L 310 104 L 310 130 L 260 130" stroke="#059669" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <!-- tiny loop shading -->
+        <path d="M 260 97 L 298 97 L 298 130 L 260 130 Z" fill="#059669" fill-opacity="0.10" stroke="none"/>
+        <text x="180" y="195" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#065f46">loop ≈ 작음 · ESL ≈ 0.5 nH</text>
+      </svg>
+      <p class="mt-3 text-xs text-emerald-900/80">
+        Cap과 IC의 Vdd/GND via가 같은 층에서 최단 거리. 루프 면적 최소화 → ESL 최소화 → 고주파까지 유효.
+      </p>
+    </div>
+  </div>
+  <p class="mt-4 text-xs text-slate-500">여기서 중요한 건 <b>cap 개수가 아니라 배치</b>. cap 네 개를 멀리 놓느니 한 개를 가까이 붙이는 게 낫다.</p>
+</figure>
