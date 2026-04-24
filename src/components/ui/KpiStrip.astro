@@ -1,0 +1,47 @@
+---
+import { capImpedance, parallelImpedance, magnitude, type Complex } from '../../lib/pdn/impedance';
+import { CAP_100NF, CAP_10UF, CAP_100UF_BULK } from '../../lib/pdn/presets';
+
+function vrmImpedance(f: number): Complex {
+  return { re: 0.02, im: 2 * Math.PI * f * 500e-9 };
+}
+
+// compute KPIs for the recommended preset
+const freqs: number[] = [];
+for (let e = 1; e <= 9; e += 0.03) freqs.push(Math.pow(10, e));
+const zs = freqs.map((f) => {
+  const zTotal = parallelImpedance([
+    capImpedance(CAP_100UF_BULK, f),
+    capImpedance(CAP_10UF, f),
+    parallelImpedance(Array(4).fill(capImpedance(CAP_100NF, f))),
+    vrmImpedance(f),
+  ]);
+  return magnitude(zTotal);
+});
+const peakZ = Math.max(...zs);
+const peakIdx = zs.indexOf(peakZ);
+const peakF = freqs[peakIdx];
+const capCount = 1 + 1 + 4; // bulk + mid + 4×hf
+
+function fmtHz(f: number) {
+  if (f >= 1e9) return (f/1e9).toFixed(1) + ' GHz';
+  if (f >= 1e6) return (f/1e6).toFixed(1) + ' MHz';
+  if (f >= 1e3) return (f/1e3).toFixed(1) + ' kHz';
+  return f.toFixed(0) + ' Hz';
+}
+const stats = [
+  { label: 'Peak |Z|',         value: (peakZ * 1000).toFixed(1) + ' mΩ', hint: '권장 조합 기준' },
+  { label: 'Peak Frequency',   value: fmtHz(peakF),                      hint: 'anti-resonance' },
+  { label: 'Target Impedance', value: '50 mΩ',                           hint: 'Z_target' },
+  { label: 'Recommended Caps', value: String(capCount),                  hint: '100μF + 10μF + 100nF×4' },
+];
+---
+<div class="my-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+  {stats.map((s) => (
+    <div class="rounded-lg border border-slate-200 bg-white p-4">
+      <div class="font-mono text-[10px] tracking-widest text-slate-500 uppercase">{s.label}</div>
+      <div class="mt-1.5 text-xl font-semibold text-slate-900 font-mono">{s.value}</div>
+      <div class="mt-1 text-[11px] text-slate-500">{s.hint}</div>
+    </div>
+  ))}
+</div>
