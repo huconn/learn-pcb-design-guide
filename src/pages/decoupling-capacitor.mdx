@@ -12,6 +12,10 @@ import FrequencyBandMap from '../components/concept/FrequencyBandMap.astro';
 import TimeDomainScope from '../components/sim/TimeDomainScope.svelte';
 import PdnImpedance from '../components/sim/PdnImpedance.svelte';
 import MeasurementGallery from '../components/verify/MeasurementGallery.astro';
+import SingleVsMultiple from '../components/compare/SingleVsMultiple.svelte';
+import HierarchicalDecoupling from '../components/concept/HierarchicalDecoupling.astro';
+import PlacementMatters from '../components/concept/PlacementMatters.astro';
+import DecouplingCalculator from '../components/sim/DecouplingCalculator.svelte';
 
 <TopicLayout topic={DECOUPLING_CAPACITOR}>
 
@@ -30,6 +34,30 @@ import MeasurementGallery from '../components/verify/MeasurementGallery.astro';
 <div class="mt-6">
   <Card id="time-domain" title="Time-Domain Ripple" subtitle="load step에 대한 Vdd 리플. 프리셋을 '0개 (나쁜 예)' → '권장 풀세트'로 바꿔보세요.">
     <TimeDomainScope client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="compare" title="Single vs Multiple Capacitors" subtitle="값 하나로는 한 주파수 대역만 커버. 여러 값을 섞어야 전 대역 안전.">
+    <SingleVsMultiple client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="hierarchical" title="Hierarchical Decoupling" subtitle="계층별로 담당 주파수가 다르다">
+    <HierarchicalDecoupling />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="placement" title="Placement Matters" subtitle="cap 개수보다 배치 · loop inductance 결정">
+    <PlacementMatters />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="calculator" title="Decoupling Calculator" subtitle="ΔV와 ΔI로 타겟 임피던스 계산 · 계층별 cap 추천">
+    <DecouplingCalculator client:visible />
   </Card>
 </div>
 
@@ -69,7 +97,9 @@ import MeasurementGallery from '../components/verify/MeasurementGallery.astro';
       { text: "다른 값 혼용 (100 nF + 10 μF + bulk)", anchor: "explore-impedance" },
       { text: "via/trace 최단거리 · 같은 층 우선", anchor: "concept" },
       { text: "Ground return 경로 확인", anchor: "concept" },
-      { text: "타겟 임피던스 아래 전 주파수에서 유지", anchor: "explore-impedance" }
+      { text: "타겟 임피던스 아래 전 주파수에서 유지", anchor: "explore-impedance" },
+      { text: "배치 — IC 핀 옆, 최단 루프 유지", anchor: "placement" },
+      { text: "ΔV/ΔI 로 타겟 임피던스 산정", anchor: "calculator" },
     ]} />
   </Card>
 </div>
