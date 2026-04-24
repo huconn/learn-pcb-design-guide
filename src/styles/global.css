@@ -4,22 +4,47 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-trace-primary: #0284c7;
-  --color-trace-warn: #db2777;
-  --color-trace-ok: #059669;
-  --color-scope-bg: #020617;
-  --color-scope-grid: #1e293b;
-  --color-scope-axis: #64748b;
+  /* Brand + interactive accents */
+  --color-brand: #4f46e5;        /* indigo-600 · primary accent (buttons, active nav, primary trace) */
+  --color-brand-soft: #eef2ff;   /* indigo-50 · subtle backgrounds */
+  --color-accent-ok: #059669;    /* emerald-600 · recommended / "ok" state / bulk cap trace */
+  --color-accent-warn: #f43f5e;  /* rose-500 · anti-resonance peaks / "bad" examples */
+
+  /* Chart palette — designed for contrast on white */
+  --color-trace-total: #4f46e5;  /* indigo-600 · Total/합성 */
+  --color-trace-bulk: #059669;   /* emerald-600 */
+  --color-trace-mid: #8b5cf6;    /* violet-500 */
+  --color-trace-hf: #0ea5e9;     /* sky-500 */
+  --color-trace-vrm: #94a3b8;    /* slate-400 · reference */
+  --color-trace-warn: #f43f5e;   /* rose-500 · markers */
+  --color-trace-ok: #10b981;     /* emerald-500 · measured */
+
+  /* Semantic tokens for chart canvas (mostly unused now since we're on light) */
+  --color-scope-bg: #f8fafc;     /* slate-50 · light chart card background */
+  --color-scope-grid: #e2e8f0;   /* slate-200 · grid lines */
+  --color-scope-axis: #64748b;   /* slate-500 · axis labels */
+
+  /* Fonts */
   --font-mono: ui-monospace, SFMono-Regular, monospace;
 }
 
 :root {
-  --trace-primary: #0284c7;
-  --trace-warn: #db2777;
-  --trace-ok: #059669;
-  --scope-bg: #020617;
-  --scope-grid: #1e293b;
+  --brand: #4f46e5;
+  --brand-soft: #eef2ff;
+  --accent-ok: #059669;
+  --accent-warn: #f43f5e;
+  --trace-total: #4f46e5;
+  --trace-bulk: #059669;
+  --trace-mid: #8b5cf6;
+  --trace-hf: #0ea5e9;
+  --trace-vrm: #94a3b8;
+  --trace-warn: #f43f5e;
+  --scope-bg: #f8fafc;
+  --scope-grid: #e2e8f0;
 }
 
-html { scroll-behavior: smooth; }
-body { font-family: system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif; }
+html { scroll-behavior: smooth; background: #ffffff; }
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  color: #0f172a;
+}
