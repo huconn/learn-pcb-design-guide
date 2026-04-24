@@ -152,8 +152,11 @@
     return () => ro.disconnect();
   });
 
-  $: if (chart) updateChart();
-  $: [onBulk, onMid, onHf, nMid, nHf, Ztarget, bulkESR, bulkESL, midESR, midESL, hfESR, hfESL];
+  $: if (chart && (onBulk || !onBulk) && (onMid || !onMid) && (onHf || !onHf)) {
+    // Reference every reactive input so Svelte tracks them all.
+    void [onBulk, onMid, onHf, nMid, nHf, Ztarget, bulkESR, bulkESL, midESR, midESL, hfESR, hfESL];
+    updateChart();
+  }
 
   onDestroy(() => chart?.dispose());
 

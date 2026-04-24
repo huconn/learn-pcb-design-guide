@@ -4,20 +4,21 @@ import TopicHero from '../components/ui/TopicHero.astro';
 import KpiStrip from '../components/ui/KpiStrip.astro';
 import TipBanner from '../components/ui/TipBanner.astro';
 import Card from '../components/ui/Card.astro';
-import ConceptDrawer from '../components/ui/ConceptDrawer.astro';
 import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
-import ReservoirAnalogy from '../components/concept/ReservoirAnalogy.astro';
-import CurrentWaveAnimation from '../components/concept/CurrentWaveAnimation.astro';
-import FrequencyBandMap from '../components/concept/FrequencyBandMap.astro';
 import TimeDomainScope from '../components/sim/TimeDomainScope.svelte';
 import PdnImpedance from '../components/sim/PdnImpedance.svelte';
 import MeasurementGallery from '../components/verify/MeasurementGallery.astro';
 import SingleVsMultiple from '../components/compare/SingleVsMultiple.svelte';
-import HierarchicalDecoupling from '../components/concept/HierarchicalDecoupling.astro';
-import PlacementMatters from '../components/concept/PlacementMatters.astro';
 import DecouplingCalculator from '../components/sim/DecouplingCalculator.svelte';
 
-<TopicLayout topic={DECOUPLING_CAPACITOR}>
+<TopicLayout topic={DECOUPLING_CAPACITOR} activeSubSlug="lab">
+
+<div class="mt-2 mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 flex items-center justify-between gap-4">
+  <div>
+    <b>처음이신가요?</b> — 먼저 <a href="/decoupling-capacitor/basics" class="underline decoration-amber-400 hover:decoration-amber-700 font-medium">기초편</a>에서 왜 cap 이 필요한지, 어떤 역할인지 개념부터 잡고 오세요.
+  </div>
+  <a href="/decoupling-capacitor/basics" class="shrink-0 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-[13px] font-medium text-amber-800 hover:bg-amber-100">기초편 →</a>
+</div>
 
 <TopicHero topic={DECOUPLING_CAPACITOR} />
 
@@ -44,18 +45,6 @@ import DecouplingCalculator from '../components/sim/DecouplingCalculator.svelte'
 </div>
 
 <div class="mt-6">
-  <Card id="hierarchical" title="Hierarchical Decoupling" subtitle="계층별로 담당 주파수가 다르다">
-    <HierarchicalDecoupling />
-  </Card>
-</div>
-
-<div class="mt-6">
-  <Card id="placement" title="Placement Matters" subtitle="cap 개수보다 배치 · loop inductance 결정">
-    <PlacementMatters />
-  </Card>
-</div>
-
-<div class="mt-6">
   <Card id="calculator" title="Decoupling Calculator" subtitle="ΔV와 ΔI로 타겟 임피던스 계산 · 계층별 cap 추천">
     <DecouplingCalculator client:visible />
   </Card>
@@ -72,33 +61,14 @@ import DecouplingCalculator from '../components/sim/DecouplingCalculator.svelte'
   </Card>
 </div>
 
-<ConceptDrawer>
-  <div>
-    <div class="font-mono text-[10px] tracking-widest text-slate-500 uppercase mb-2">저수지 비유</div>
-    <ReservoirAnalogy />
-    <p class="text-sm text-slate-600 mt-1">IC는 샤워기 · VRM은 먼 댐 · PCB 트레이스는 긴 파이프 · cap은 동네 물탱크. 수요가 튀는 순간 물탱크가 먼저 공급.</p>
-  </div>
-  <div>
-    <div class="font-mono text-[10px] tracking-widest text-slate-500 uppercase mb-2">전류 파동</div>
-    <CurrentWaveAnimation />
-    <p class="text-sm text-slate-600 mt-1">cap이 IC 수요에 먼저 응답 · VRM은 뒤따라옴.</p>
-  </div>
-  <div>
-    <div class="font-mono text-[10px] tracking-widest text-slate-500 uppercase mb-2">주파수 담당</div>
-    <FrequencyBandMap />
-    <p class="text-sm text-slate-600 mt-1">cap 값이 작을수록 더 높은 주파수를 담당 — 여러 값을 섞어야 전 대역 커버.</p>
-  </div>
-</ConceptDrawer>
-
 <div class="mt-6">
   <Card id="checklist" title="Design Checklist (TL;DR)" subtitle="실무 리뷰 체크리스트 · 각 항목은 관련 섹션으로 점프">
     <ChecklistBlock items={[
-      { text: "각 전원 핀마다 0.1 μF 하나 — IC 바로 옆", anchor: "concept" },
+      { text: "각 전원 핀마다 0.1 μF 하나 — IC 바로 옆", anchor: "explore-impedance" },
       { text: "다른 값 혼용 (100 nF + 10 μF + bulk)", anchor: "explore-impedance" },
-      { text: "via/trace 최단거리 · 같은 층 우선", anchor: "concept" },
-      { text: "Ground return 경로 확인", anchor: "concept" },
+      { text: "via/trace 최단거리 · 같은 층 우선", anchor: "compare" },
+      { text: "Ground return 경로 확인", anchor: "compare" },
       { text: "타겟 임피던스 아래 전 주파수에서 유지", anchor: "explore-impedance" },
-      { text: "배치 — IC 핀 옆, 최단 루프 유지", anchor: "placement" },
       { text: "ΔV/ΔI 로 타겟 임피던스 산정", anchor: "calculator" },
     ]} />
   </Card>
@@ -108,6 +78,7 @@ import DecouplingCalculator from '../components/sim/DecouplingCalculator.svelte'
   <Card id="further" title="더 깊이 / 다음 토픽">
     이 가이드의 시뮬레이션은 **교육용 직관 모델** 입니다. 수치는 ±30% 정도만 맞습니다. 실제 설계 검증은 SPICE 와 실측을 꼭 병행하세요.
 
+    - 개념 복습이 필요하면 [기초편](/decoupling-capacitor/basics)으로 돌아가세요.
     - 다음 토픽 (예정): PDN planning, Signal integrity, Ground bounce
     - 피드백/오류 신고: (repo link)
   </Card>

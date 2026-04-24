@@ -1,7 +1,7 @@
 ---
 import { CATEGORIES } from '../../lib/content/topics';
-interface Props { activeSlug?: string }
-const { activeSlug } = Astro.props;
+interface Props { activeSlug?: string; activeSubSlug?: string }
+const { activeSlug, activeSubSlug } = Astro.props;
 ---
 <aside class="hidden lg:flex fixed top-0 left-0 z-20 h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
   <div class="px-5 pt-6 pb-4 border-b border-slate-200">
@@ -29,14 +29,31 @@ const { activeSlug } = Astro.props;
                 </li>
               );
             }
+            const topHref = t.subpages && t.subpages.length ? t.subpages[0].href : `/${t.slug}`;
             return (
               <li>
-                <a href={`/${t.slug}`} class={baseClass + (active
+                <a href={topHref} class={baseClass + (active
                   ? ' bg-indigo-50 text-indigo-700 font-medium'
                   : ' text-slate-700 hover:bg-slate-100 hover:text-slate-900')}>
                   <span class="truncate">{t.title}</span>
                   {active && <span class="block w-1.5 h-1.5 rounded-full bg-indigo-600"></span>}
                 </a>
+                {active && t.subpages && (
+                  <ul class="mt-0.5 ml-3 border-l border-slate-200 space-y-0.5">
+                    {t.subpages.map((sp) => {
+                      const subActive = sp.slug === activeSubSlug;
+                      return (
+                        <li>
+                          <a href={sp.href} class={'block rounded-md pl-3 pr-3 py-1 text-[13px] ' + (subActive
+                            ? 'text-indigo-700 font-medium'
+                            : 'text-slate-500 hover:text-slate-900')}>
+                            {sp.label}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </li>
             );
           })}

@@ -3,8 +3,8 @@ import '../styles/global.css';
 import type { Topic } from '../lib/content/topics';
 import Sidebar from '../components/ui/Sidebar.astro';
 
-interface Props { topic: Topic }
-const { topic } = Astro.props;
+interface Props { topic: Topic; activeSubSlug?: string }
+const { topic, activeSubSlug } = Astro.props;
 ---
 <!doctype html>
 <html lang="ko">
@@ -15,7 +15,7 @@ const { topic } = Astro.props;
     <meta name="description" content={topic.subtitle} />
   </head>
   <body class="bg-white text-slate-900 antialiased">
-    <Sidebar activeSlug={topic.slug} />
+    <Sidebar activeSlug={topic.slug} activeSubSlug={activeSubSlug} />
     <div class="lg:pl-64">
       <main class="mx-auto w-full max-w-6xl px-5 sm:px-8 py-8">
         <slot />

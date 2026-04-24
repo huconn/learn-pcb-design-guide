@@ -1,3 +1,9 @@
+export type SubPage = {
+  slug: string;        // e.g. 'basics' (empty string for the topic root)
+  label: string;       // sidebar label, e.g. '기초'
+  href: string;        // absolute path
+};
+
 export type Topic = {
   slug: string;
   title: string;
@@ -6,6 +12,7 @@ export type Topic = {
   readingMinutes: number;
   level: '초급' | '초급~중급' | '중급' | '중급~고급';
   status: 'draft' | 'published' | 'coming-soon';
+  subpages?: SubPage[];
 };
 
 export type Category = {
@@ -23,6 +30,10 @@ export const DECOUPLING_CAPACITOR: Topic = {
   readingMinutes: 12,
   level: '초급~중급',
   status: 'published',
+  subpages: [
+    { slug: 'basics', label: '기초 · 개념',  href: '/decoupling-capacitor/basics' },
+    { slug: 'lab',    label: '실험실 · 시뮬', href: '/decoupling-capacitor' },
+  ],
 };
 
 export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR];

@@ -1,0 +1,173 @@
+import TopicLayout from '../../layouts/TopicLayout.astro';
+import { DECOUPLING_CAPACITOR } from '../../lib/content/topics';
+import Card from '../../components/ui/Card.astro';
+import TipBanner from '../../components/ui/TipBanner.astro';
+import ReservoirAnalogy from '../../components/concept/ReservoirAnalogy.astro';
+import CurrentWaveAnimation from '../../components/concept/CurrentWaveAnimation.astro';
+import FrequencyBandMap from '../../components/concept/FrequencyBandMap.astro';
+import HierarchicalDecoupling from '../../components/concept/HierarchicalDecoupling.astro';
+import PlacementMatters from '../../components/concept/PlacementMatters.astro';
+
+<TopicLayout topic={DECOUPLING_CAPACITOR} activeSubSlug="basics">
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{DECOUPLING_CAPACITOR.category} · 기초편</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    디커플링 커패시터
+    <span class="block mt-1 text-slate-500 text-xl font-normal">왜 필요한지, 어떻게 동작하는지</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    이 페이지는 <b>개념만</b> 다룹니다. 수식도 없고 시뮬레이션도 없습니다. 끝까지 읽으면 
+    <a href="/decoupling-capacitor" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">실험실</a>에서 직접 값을 조작해볼 수 있도록 준비됩니다.
+  </p>
+  <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 6분 읽기</span>
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">★ 초급</span>
+    <span class="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-700">그림 중심</span>
+  </div>
+</section>
+
+<TipBanner>
+  <b>읽는 순서</b> — 위에서 아래로 한 번 쭉 읽으세요. 섹션이 다음 섹션의 전제(前提)가 됩니다.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="why" title="1. 왜 커패시터가 필요한가?" subtitle="칩이 전류를 갑자기 원하는 순간, 전원이 흔들린다">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        디지털 칩(CPU·FPGA·MCU)은 클럭마다 내부에서 수많은 트랜지스터가 동시에 스위칭합니다. 
+        그 순간 <b>전류 수요가 수 ns 안에 수 A 뛰어오릅니다.</b>
+      </p>
+      <p>
+        전원 공급자(VRM, 보통 보드 한켠의 레귤레이터)는 칩에서 수 cm 떨어져 있고, 그 사이에는 
+        구리 트레이스가 만든 <b>기생 인덕턴스(ESL)</b> 가 있습니다. 인덕턴스는 전류가 갑자기 바뀌는 걸 <b>싫어합니다</b> — 
+        물리적으로 따라올 수 없어요.
+      </p>
+      <p>
+        → 결과: 칩 핀에서 본 전압(Vdd)이 순간적으로 <span class="text-rose-600 font-semibold">푹 꺼집니다(droop)</span>. 
+        그 전압 튐은 다른 칩의 로직 오동작, 리셋, 데이터 에러로 이어집니다.
+      </p>
+      <p>
+        디커플링 커패시터는 이 짧은 순간 동안 <b>칩 바로 옆에서 전류를 먼저 대신 공급</b>해주는 
+        "로컬 에너지 저장소" 입니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="reservoir" title="2. 저수지 비유" subtitle="물 수요가 튀면 동네 물탱크가 먼저 푼다">
+    <ReservoirAnalogy />
+    <div class="prose prose-slate max-w-none mt-3">
+      <ul>
+        <li><b>IC</b> — 샤워기 (순간 수요가 튐)</li>
+        <li><b>VRM</b> — 먼 댐 (공급 능력은 크지만 멀다)</li>
+        <li><b>PCB 트레이스</b> — 긴 파이프 (급한 흐름 변화에 저항)</li>
+        <li><b>디커플링 cap</b> — 동네 물탱크 (수요가 튀면 먼저 푼다)</li>
+      </ul>
+      <p>
+        댐이 아무리 커도 파이프가 길면 샤워기에서 물이 끊깁니다. 동네에 물탱크가 있으면 
+        순간 수요를 해결하고, 댐은 나중에 천천히 채워줍니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="wave" title="3. 누가 먼저 응답하는가" subtitle="전류 요구가 생겼을 때 시간별로 누가 공급하는지">
+    <CurrentWaveAnimation />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        IC가 전류를 원하면:
+      </p>
+      <ol>
+        <li><b>수 ns 이내</b> — 가장 가까운 <span class="text-sky-700 font-semibold">작은 cap (100 nF)</span> 이 먼저 공급</li>
+        <li><b>수십–수백 ns</b> — 조금 큰 <span class="text-violet-700 font-semibold">mid cap (10 μF)</span> 이 이어받음</li>
+        <li><b>수 μs 이상</b> — <span class="text-emerald-700 font-semibold">bulk cap (100 μF)</span> 과 VRM 이 장기적으로 공급</li>
+      </ol>
+      <p>
+        왜 작은 값이 먼저일까요? 다음 섹션에서.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="frequency" title="4. 주파수 담당이 다르다" subtitle="cap 값마다 자기만의 '빠른 영역' 이 있다">
+    <FrequencyBandMap />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        커패시터의 <b>용량(C)</b> 이 클수록 저장할 수 있는 에너지는 많지만, 
+        자체적인 <b>기생 인덕턴스(ESL)</b> 가 있어 <span class="text-rose-600 font-semibold">고주파에서는 오히려 느려집니다</span>. 
+        작은 cap 은 용량은 작지만 ESL 도 작아 수백 MHz 까지 민첩합니다.
+      </p>
+      <p>
+        그래서 한 값만 쓰면 특정 주파수 대역만 커버됩니다. <b>여러 값을 섞어야</b> 수 kHz ~ 수백 MHz 전 대역이 
+        "누군가"에 의해 담당됩니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="hierarchical" title="5. 계층 구조" subtitle="bulk → mid → high-frequency 세 층으로 쌓는다">
+    <HierarchicalDecoupling />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        실무에서는 보통 세 계층을 조합합니다:
+      </p>
+      <ul>
+        <li><b>Bulk (100 μF 전해/탄탈)</b> — VRM 근처, 저주파 (kHz 대) 담당, 보드 전체 에너지 비축</li>
+        <li><b>Mid (10 μF MLCC)</b> — 중간 주파수 (100 kHz – 수 MHz) 연결</li>
+        <li><b>HF (100 nF MLCC)</b> — 칩 핀 바로 옆, 수십–수백 MHz 의 빠른 수요 응답</li>
+      </ul>
+      <p>
+        각자가 자기 대역을 맡고, 겹치는 구간에서 <b>서로 이어받는(handoff)</b> 구조입니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="placement" title="6. 배치가 값보다 중요하다" subtitle="cap 을 멀리 두면 cap 이 아니다">
+    <PlacementMatters />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        아무리 좋은 cap 도 IC 핀에서 멀리 떨어져 있으면 <b>연결 트레이스의 인덕턴스(loop inductance)</b> 때문에 
+        고주파에서 쓸모없어집니다. 
+      </p>
+      <p>
+        "cap을 몇 개 썼느냐" 보다 "<b>cap 이 IC 핀에서 얼마나 가까우냐</b>", "<b>return path 까지의 루프가 얼마나 짧으냐</b>" 
+        가 훨씬 중요합니다. 같은 cap 이라도 배치에 따라 10배 차이가 납니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="tldr" title="핵심 요약 (TL;DR)">
+    <ul class="list-disc pl-5 space-y-1.5 text-slate-700 [&>li]:leading-relaxed">
+      <li>칩의 순간 전류 수요 때문에 전원이 흔들린다 → 로컬 저장소 필요</li>
+      <li>작은 cap 은 빠르고, 큰 cap 은 오래 간다 → 섞어야 전 대역 커버</li>
+      <li>cap 의 ESL 이 고주파 한계를 결정한다</li>
+      <li>배치가 핵심이다 — 멀리 두면 값이 무의미</li>
+      <li>실무 목표: "모든 주파수에서 PDN 임피던스를 <b>타겟 아래</b> 로 유지"</li>
+    </ul>
+  </Card>
+</div>
+
+<div class="mt-8 mb-12">
+  <a href="/decoupling-capacitor" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+    <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
+    <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실에서 직접 해보기</div>
+    <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+      이제 cap 개수, 값, ESR/ESL 을 직접 조작하면서 임피던스 곡선이 어떻게 변하는지, 
+      load step 에 대한 Vdd 리플이 어떻게 달라지는지 직접 관찰해보세요.
+    </p>
+    <div class="mt-3 inline-flex items-center gap-2 text-indigo-600 text-sm font-medium">
+      실험실로 이동 <span class="group-hover:translate-x-1 transition-transform">→</span>
+    </div>
+  </a>
+</div>
+
+</TopicLayout>
