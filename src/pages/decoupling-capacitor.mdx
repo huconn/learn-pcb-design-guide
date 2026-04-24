@@ -51,12 +51,12 @@ import DecouplingCalculator from '../components/sim/DecouplingCalculator.svelte'
 </div>
 
 <div class="mt-6">
-  <Card id="verify" title="Measurement Gallery" subtitle="실측 스코프 캡처 · 0/1/4/4+bulk 비교 (실측 이미지 준비중)">
+  <Card id="verify" title="Measurement Gallery" subtitle="스코프 캡처 · 0/1/4/4+bulk 비교 (교육용 모사 파형)">
     <MeasurementGallery shots={[
-      { key: 'none', label: '0 caps', caption: 'cap 없음 — 기준' },
-      { key: 'one',  label: '1 cap',  caption: '100 nF × 1' },
-      { key: 'four', label: '4 caps', caption: '100 nF × 4' },
-      { key: 'full', label: '4 + bulk', caption: '100 nF × 4 + 10 μF + 100 μF bulk' },
+      { key: 'none', label: '0 caps',    caption: 'cap 없음 — 기준',             src: '/verify/vdd-0caps.png', setup: 'Iload step 0→1A, 1.0V rail', vpp: '580 mV' },
+      { key: 'one',  label: '1 cap',     caption: '100 nF × 1',                 src: '/verify/vdd-1cap.png',  setup: 'Iload step 0→1A, 1.0V rail', vpp: '290 mV' },
+      { key: 'four', label: '4 caps',    caption: '100 nF × 4',                 src: '/verify/vdd-4caps.png', setup: 'Iload step 0→1A, 1.0V rail', vpp: '95 mV'  },
+      { key: 'full', label: '4 + bulk',  caption: '100 nF × 4 + 10 μF + 100 μF bulk', src: '/verify/vdd-full.png', setup: 'Iload step 0→1A, 1.0V rail', vpp: '22 mV' },
     ]} />
   </Card>
 </div>

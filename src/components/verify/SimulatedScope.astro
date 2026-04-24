@@ -1,0 +1,119 @@
+---
+import { simulateTimeDomain } from '../../lib/pdn/timeDomain';
+
+interface Props {
+  Ctotal: number;       // F
+  ESRtotal?: number;    // Ω
+  label?: string;
+  divTime?: number;     // seconds per division
+  divVolt?: number;     // volts per division
+}
+const {
+  Ctotal,
+  ESRtotal = 0.01,
+  label = 'CH1 Vdd',
+  divTime = 300e-9,
+  divVolt = 0.05,
+} = Astro.props;
+
+const Vtarget = 1.0;
+const loadStart = 500e-9;
+const loadEnd = 2.5e-6;
+const Ipeak = 1.0;
+const loadCurrent = (t: number) => (t >= loadStart && t <= loadEnd) ? Ipeak : 0;
+
+const tMax = 3e-6;
+const res = simulateTimeDomain({
+  Vtarget,
+  Rvrm: 0.02,
+  Lvrm: 500e-9,
+  Ctotal,
+  ESRtotal,
+  loadCurrent,
+  dt: 1e-9,
+  tMax,
+});
+
+let minV = Infinity, maxV = -Infinity;
+for (let i = 0; i < res.V.length; i++) {
+  if (res.V[i] < minV) minV = res.V[i];
+  if (res.V[i] > maxV) maxV = res.V[i];
+}
+const vpp = maxV - minV;
+const droop = Vtarget - minV;
+
+// SVG canvas
+const W = 400, H = 240;
+const xDiv = W / 10;
+const yDiv = H / 8;
+const yCenter = H / 2;
+
+const xScale = (t: number) => (t / tMax) * W;
+const yScale = (v: number) => yCenter - ((v - Vtarget) / divVolt) * yDiv;
+
+// Build path (subsample for SVG size)
+const stride = 3;
+let path = '';
+for (let i = 0; i < res.t.length; i += stride) {
+  const x = xScale(res.t[i]);
+  let y = yScale(res.V[i]);
+  if (y < 0) y = 0;
+  if (y > H) y = H;
+  path += (i === 0 ? 'M' : 'L') + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+}
+
+// Second trace: Iload as faint overlay (mapped so 1A peak ≈ 2 divs at top)
+const iLoadScale = (I: number) => (H - 24) - (I / Ipeak) * (yDiv * 1.5);
+let iPath = '';
+for (let i = 0; i < res.t.length; i += stride) {
+  const x = xScale(res.t[i]);
+  const y = iLoadScale(res.Iload[i]);
+  iPath += (i === 0 ? 'M' : 'L') + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+}
+
+const fmtTime = (s: number) => s >= 1e-6 ? `${(s * 1e6).toFixed(0)}μs` : `${(s * 1e9).toFixed(0)}ns`;
+const fmtVolt = (v: number) => v >= 1 ? `${v.toFixed(1)}V` : `${(v * 1000).toFixed(0)}mV`;
+---
+
+<svg viewBox={`0 0 ${W} ${H}`} class="w-full h-full block" preserveAspectRatio="none" role="img" aria-label={`모사 스코프 — ${label}, Vpp ${fmtVolt(vpp)}`}>
+  <rect width={W} height={H} fill="#0a0e1a" />
+
+  <g stroke="#1e3a3a" stroke-width="0.5" opacity="0.85">
+    {Array.from({ length: 11 }).map((_, i) => (
+      <line x1={i * xDiv} y1={0} x2={i * xDiv} y2={H} />
+    ))}
+    {Array.from({ length: 9 }).map((_, i) => (
+      <line x1={0} y1={i * yDiv} x2={W} y2={i * yDiv} />
+    ))}
+  </g>
+
+  <g stroke="#2c5a5a" stroke-width="0.9">
+    <line x1={W / 2} y1={0} x2={W / 2} y2={H} />
+    <line x1={0} y1={yCenter} x2={W} y2={yCenter} />
+  </g>
+
+  <g stroke="#2c5a5a" stroke-width="0.6">
+    {Array.from({ length: 50 }).map((_, i) => (
+      <line x1={(i + 1) * (W / 50)} y1={yCenter - 2} x2={(i + 1) * (W / 50)} y2={yCenter + 2} />
+    ))}
+  </g>
+
+  <path d={iPath} fill="none" stroke="#eab308" stroke-width="1" opacity="0.55" />
+
+  <path d={path} fill="none" stroke="#22d3a5" stroke-width="1.6" />
+
+  <line x1={xScale(loadStart)} y1={0} x2={xScale(loadStart)} y2={H} stroke="#f43f5e" stroke-width="0.6" stroke-dasharray="2 3" opacity="0.6" />
+
+  <g font-family="ui-monospace, SFMono-Regular, monospace" font-size="9" fill="#94a3b8">
+    <text x="6" y="12">{label}</text>
+    <text x="6" y="24" fill="#22d3a5">{fmtVolt(divVolt)}/div</text>
+    <text x={W - 75} y="12">{fmtTime(divTime)}/div</text>
+    <text x={W - 75} y="24" fill="#eab308">Iload 500mA/div</text>
+    <text x="6" y={H - 8} fill="#22d3a5">Vpp = {fmtVolt(vpp)}</text>
+    <text x={W / 2 + 8} y={H - 8} fill="#f43f5e">droop = {fmtVolt(droop)}</text>
+  </g>
+
+  <g stroke="#22d3a5" stroke-width="0.8" fill="none">
+    <polyline points={`0,8 4,8 4,4 8,4 8,8 12,8`} transform={`translate(${W - 30}, ${yScale(Vtarget) - 4})`} opacity="0.0" />
+  </g>
+</svg>
