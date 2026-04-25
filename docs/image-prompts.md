@@ -12,6 +12,15 @@
 - 사이트 톤: 흰 배경 + 명확한 라벨 + 모노스페이스 텍스트 라벨.
 - 필요한 경우만 영문 라벨, 한글 텍스트는 이미지에 넣지 마세요 (사이트 캡션이 별도).
 
+### 첫 결과가 안 좋을 때 빠른 진단
+
+이전 시도에서 얻은 교훈:
+
+1. **"PCB 사진"** 으로 요청하면 보드가 텅 빈 그림이 나오기 쉬움 → **"PCB CAD viewer 스타일 (Altium 3D / KiCad 3D 처럼)"** 으로 톤을 명시. 그리고 `GND copper pour fills the entire visible area` + `many GND vias scattered (~30+ visible)` 를 명시적으로 적기.
+2. **교육적 포인트(핫 루프, 큰 면적, 결합 등)는 그림에 직접 오버레이로 그리도록 요청** — `BAD` 라벨 텍스트로 끝나면 안 됨. **빨간 점선 + 반투명 채움** 패턴이 잘 작동.
+3. **"오실로스코프 사진"** 대신 **"screen export"** 라고 명시 — bezel/desk/window 들어가는 걸 막음.
+4. 이미지 안 텍스트는 영어로만 (한글은 폰트 렌더링이 깨질 수 있음). 한글 캡션은 사이트 MDX 에서 처리.
+
 ---
 
 ## 1. ESD — IEC 61000-4-2 waveform on oscilloscope
@@ -139,20 +148,34 @@ MDX 에 추가:
 
 ### Prompt
 
-> Photorealistic top-down view of a green PCB section (FR4) showing a 25 mm × 12 mm region with **a differential pair of traces** routed between two IC pads on the left and a connector on the right.
+> Top-down view of a PCB section, rendered like a high-quality professional PCB CAD viewer (Altium 3D viewer / KiCad 3D top-down). NOT a flat photograph.
 >
-> - The two parallel traces (gold copper, ~7 mil wide, ~7 mil edge-to-edge gap) run side-by-side from left to right.
-> - In the **middle of one of the two traces** (the shorter one), there is a serpentine (sawtooth-like) length compensation section with **3 tight back-and-forth loops** each ~2 mm wide. The other trace runs straight through this region. After the serpentine, both traces continue straight together to the right edge.
-> - White silkscreen labels on the board: `TX+`, `TX-` near the left pads.
-> - Solder mask green, classic FR4. Crisp focus. No annotations on the image, no watermark, no rulers.
+> Board:
+> - Visible region 30 mm × 17 mm of green FR4 (matte deep green #0d4d2a)
+> - **GND copper pour fills the entire visible area** except where signal traces and pads sit, with thin clearance gaps visible around all routing
+> - **Many small GND vias** scattered evenly across the GND pour (gold filled circles, ~0.4 mm, with darker plated rings) — at least 60–80 vias visible total to give a real-board density. Vias are arranged in a loose grid pattern at ~2 mm spacing.
+>
+> Differential pair routing:
+> - Two parallel gold microstrip traces (matte gold #d4a04c, each ~7 mil wide with a ~7 mil edge-to-edge gap between them) running horizontally from the left edge to the right edge.
+> - On the **left edge**: two square IC-style pads labeled `TX+` (top) and `TX-` (bottom) in white silkscreen.
+> - On the **right edge**: two pads, simply labeled (`TX+ out` and `TX- out`) in small silkscreen.
+> - **Length compensation serpentine**: ONLY on the **upper trace (TX+)**, in the middle third of the routing. Three or four tight rectangular zig-zags each about 2 mm × 1 mm, shaped like a square wave with sharp 90° corners. The lower trace (TX-) runs straight through the same region. After the serpentine the two traces become parallel again until the right edge.
+> - The serpentine zig-zags maintain the same trace width as the rest of the line.
+>
+> **Highlight overlay (the educational element)**:
+> - Subtle translucent yellow band (≈15% opacity) following the serpentine region, ~6 mm wide, drawn behind the traces.
+> - Small white sans-serif text overlay below the serpentine: `Δlength compensation`
+> - Two thin orange arrows above the pair (one near left, one near right) pointing in the propagation direction (left → right) labeled `signal →` in tiny white text.
+>
+> Image is sharp, fully top-down (orthographic), evenly lit, no shadows, no motion blur. No watermark, no rulers, no rendered measurement scale bars (we'll add captions in the page).
 
 ### After generating
 
 ```mdx
-<figure class="not-prose my-4">
-  <img src="/hsi/length-match-serpentine.png" alt="differential pair length matching" class="rounded-lg border border-slate-200" />
-  <figcaption class="mt-2 text-xs text-slate-600">
-    페어 안 길이 매칭(intra-pair) 을 위한 사형(serpentine) — 두 트레이스 끝의 도착 시각을 맞추기 위해 한쪽만 늘림. <b>중간에서 처리</b> 하는 게 끝단 처리보다 안정.
+<figure class="not-prose my-4 rounded-lg border border-slate-200 overflow-hidden">
+  <img src="/hsi/length-match-serpentine.png" alt="differential pair length matching serpentine" class="block w-full" loading="lazy" />
+  <figcaption class="px-4 py-3 text-sm text-slate-700 bg-white leading-relaxed">
+    페어 안 길이 매칭(intra-pair) 을 위한 사형(serpentine) — 두 트레이스 끝의 도착 시각을 맞추기 위해 짧은 쪽 트레이스만 늘립니다. <b>중간에서 처리</b> 하는 게 끝단 처리보다 임피던스 변동이 적어 안정. USB 3 / DDR / HDMI 모두 동일한 패턴.
   </figcaption>
 </figure>
 ```
@@ -209,50 +232,96 @@ MDX 에 추가:
 
 ### Prompt
 
-> Vector Network Analyzer (VNA) impedance magnitude plot, screen-only export, NOT a photo of a bezel.
+> Clean instrument screen export of a Vector Network Analyzer (VNA) impedance magnitude plot. Screen-only export (the rectangle of plot area + axes + labels). NOT a photo of a bezel, NOT inside a window frame, NOT on a wood desk, NOT with any analyzer model name visible.
 >
-> - Background: white (#ffffff). Light slate gridlines (#e2e8f0).
-> - Axes: log-log. X-axis labeled `Frequency (Hz)` from 1 MHz to 10 GHz. Y-axis labeled `|Z| (Ω)` from 1 mΩ to 10 Ω. Dark slate axis labels (#0f172a) in sans-serif.
-> - One main trace in indigo (#4f46e5), ~2 px stroke. The trace starts low (~5 mΩ) at 1 MHz, gently rises, then **shows two sharp resonance peaks** at approximately 500 MHz (peak ~2 Ω) and 1.5 GHz (peak ~1 Ω), with deep notches between, then drops back. After 2 GHz the curve oscillates more (multiple cavity modes).
-> - Horizontal dashed green line at 50 mΩ labeled `Z_target` in green.
-> - Red dashed vertical line at 500 MHz labeled `f_res` in red.
-> - Small text annotation near the first peak: `cavity mode (10 cm × 15 cm board)`.
-> - No tooltip box, no markers menu, no scope/VNA branding.
+> Canvas:
+> - Background: white (#ffffff)
+> - Plot area inset 60 px from edges, surrounded by axis label region
+> - Light slate gridlines (#e2e8f0) — both major and minor for log axes
+>
+> Axes (log-log):
+> - X-axis: `Frequency (Hz)` — labeled at 1 MHz, 10 MHz, 100 MHz, 1 GHz, 10 GHz with major decade gridlines
+> - Y-axis: `|Z| (Ω)` — labeled at 1 mΩ, 10 mΩ, 100 mΩ, 1 Ω, 10 Ω with major decade gridlines
+> - Axis label text in dark slate (#0f172a), sans-serif
+> - Small tick marks at minor decade subdivisions (2, 3, 5)
+>
+> Trace (THE MAIN ELEMENT):
+> - One curve in indigo (#4f46e5), ~2 px stroke, smooth
+> - Below 100 MHz: trace sits flat near 5–10 mΩ (well under target)
+> - 100–300 MHz: trace gently rises to ~30 mΩ
+> - **First sharp resonance peak at ~500 MHz reaching ~2 Ω** (a tall narrow spike — clearly the dominant feature)
+> - Notch back down to ~50 mΩ between 600–800 MHz
+> - **Second smaller peak at ~1.5 GHz reaching ~600 mΩ**
+> - Above 2 GHz: trace becomes irregular with multiple smaller peaks/notches (cavity modes)
+> - Final trace position around 200–500 mΩ at 10 GHz
+>
+> Overlays (educational):
+> - **Horizontal dashed green line (#10b981) at 50 mΩ across the entire plot** labeled `Z_target = 50 mΩ` in green text on the right side
+> - **Red dashed vertical line at the first peak (~500 MHz)** labeled `f_res ≈ c / (2L√εr)` in small red text near the top of the line
+> - Small annotation text near the peak: `cavity mode · 10 cm × 15 cm board · εr = 4.2` in slate gray
+> - Small annotation in the high-frequency region: `multiple modes`
+>
+> Title at top-left: `PDN Impedance · Vcc plane to GND plane` (small sans-serif)
+> No watermark. No tooltip box. No marker menu. No analyzer brand. No frame around the image — it should look like a direct PNG export from analysis software.
 
 ### After generating
 
 ```mdx
-<figure class="not-prose my-4">
-  <img src="/pdn/plane-resonance.png" alt="PDN plane resonance Z(f)" class="rounded-lg border border-slate-200" />
-  <figcaption class="mt-2 text-xs text-slate-600">
-    실제 보드의 PDN 임피던스 측정 예 — 500 MHz 부근의 첫 번째 cavity resonance 가 Z_target 을 위로 뚫고 나가는 모습.
+<figure class="not-prose my-4 rounded-lg border border-slate-200 overflow-hidden">
+  <img src="/pdn/plane-resonance.png" alt="PDN Vcc/GND plane resonance impedance" class="block w-full" loading="lazy" />
+  <figcaption class="px-4 py-3 text-sm text-slate-700 bg-white leading-relaxed">
+    실측에 가까운 PDN 임피던스 — 500 MHz 부근의 첫 번째 <b>cavity resonance</b> 가 Z_target (50 mΩ) 을 한참 뚫고 올라가는 게 보입니다. plane 가장자리에 stitching via 와 damping cap 을 분포시켜 Q 를 낮추는 게 이 영역을 잠재우는 표준 처방.
   </figcaption>
 </figure>
 ```
 
 ---
 
-## 6. (선택) Stack-up cross-section — multilayer PCB cutaway
+## 6. Stack-up cross-section — multilayer PCB cutaway
 
-**Goes to**: `/trace-geometry/basics` 또는 `/pdn-planning/basics`
+**Goes to**: `/trace-geometry/basics`, `/pdn-planning/basics`, `/high-speed-interfaces` 에서 모두 재사용
 **Save as**: `public/stackup/6layer-cutaway.png`
-**Aspect**: 4:3 · 1200 × 900
+**Aspect**: 16:9 · 1200 × 675 (옆으로 긴 단면이라 16:9 더 적합)
 
 ### Prompt
 
-> Photorealistic close-up cross-section of a 6-layer PCB cut and polished, showing the layer stack from above. Macro photography, ~50 mm width visible.
+> Cross-section illustration of a 6-layer PCB cut and viewed from the side. Render as a clean professional engineering diagram — somewhere between a textbook illustration and a high-quality 3D rendering. NOT a photograph of a real cut sample (real polished sections are dark and hard to read).
 >
-> - 6 alternating copper layers (gold/copper color) separated by 5 dielectric prepreg/core layers (translucent yellow-tan).
-> - Layer 1 (top, copper): a few signal traces visible as cross-section rectangles (small gold squares).
-> - Layer 2 (full plane): solid GND plane visible as a continuous gold strip across.
-> - Layer 3 (signal): one signal trace visible.
-> - Layer 4 (Vcc plane): solid copper.
-> - Layer 5 (GND plane): solid copper.
-> - Layer 6 (bottom, signal): a few traces.
-> - One vertical via shown going through all layers (gold cylinder), plated barrel.
-> - Solder mask green on top and bottom outer surfaces.
-> - White ruler at the top edge showing 0–2 mm scale.
-> - No annotations, no labels on the image (we'll add them via overlay in the page).
+> Composition:
+> - View horizontal, showing 30 mm of board width × full board thickness (~1.6 mm tall, exaggerated to fit aspect)
+> - Camera looking straight at the cut face (orthographic)
+> - White (#ffffff) background outside the board
+>
+> Stack from top to bottom (label each on the LEFT side with thin lines connecting layer to label):
+> - Solder mask, top — thin green band (#0d4d2a), ~25 μm
+> - **L1 — top signal**: gold copper layer with 3 short trace cross-sections visible (small gold rectangles spaced apart). Label: `L1 — Top signal` in dark slate sans-serif
+> - Prepreg (dielectric) — translucent amber/tan band (#fef3c7) ~75 μm tall
+> - **L2 — GND plane**: solid continuous gold strip across the entire width. Label: `L2 — GND plane (solid)` in green-tinted text
+> - Core dielectric — slightly thicker amber band ~150 μm
+> - **L3 — inner signal**: gold layer with 2 trace cross-sections. Label: `L3 — Inner signal`
+> - Prepreg — amber band ~100 μm
+> - **L4 — Vcc plane**: solid gold strip. Label: `L4 — Vcc plane (3.3 V)` in orange-tinted text
+> - Core — amber band ~150 μm
+> - **L5 — GND plane**: solid gold strip. Label: `L5 — GND plane (solid)` in green-tinted text
+> - Prepreg — amber band ~75 μm
+> - **L6 — bottom signal**: gold layer with 3 trace cross-sections. Label: `L6 — Bottom signal`
+> - Solder mask, bottom — thin green band ~25 μm
+>
+> Vertical features:
+> - One **through-hole via** drawn at ~30% from the left, going from L1 to L6: a vertical gold cylinder cross-section (with darker plated barrel walls) connecting all copper layers. Tiny gold pads at L1 and L6 ends.
+> - One **blind via** at ~75% from the left, only spanning L1 to L2 (top to GND only): a smaller gold structure.
+>
+> Annotations on the RIGHT side of the diagram (in dark slate):
+> - Bracket spanning L1↔L2 with label `H = 75 μm = 3 mil` (the dielectric height between top signal and GND)
+> - Bracket spanning the entire L1↔L6 stack with label `Total: 1.6 mm`
+> - Small text near a top trace: `W = 0.18 mm` (width of one of the L1 traces)
+>
+> Style:
+> - Clean engineering illustration, not a 3D photograph
+> - Subtle drop shadows on each layer for depth
+> - All text in slate dark gray (#0f172a) sans-serif
+> - Image is sharp, vector-quality look
+> - No watermark, no rulers other than the labeled ones
 
 ### After generating
 
