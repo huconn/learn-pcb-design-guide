@@ -42,6 +42,13 @@ import EsdLayoutGood from '../components/concept/EsdLayoutGood.astro';
         칩 자체의 HBM ±2 kV 만으로는 부족합니다 — 외부에 ESD 다이오드 추가가 필수.
       </p>
     </div>
+
+    <figure class="not-prose mt-4 rounded-lg border border-slate-200 bg-white overflow-hidden">
+      <img src="/esd/iec-waveform.png" alt="IEC 61000-4-2 표준 ESD 펄스 — 30 A peak, 0.8 ns rise time" class="block w-full" loading="lazy" />
+      <figcaption class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
+        IEC 61000-4-2 의 표준 ESD 펄스 — 약 30 A 피크에 0.8 ns 라는 매우 빠른 rise time. 이 di/dt 가 트레이스 인덕턴스(L)를 만나면 <span class="font-mono text-rose-700">V = L · di/dt</span> 만큼의 전압이 IC 핀에 도달합니다. 트레이스 5 nH 만 돼도 <span class="font-mono">5e-9 × (30 / 0.8e-9) ≈ 188 V</span> — 그래서 TVS 가 <b>커넥터 옆 1 cm 이내</b> 여야 의미가 있습니다.
+      </figcaption>
+    </figure>
   </Card>
 </div>
 

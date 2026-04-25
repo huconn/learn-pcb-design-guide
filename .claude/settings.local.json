@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /Users/dkkang/dev/hardware-pcb-design-guide/public/esd)",
+      "Bash(cp /Users/dkkang/.claude/image-cache/26032bdf-5f04-4f6f-bbae-ff820fef9c90/2.png /Users/dkkang/dev/hardware-pcb-design-guide/public/esd/iec-waveform.png)"
+    ]
+  }
+}
