@@ -118,6 +118,13 @@ import TipBanner from '../../components/ui/TipBanner.astro';
         대처법 — plane 가장자리에 <b>다수의 stitching via</b> 와 <b>damping cap</b> 으로 Q 낮추기.
       </p>
     </div>
+
+    <figure class="not-prose mt-4 rounded-lg border border-slate-200 bg-white overflow-hidden">
+      <img src="/pdn/plane-resonance.png" alt="PDN Vcc/GND plane impedance — first cavity resonance breaks through Z_target" class="block w-full" loading="lazy" />
+      <figcaption class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
+        Vcc / GND plane 사이의 PDN 임피던스 — 100 MHz 까지는 plane cap 덕분에 깨끗하지만, 약 <b>500 MHz 의 첫 cavity resonance</b> 에서 임피던스가 <b>2 Ω</b> 까지 치솟아 Z_target (50 mΩ) 을 한참 위로 뚫고 올라갑니다. 이 영역은 디커플링 cap 으로 잡을 수 없고, plane 가장자리에 stitching via 와 damping cap 을 분포시켜 Q 를 낮추는 게 표준 처방.
+      </figcaption>
+    </figure>
   </Card>
 </div>
 
