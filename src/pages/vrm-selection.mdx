@@ -32,8 +32,29 @@ import BuckHotLoop from '../components/concept/BuckHotLoop.astro';
 </Card>
 
 <div class="mt-6">
-  <Card id="hot-loop" title="② 핫 루프 — Cin 위치의 차이" subtitle="가장 중요한 레이아웃 룰">
-    <BuckHotLoop />
+  <Card id="hot-loop" title="② 핫 루프 — Cin 위치의 차이" subtitle="가장 중요한 레이아웃 룰 · 빨간 점선 = 매 사이클 흐르는 commutation loop">
+    <div class="not-prose space-y-4">
+      <figure class="rounded-lg border border-rose-200 overflow-hidden">
+        <img src="/buck/buck-bad.png" alt="BAD buck layout — Cin far from IC, large hot loop" class="block w-full" loading="lazy" />
+        <figcaption class="px-4 py-3 text-sm bg-rose-50 text-rose-900 leading-relaxed">
+          <b>BAD</b> — Cin 이 IC 에서 18 mm 떨어져 있어 매 스위칭 사이클마다 흐르는 commutation 전류가 큰 루프를 만듭니다. 루프 인덕턴스 ≈ <span class="font-mono">1 nH/mm × 35 mm = 35 nH</span>. SW 노드 ringing, 출력 ripple, EMI 모두 폭증.
+        </figcaption>
+      </figure>
+      <figure class="rounded-lg border border-emerald-200 overflow-hidden">
+        <img src="/buck/buck-good.png" alt="GOOD buck layout — Cin touching IC pin, tiny hot loop" class="block w-full" loading="lazy" />
+        <figcaption class="px-4 py-3 text-sm bg-emerald-50 text-emerald-900 leading-relaxed">
+          <b>GOOD</b> — Cin 이 U1 의 V_in 핀 옆 1 mm 안. 핫 루프 ≈ 4 mm → 인덕턴스 ≈ <span class="font-mono">4 nH</span> 수준. SW 노드 깨끗, EMI 시험 통과 가능. 보드 다른 변경 없이 <b>이 위치 차이만으로</b> 출력 노이즈 한 자릿수 차이.
+        </figcaption>
+      </figure>
+      <details class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+        <summary class="cursor-pointer select-none text-sm text-slate-700 hover:text-slate-900">
+          <span class="font-mono text-[10px] tracking-widest text-slate-500 uppercase">참고</span> 추상 다이어그램으로 보기
+        </summary>
+        <div class="mt-3">
+          <BuckHotLoop />
+        </div>
+      </details>
+    </div>
   </Card>
 </div>
 

@@ -59,7 +59,14 @@ import BuckHotLoop from '../../components/concept/BuckHotLoop.astro';
 
 <div class="mt-6">
   <Card id="hot-loop" title="3. Buck 의 핫 루프 — 가장 중요한 레이아웃 룰">
-    <BuckHotLoop />
+    <div class="not-prose space-y-3 mb-3">
+      <figure class="rounded-lg border border-slate-200 overflow-hidden">
+        <img src="/buck/buck-bad.png" alt="BAD buck layout" class="block w-full" loading="lazy" />
+      </figure>
+      <figure class="rounded-lg border border-slate-200 overflow-hidden">
+        <img src="/buck/buck-good.png" alt="GOOD buck layout" class="block w-full" loading="lazy" />
+      </figure>
+    </div>
     <div class="prose prose-slate max-w-none mt-3">
       <p>
         Buck 컨버터는 매 스위칭 사이클마다 <b>입력 캡(Cin) → 하이사이드 FET → SW 노드 → 로우사이드 FET (또는 다이오드) → GND → 다시 Cin</b> 의 루프로 큰 di/dt 가 흐릅니다. 이 루프를 "<b>핫 루프 (hot loop)</b>" 또는 commutation loop 이라고 합니다.

@@ -56,24 +56,53 @@ MDX 에 추가:
 **Save as**: `public/buck/buck-bad.png` 와 `public/buck/buck-good.png`
 **Aspect**: 4:3 · 1200 × 900 (각각)
 
-> **두 이미지를 각각 따로 생성**하되 **같은 스타일** 로 유지하세요.
+> **두 이미지를 각각 따로 생성**하되 **같은 스타일** 로 유지하세요. PCB CAD 뷰 + 핫 루프가 빨간 오버레이로 표시되는 형식.
 
 ### Prompt — bad layout
 
-> Photorealistic top-down macro photo of a green PCB section (FR4) lit evenly. The view shows a 50 mm × 50 mm region centered on a small TQFN-style buck converter IC (about 4 × 4 mm, black with silver pads).
+> Top-down view of a PCB section, rendered like a high-quality professional PCB CAD viewer (think Altium 3D viewer / KiCad 3D top-down). NOT a flat photograph, NOT a schematic, NOT a clean studio shot. The look should resemble a 3D-rendered preview of an actual board.
 >
-> - Around the IC: a 0805 ceramic input capacitor (Cin) is placed about **15 mm away** from the IC's V_in pins (clearly far). Visible copper trace connects the cap pad to the IC.
-> - To the right of the IC: a small SMD inductor (about 5 × 5 × 3 mm, dark blue body), then a 0805 output capacitor 5 mm to the right of the inductor.
-> - Solder mask green, white silkscreen reference designators (`U1`, `C1`, `L1`, `C2`).
-> - Visible thicker copper traces shown as gold/copper color where solder mask is absent (impedance-style stitched look).
-> - Bottom-right corner annotation in white text overlay: `BAD — Cin 15 mm from IC`
-> - No components other than these. No surrounding board content. Crisp focus, slight reflective sheen. No watermark, no measurement scale bars.
+> Board:
+> - 50 mm × 50 mm visible region of green FR4 (matte solder mask, deep green #0d4d2a)
+> - **Most of the visible area is covered by a copper GND pour** — shown as a subtly visible darker green/copper-tinted zone with thin clearance gaps around traces and pads. The pour is everywhere except where traces, pads, and component footprints sit.
+> - Many small **GND vias** scattered across the pour (filled gold dots, ~0.5 mm, with a darker plated ring) — at least 30 vias visible total to give a real-board density
+>
+> Components (all top-side, oriented for clear viewing):
+> - **U1** at center: QFN-16 buck IC, 4mm × 4mm, matte black body, with 16 silver leads visible on the perimeter and a center exposed thermal pad. The thermal pad has 5 GND vias drilled into it (visible as small dots inside).
+> - **C1** (input ceramic cap, 0805 size): placed **far to the LEFT of U1, about 18 mm away**. Light tan body, two silver terminations.
+> - **L1** (shielded SMD inductor, ~5×5×3 mm): immediately to the right of U1, ~2 mm gap. Dark navy body.
+> - **C2** (output ceramic cap, 0805): right of L1, ~2 mm gap.
+>
+> Routing:
+> - Thin gold trace from C1's V+ pad runs ~18 mm right across the GND pour, with a clearance gap visible around the trace, ending at U1's V_in pin (left side of U1).
+> - U1's PGND pin connects only to the GND pour through vias.
+> - SW pin of U1 → L1 → C2 forms a clean output chain.
+>
+> **Hot loop highlight (THE KEY VISUAL ELEMENT)**:
+> - Draw a translucent **red dashed loop** (#dc2626, 50% opacity, 2 mm thick line) tracing the entire commutation current path: from C1's V+ terminal → along the long V_in trace → into U1's V_in pin → across U1 body → out U1's PGND → return through the GND pour back to C1's GND terminal → closing the loop.
+> - Fill the area enclosed by the loop with translucent red (15% opacity, no border).
+> - The result: a large red rectangle/ellipse roughly 22 mm × 6 mm dominating the left half of the image — clearly conveying "this loop is huge".
+>
+> White sans-serif text overlay, bottom-right corner: `BAD — hot loop ≈ 35 mm path length`
+> Component reference designators (`U1`, `C1`, `L1`, `C2`) in small white sans-serif silkscreen on the board.
+>
+> Image is sharp, fully top-down (orthographic camera), evenly lit, no shadows, no motion blur, no HDR. No watermark, no rulers, no measurement scale bars.
 
 ### Prompt — good layout
 
-> Same scene, same camera angle, same lighting, same board, same IC and components — but **Cin is placed 1 mm from the IC's V_in pin** (touching the pad), with a tight commutation loop visible.
-> Bottom-right annotation in white text overlay: `GOOD — Cin 1 mm from IC pin`
-> Everything else identical to image 1.
+> Same scene, same camera, same components, same GND pour density, same via density — but with one critical difference:
+> - **C1 is now placed touching U1's V_in pin pad** (less than 1 mm gap). Cluster: C1 immediately to the left of U1, sharing the V_in trace through the shortest possible link.
+> - The red dashed hot loop is now a tiny rectangle (~3 mm × 2 mm) wrapping just around C1 and U1's V_in/PGND corner. Translucent red fill covers only that small area.
+>
+> White text overlay, bottom-right: `GOOD — hot loop ≈ 4 mm path length`
+> Everything else identical to the BAD image — same board size, same component selection, same GND pour, same vias, same lighting.
+
+### Why these prompts are different from before
+
+이전 프롬프트의 문제점 + 수정:
+- 이전: 단순 photo / GND pour 없음 → **GND pour 명시적 요청 + via 30개 + 동밀도** 추가
+- 이전: "BAD" 이유가 라벨에만 있음 → **빨간 점선 루프 + 반투명 채움 으로 핫 루프 자체를 그림에 그리도록**
+- 이전: PCB CAD 톤 부재 → **Altium 3D viewer 같은 느낌으로 명시**
 
 ### After generating
 
