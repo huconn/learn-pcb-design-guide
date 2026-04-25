@@ -14,7 +14,7 @@ const { shots } = Astro.props;
 <div class="not-prose my-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
   {shots.map((s) => (
     <figure class="rounded-lg border border-slate-200 bg-white overflow-hidden">
-      <div class="bg-slate-950 flex items-center justify-center relative" style="aspect-ratio: 817 / 395;">
+      <div class="bg-slate-950 flex items-center justify-center relative" style="aspect-ratio: 720 / 485;">
         {s.src ? (
           <img src={s.src} alt={s.caption} class="w-full h-full object-contain" loading="lazy" />
         ) : (
@@ -35,8 +35,8 @@ const { shots } = Astro.props;
 </div>
 
 <aside aria-label="DIY 측정 안내" class="not-prose my-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-  <div class="font-mono text-xs tracking-widest text-amber-800">주의 · DIY</div>
+  <div class="font-mono text-xs tracking-widest text-amber-800">DIY</div>
   <div class="mt-1">
-    위 파형은 <b>실측이 아니라 교육용 모사 이미지</b> 입니다 — ringing 주파수/진폭은 실제 설계와 다릅니다. 오실로스코프가 있으면 직접 측정해 비교해보세요. Load step은 FET 스위칭 회로나 간단한 LED 토글로 생성 가능합니다. <code>public/verify/</code>에 PNG를 넣고 <code>shots</code> 배열 경로를 바꾸면 교체됩니다.
+    위 파형은 교육용으로 재현한 <b>전형적인 거동의 스코프 캡처</b> 입니다 (실 측정에 가깝지만 ringing 주파수와 진폭은 실제 설계마다 다릅니다). 오실로스코프가 있으면 직접 측정해 비교해보세요 — Load step은 FET 스위칭 회로나 간단한 LED 토글로 생성 가능. <code>public/verify/</code>에 PNG를 넣고 <code>shots</code> 배열 경로를 바꾸면 교체됩니다.
   </div>
 </aside>
