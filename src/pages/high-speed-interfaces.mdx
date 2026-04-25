@@ -78,6 +78,27 @@ import StackupDiagram from '../components/concept/StackupDiagram.astro';
 </div>
 
 <div class="mt-6">
+  <Card id="length-match" title="Length matching — 사형(serpentine) 그리는 법" subtitle="페어 안 길이 차이를 어디에서 어떻게 보정하나">
+    <figure class="not-prose rounded-lg border border-slate-200 overflow-hidden">
+      <img src="/hsi/length-match-serpentine.png" alt="differential pair length compensation serpentine" class="block w-full" loading="lazy" />
+    </figure>
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        차동 페어의 두 트레이스가 도착할 때 시간 차이가 나면 (skew), 신호가 깨집니다. 페어 안 길이 매칭(intra-pair) 은 보통 <b>≤ 5 mil</b> 까지. 라우팅 중 한쪽이 더 길어지면 짧은 쪽 (<b>위 그림에서는 TX+</b>) 에 사형 (serpentine) 을 넣어 길이를 늘립니다.
+      </p>
+      <p><b>요점</b>:</p>
+      <ul>
+        <li><b>중간에서 처리</b> — 끝단(드라이버 핀 직후 또는 RX 핀 직전) 보다 중간이 임피던스 변동에 강함</li>
+        <li><b>짧은 쪽만</b> 보정 — 둘 다 사형으로 만들지 말 것</li>
+        <li>사형 폭은 <b>3W 이상</b> — 사형 자체가 자기와 결합해 임피던스를 흔드는 걸 막기 위해</li>
+        <li>같은 페어가 via 를 건너면 via 도 같은 위치, 같은 개수로 (페어가 항상 대칭)</li>
+      </ul>
+      <p>USB 3 / DDR / HDMI / PCIe 모두 같은 패턴.</p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
   <Card id="gbe" title="Gigabit Ethernet (1000BASE-T)" subtitle="4 페어 · 마그네틱 분리 · Bob Smith 종단">
     <div class="prose prose-slate max-w-none">
       <p><b>핵심 숫자</b></p>
