@@ -1,0 +1,167 @@
+import TopicLayout from '../../layouts/TopicLayout.astro';
+import { PDN_PLANNING } from '../../lib/content/topics';
+import Card from '../../components/ui/Card.astro';
+import TipBanner from '../../components/ui/TipBanner.astro';
+
+<TopicLayout topic={PDN_PLANNING} activeSubSlug="basics">
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{PDN_PLANNING.category} · 기초편</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    PDN Planning
+    <span class="block mt-1 text-slate-500 text-xl font-normal">VRM → 보드 → IC die 까지의 전체 전원 구조 설계</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    개별 토픽 — <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">디커플링</a>, 
+    <a href="/vrm-selection/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM</a>, 
+    <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">return paths</a>, 
+    <a href="/trace-geometry/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">trace geometry</a> — 
+    가 각자 풀려있는 동안, 이 페이지는 그것들을 <b>한 보드에서 통합</b> 하는 관점입니다.
+  </p>
+</section>
+
+<TipBanner>
+  <b>한 줄</b> — PDN 의 목표는 <span class="font-mono">|Z_PDN(f)| &lt; Z_target</span> 을 <b>모든 주파수 (DC – 수백 MHz)</b> 에서 만드는 것. 누구도 혼자서 그 임피던스 범위를 다 커버하지 못하므로 <b>계층</b> 으로 만든다.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="what" title="1. PDN 이란?">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        PDN (Power Distribution Network) = 전원 배전망. 입력 어댑터에서 시작해서 IC 의 die 까지 전원을 운반하는 모든 부품·트레이스·plane 의 합:
+      </p>
+      <ol>
+        <li>입력 (어댑터/배터리)</li>
+        <li>EMI 필터 (페라이트 비드, common-mode choke)</li>
+        <li>VRM (LDO 또는 buck) — 1차 변환</li>
+        <li>출력 bulk cap (10–100 μF 전해/MLCC)</li>
+        <li>전원 plane (PCB 내층 통째로)</li>
+        <li>중간 cap (1–22 μF MLCC, 보드 곳곳)</li>
+        <li>HF cap (100 nF, IC 핀 옆 다수)</li>
+        <li>패키지 cap (BGA 패키지 내부)</li>
+        <li>온칩 cap (die 위 MOSFET capacitor)</li>
+        <li>최종 — IC 트랜지스터</li>
+      </ol>
+      <p>
+        IC 가 보는 임피던스(Z_PDN)는 위의 <b>모든 단계의 병렬 합성</b>. 어느 단계가 부실하면 그 주파수 대역에서 droop 이 일어남.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="target" title="2. Target Impedance — 목표값 정하기">
+    <div class="prose prose-slate max-w-none">
+      <p>가장 중요한 한 식:</p>
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
+        Z_target = ΔV / ΔI
+      </p>
+      <ul>
+        <li><b>ΔV</b> — IC 가 허용하는 ripple. 보통 V_rail 의 1–5 % (3.3 V 면 30–150 mV).</li>
+        <li><b>ΔI</b> — IC 가 만드는 과도 전류. 데이터시트의 dynamic load step.</li>
+      </ul>
+      <p>
+        예: 1.2 V CPU 코어 · 50 mV 허용 · ΔI = 5 A → Z_target = 10 mΩ. 이 값을 <b>DC – 수백 MHz 까지</b> 유지.
+      </p>
+      <p>
+        실험실의 <a href="/pdn-planning#target" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Target Z 계산기</a> 로 직접 입력해서 어느 등급(여유/권장/엄격/극단) 인지 확인하세요.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="hierarchy" title="3. 누가 어느 주파수를 담당하나">
+    <div class="prose prose-slate max-w-none">
+      <p>같은 cap 이라도 자체 ESL 때문에 고주파에서는 무용지물. 그래서 다른 종류의 cap 을 섞어야 합니다:</p>
+      <table class="w-full text-sm mt-2">
+        <thead class="text-slate-500 font-mono text-[10px] uppercase">
+          <tr>
+            <th class="text-left py-1.5">담당</th>
+            <th class="text-left py-1.5">주파수</th>
+            <th class="text-left py-1.5">부품</th>
+            <th class="text-left py-1.5">위치</th>
+          </tr>
+        </thead>
+        <tbody class="text-slate-700">
+          <tr><td>VRM</td>      <td class="font-mono">DC – kHz</td>      <td>레귤레이터 자체</td>            <td>피드백 제어</td></tr>
+          <tr><td>Bulk</td>     <td class="font-mono">– 100 kHz</td>    <td>47 – 100 μF 전해/MLCC</td>     <td>VRM 출력 측</td></tr>
+          <tr><td>Mid</td>      <td class="font-mono">– 10 MHz</td>     <td>1 – 22 μF MLCC</td>             <td>각 IC 영역에 1–2 개</td></tr>
+          <tr><td>HF</td>       <td class="font-mono">– 100 MHz</td>    <td>100 nF MLCC × 다수</td>         <td>IC 핀 마다 1 cm 내</td></tr>
+          <tr><td>Plane</td>    <td class="font-mono">{`> 100 MHz`}</td><td>Vcc/GND plane 자체</td>         <td>보드 전체 (스택업)</td></tr>
+          <tr><td>Package</td>  <td class="font-mono">{`> 500 MHz`}</td><td>BGA 내부 cap</td>               <td>IC 패키지</td></tr>
+          <tr><td>Die</td>      <td class="font-mono">{`> 1 GHz`}</td>  <td>온칩 MOS cap</td>               <td>die 자체</td></tr>
+        </tbody>
+      </table>
+      <p>
+        설계자가 직접 통제하는 영역은 Bulk · Mid · HF · Plane. Package/Die 는 IC 가 결정.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="planes" title="4. Plane Resonance — Vcc/GND plane 의 함정">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        Vcc plane 과 GND plane 사이는 사실상 <b>큰 평행판 캐패시터</b>. 보드 전체 면적 × 작은 거리 → 수 nF 수준의 캡으로 동작합니다. 
+        이는 100 MHz 대역에서 매우 좋은 디커플링이 되지만 — <b>plane 자체의 공진</b> 도 일으킵니다.
+      </p>
+      <p>
+        plane 가장자리에서 신호가 반사되어 <b>cavity resonance</b> 가 형성됩니다. 첫 공진 주파수:
+      </p>
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-[13px]">
+        f_res ≈ c / (2 · L · √ε_r) &nbsp;&nbsp; (L = plane 의 가장 긴 변)
+      </p>
+      <p>
+        예: 10 cm × 15 cm 보드, ε_r = 4.2 → f_res ≈ 0.49 GHz. 이 주파수 부근에서 plane impedance 가 폭증 (anti-resonance).
+        대처법 — plane 가장자리에 <b>다수의 stitching via</b> 와 <b>damping cap</b> 으로 Q 낮추기.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="stackup" title="5. Stackup 으로 PDN 결정하기">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        Plane 캡은 <b>면적 × 1/거리</b> 에 비례 — 즉 Vcc 와 GND plane 을 <b>가까이 (거리 H 작게)</b> 두면 plane cap 이 커져 고주파 PDN 이 좋아짐. 6-layer 보드에서 흔한 구성:
+      </p>
+      <ul>
+        <li>L1 신호 — L2 GND — L3 Vcc — L4 GND — L5 Vcc — L6 신호. → Vcc/GND 사이 거리 매우 작음 (4 mil 정도) → plane 캡 크게.</li>
+        <li>또는 L1 신호 — L2 GND — L3 신호 — L4 Vcc — L5 GND — L6 신호. → 신호 라우팅 우선.</li>
+      </ul>
+      <p>
+        고밀도 BGA 가 있는 보드는 첫 번째 (Vcc/GND 가깝게) 를 선호. 일반 컨슈머 보드는 두 번째.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>VRM 선택과 입력 측 디커플링: <a href="/vrm-selection/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a></li>
+        <li>cap 계층의 주파수 응답 (실시간 시뮬): <a href="/decoupling-capacitor" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling · Lab</a></li>
+        <li>고속 인터페이스 별 권장 PDN: <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+        <li>Plane 이 조각나면 PDN 이 깨짐: <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-8 mb-12">
+  <a href="/pdn-planning" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+    <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
+    <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — Target Z + Plane Cap 계산기</div>
+    <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+      Vrail · ripple · ΔI 로 Target Z 계산하고, 보드 면적과 plane 간격으로 plane 자체 캡 + plane 만의 high-freq 커버리지 한계 확인.
+    </p>
+    <div class="mt-3 inline-flex items-center gap-2 text-indigo-600 text-sm font-medium">
+      실험실로 이동 <span class="group-hover:translate-x-1 transition-transform">→</span>
+    </div>
+  </a>
+</div>
+
+</TopicLayout>

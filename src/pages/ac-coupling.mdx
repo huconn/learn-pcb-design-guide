@@ -1,0 +1,65 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { AC_COUPLING } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import RCFilterCalc from '../components/sim/RCFilterCalc.svelte';
+
+<TopicLayout topic={AC_COUPLING} activeSubSlug="lab">
+
+<div class="mt-2 mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 flex items-center justify-between gap-4">
+  <div>
+    <b>처음이신가요?</b> — 먼저 <a href="/ac-coupling/basics" class="underline decoration-amber-400 hover:decoration-amber-700 font-medium">기초편</a>에서 RC HPF 식과 droop 개념을 잡고 오세요.
+  </div>
+  <a href="/ac-coupling/basics" class="shrink-0 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-[13px] font-medium text-amber-800 hover:bg-amber-100">기초편 →</a>
+</div>
+
+<section class="mt-2 mb-6">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{AC_COUPLING.category} · 실험실</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    RC High-Pass Filter
+    <span class="block mt-1 text-slate-500 text-xl font-normal">R · C 조작 → cutoff · droop · Bode</span>
+  </h1>
+</section>
+
+<TipBanner>
+  <b>먼저 해보기</b> — 기본값 (R = 50 kΩ, C = 100 nF) 에서 R 을 1 kΩ 로 줄이면 cutoff 가 어떻게 변하는지 확인. 신호가 차단되는 시점을 눈으로 보세요.
+</TipBanner>
+
+<Card id="calc" title="RC HPF Calculator" subtitle="cutoff · droop · Bode 시각화">
+  <RCFilterCalc client:visible />
+</Card>
+
+<div class="mt-6">
+  <Card id="presets" title="자주 쓰는 값 — 빠른 가이드">
+    <div class="prose prose-slate max-w-none">
+      <table class="w-full text-sm">
+        <thead class="text-slate-500 font-mono text-[10px] uppercase">
+          <tr>
+            <th class="text-left py-1.5">용도</th>
+            <th class="text-left py-1.5">R</th>
+            <th class="text-left py-1.5">C</th>
+            <th class="text-left py-1.5">f<sub>c</sub></th>
+            <th class="text-left py-1.5">메모</th>
+          </tr>
+        </thead>
+        <tbody class="text-slate-700">
+          <tr><td>오디오 mic preamp</td>             <td class="font-mono">100 kΩ</td><td class="font-mono">100 nF</td><td class="font-mono">~16 Hz</td><td>20 Hz 까지 약간 감쇠 — 1 μF 권장</td></tr>
+          <tr><td>오디오 line in</td>                <td class="font-mono">22 kΩ</td> <td class="font-mono">10 μF</td> <td class="font-mono">~0.7 Hz</td><td>큰 캡 = 비전해질이면 비싸</td></tr>
+          <tr><td>USB 3 TX 측</td>                  <td class="font-mono">~50 Ω</td> <td class="font-mono">100 nF</td><td class="font-mono">~32 MHz</td><td>스펙 — 0402/0201 MLCC</td></tr>
+          <tr><td>OP 앰프 입력 바이어스 (싱글)</td>  <td class="font-mono">100 kΩ</td><td class="font-mono">1 μF</td>  <td class="font-mono">~1.6 Hz</td><td>풀업 디바이더 + 입력 사이</td></tr>
+          <tr><td>리셋 RC (delay)</td>               <td class="font-mono">10 kΩ</td> <td class="font-mono">100 nF</td><td class="font-mono">τ = 1 ms</td><td>HPF 가 아니라 RC 시상수 용도</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="관련 토픽">
+    - 디커플링과 같은 캡 식 (방향만 반대): [Decoupling](/decoupling-capacitor/basics)
+    - USB 3 TX 측 100 nF 의 정체: [고속 인터페이스](/high-speed-interfaces#usb3)
+    - RC 시상수 회로 (전원 시퀀싱, 리셋 등): [Ohm 법칙](/ohms-law)
+  </Card>
+</div>
+
+</TopicLayout>

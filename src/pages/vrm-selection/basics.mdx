@@ -1,0 +1,121 @@
+import TopicLayout from '../../layouts/TopicLayout.astro';
+import { VRM_SELECTION } from '../../lib/content/topics';
+import Card from '../../components/ui/Card.astro';
+import TipBanner from '../../components/ui/TipBanner.astro';
+import BuckHotLoop from '../../components/concept/BuckHotLoop.astro';
+
+<TopicLayout topic={VRM_SELECTION} activeSubSlug="basics">
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{VRM_SELECTION.category} · 기초편</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    VRM Selection · Buck Layout
+    <span class="block mt-1 text-slate-500 text-xl font-normal">LDO vs 스위칭 — 스펙 읽는 법과 핫 루프</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    배터리/어댑터에서 들어온 입력 전압을 IC 가 원하는 출력 전압으로 변환하는 부품 = VRM (Voltage Regulator Module). 
+    어떤 종류를 고르고, 데이터시트에서 어떤 숫자를 보고, 보드에 어떻게 배치하는지의 가이드.
+  </p>
+</section>
+
+<TipBanner>
+  <b>한 줄 결정 트리</b> — 입력과 출력 차이가 작고 전류가 작으면 <b>LDO</b>. 차이가 크거나 전류가 크면 <b>스위칭(Buck)</b>. LDO 의 손실은 (V_in − V_out) × I_out 그대로.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="types" title="1. VRM 종류 — 언제 무엇을 쓰나">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        세 가지 큰 분류:
+      </p>
+      <ul>
+        <li><b>LDO (Low Dropout Linear Regulator)</b> — 장점: 깨끗한 출력, 작고 싸고, EMI 거의 없음. 단점: 효율 = V_out / V_in. 5 V → 3.3 V → 66%, 12 V → 3.3 V → 28% (대부분 발열). 적합: I_out &lt; 500 mA, ΔV &lt; 2 V, 깨끗한 전원이 중요할 때 (오디오, ADC ref).</li>
+        <li><b>Buck (Step-down switching)</b> — 장점: 효율 85–95%. 큰 전류, 큰 ΔV 처리. 단점: 출력에 ripple, 스위칭 노이즈, EMI 가능. 더 많은 부품 (인덕터, FET). 적합: 대부분의 메인 레일 (5 V/3.3 V/1.8 V/1.2 V).</li>
+        <li><b>Boost / SEPIC / Buck-Boost</b> — 입력보다 높은 전압 (Boost), 또는 입력 전압이 출력 위아래 모두 가능 (SEPIC/Buck-Boost). 적합: 배터리 단일 셀(3.7 V) 에서 5 V 만들기, 12 V 어댑터 → 24 V 등.</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="specs" title="2. 데이터시트에서 봐야 할 숫자">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        VRM 데이터시트는 두꺼운데 처음에는 다음만 보면 됩니다:
+      </p>
+      <ul>
+        <li><b>V_in 범위</b> — 최대값을 절대 넘기면 안 됨. 최소값 아래면 동작 못 함.</li>
+        <li><b>V_out</b> — 고정형 (3.3V/5V) 또는 조정형 (R 분압으로 설정).</li>
+        <li><b>I_out_max</b> — 최대 출력 전류. 마진 30% 권장 (예: 1A 필요 → 1.5 A 부품).</li>
+        <li><b>Dropout (LDO 만)</b> — V_in − V_out 의 최소값. 보통 0.2 ~ 0.5 V. 배터리 끝물에서도 동작 보장 시 중요.</li>
+        <li><b>Quiescent current (Iq)</b> — 무부하 자체 소모. 배터리 제품엔 핵심 (μA 단위).</li>
+        <li><b>Switching frequency</b> (스위칭 만) — 높을수록 작은 인덕터 (장점), 손실 커짐 (단점). 보통 500 kHz ~ 2 MHz.</li>
+        <li><b>Load step response</b> — 부하 급변동에 V_out 이 얼마나 흔들리는지. 디지털 IC 의 droop 마진 결정.</li>
+        <li><b>Package · thermal pad</b> — 발열 부품은 thermal pad 가 plane 으로 via 떨어뜨려야 함.</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="hot-loop" title="3. Buck 의 핫 루프 — 가장 중요한 레이아웃 룰">
+    <BuckHotLoop />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        Buck 컨버터는 매 스위칭 사이클마다 <b>입력 캡(Cin) → 하이사이드 FET → SW 노드 → 로우사이드 FET (또는 다이오드) → GND → 다시 Cin</b> 의 루프로 큰 di/dt 가 흐릅니다. 이 루프를 "<b>핫 루프 (hot loop)</b>" 또는 commutation loop 이라고 합니다.
+      </p>
+      <p>
+        핫 루프 면적이 크면 → 큰 인덕턴스 → 큰 V = L·di/dt 노이즈 → 출력 ripple, EMI, SW 노드 ringing. 좋은 buck 보드의 첫 단추는 <b>Cin 을 IC 의 V_in/PGND 핀 1~2 mm 안에</b> 두는 것.
+      </p>
+      <p><b>레이아웃 우선순위</b>:</p>
+      <ol>
+        <li>Cin (입력 MLCC) → IC V_in/PGND 핀 최단 거리</li>
+        <li>SW 노드 → 인덕터 → Cout — 한 면에 깔끔하게</li>
+        <li>Cout → GND 는 plane 으로 직결</li>
+        <li>피드백 트레이스 (FB) 는 SW 노드와 멀리, 깨끗한 GND 위로</li>
+        <li>SW 노드 면적 최소화 (EMI 송출 줄임)</li>
+      </ol>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="passives" title="4. 외부 부품 선택 — Cin · L · Cout">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li><b>Cin</b> — 보통 MLCC 10 μF × 1~2개 + bulk (전해/탄탈) 100 μF. MLCC 의 DC bias derating 주의 (정격 전압의 절반 이상에서는 용량 30%↓).</li>
+        <li><b>Inductor (L)</b> — 데이터시트가 추천값 줌. saturation current ≥ 1.5 × I_out_max. DCR 작을수록 효율 좋음.</li>
+        <li><b>Cout</b> — ripple 식: ΔV ≈ ΔI × ESR + ΔI / (8 × f_sw × C). MLCC 면 ESR 거의 0 → C 값으로 결정.</li>
+        <li><b>Feedback divider</b> — V_out = V_FB × (1 + R1/R2). V_FB 보통 0.6 ~ 0.8 V. 데이터시트 권장 R 범위 (보통 10 kΩ 단위).</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>VRM 출력에서 IC 까지의 디커플링 cap 계층: <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+        <li>전체 PDN 관점: <a href="/pdn-planning/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">PDN Planning</a></li>
+        <li>전원 트레이스 폭 결정: <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭</a></li>
+        <li>핫 루프의 di/dt 가 EMI 가 되는 메커니즘: <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths · Ground Bounce</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-8 mb-12">
+  <a href="/vrm-selection" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+    <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
+    <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — Buck 효율 계산기</div>
+    <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+      V_in/V_out/I_out · 스위칭 주파수 · FET R_DS · 인덕터 DCR 을 입력하면 효율 + 손실 분류 (conduction · switching · gate) 까지 분해해서 보여줍니다.
+    </p>
+    <div class="mt-3 inline-flex items-center gap-2 text-indigo-600 text-sm font-medium">
+      실험실로 이동 <span class="group-hover:translate-x-1 transition-transform">→</span>
+    </div>
+  </a>
+</div>
+
+</TopicLayout>

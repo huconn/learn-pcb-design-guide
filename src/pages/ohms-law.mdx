@@ -1,0 +1,130 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { OHMS_LAW } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import OhmsCalc from '../components/sim/OhmsCalc.svelte';
+
+<TopicLayout topic={OHMS_LAW}>
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{OHMS_LAW.category}</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    Ohm 의 법칙 · 전력 · 분압
+    <span class="block mt-1 text-slate-500 text-xl font-normal">한 페이지 복습 — 곳곳에서 다시 만나는 식들</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    전체 가이드의 가장 기초가 되는 식들. 다른 토픽(<a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">디커플링</a>, 
+    <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">return paths</a>) 에서 계속 인용되니 가볍게 다시 보세요.
+  </p>
+</section>
+
+<TipBanner>
+  <b>3 식 · 다 외울 가치</b> — V = I·R · P = V·I = I²R = V²/R · 분압 Vout = Vin · R2/(R1+R2)
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="ohms" title="1. Ohm 의 법칙">
+    <div class="prose prose-slate max-w-none">
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-base">
+        V = I · R
+      </p>
+      <ul>
+        <li><b>V</b> — 전압 (V) · 두 점 사이 위치 에너지 차</li>
+        <li><b>I</b> — 전류 (A) · 단위 시간당 흐르는 전하량</li>
+        <li><b>R</b> — 저항 (Ω) · 전하 흐름을 방해하는 정도</li>
+      </ul>
+      <p>
+        직관: 같은 전압을 걸 때 저항이 크면 전류가 적게 흐름. 저항이 작으면 많이 흐름. 식 변형으로 쓸 일이 더 많음:
+      </p>
+      <ul>
+        <li>전류 알 때 전압: <span class="font-mono">V = I·R</span> (예: 1 mA × 10 kΩ = 10 V)</li>
+        <li>전압 알 때 전류: <span class="font-mono">I = V/R</span> (예: 3.3 V / 330 Ω = 10 mA — LED 전류 제한)</li>
+        <li>전압·전류 알 때 저항: <span class="font-mono">R = V/I</span></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="power" title="2. 전력 (Power)">
+    <div class="prose prose-slate max-w-none">
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-base">
+        P = V · I = I² · R = V² / R
+      </p>
+      <p>
+        같은 식의 세 가지 표현. 어느 두 변수를 알고 있느냐에 따라 골라 쓰세요. 자주 만나는 시나리오:
+      </p>
+      <ul>
+        <li><b>저항이 견디는 전력</b> — 1/4 W 저항(가장 흔한 쓰루홀)에 1 W 가 흐르면 타버립니다. SMD 0603 은 0.1 W, 0805 는 0.125 W 정도.</li>
+        <li><b>LDO 전력 손실</b> — Vin = 5 V, Vout = 3.3 V, Iout = 200 mA → 손실 = (5−3.3) × 0.2 = 0.34 W. SOT-23 LDO 면 발열 위험.</li>
+        <li><b>트레이스 발열</b> — 트레이스 저항 r 에 전류 I 가 흐르면 I²·r 만큼 열. → <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">폭 계산기</a> 가 이걸 IPC-2221 식으로 변환.</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="divider" title="3. 분압 (Voltage Divider)">
+    <OhmsCalc client:visible />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-base">
+        Vout = Vin · R2 / (R1 + R2)
+      </p>
+      <p>
+        가장 많이 쓰이는 회로 — ADC 입력 범위 줄이기, MCU 전원으로 12 V 배터리 모니터링, FB(Feedback) 핀 설정 등. 
+        주의 — <b>부하가 R2 와 비슷한 임피던스</b> 면 식이 깨집니다. ADC 같은 고임피던스 입력(MΩ 급) 으로 받을 때만 안전.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="series-parallel" title="4. 직렬 vs 병렬 — 합성 저항">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        <b>직렬</b> (한 줄로 연결): R<sub>tot</sub> = R₁ + R₂ + …
+      </p>
+      <p>
+        <b>병렬</b> (양 끝이 같은 곳에 연결): 1/R<sub>tot</sub> = 1/R₁ + 1/R₂ + …
+        <br />
+        두 개일 때만: R<sub>tot</sub> = R₁·R₂ / (R₁ + R₂)
+      </p>
+      <ul>
+        <li>같은 값 두 개 병렬 = 절반 (10 kΩ ‖ 10 kΩ = 5 kΩ)</li>
+        <li>같은 값 N 개 병렬 = R/N</li>
+        <li>병렬에서 한 쪽이 매우 작으면 그쪽이 거의 결과 (1 Ω ‖ 1 MΩ ≈ 1 Ω)</li>
+      </ul>
+      <p>
+        비슷한 식이 cap 에는 거꾸로 적용됩니다. 캡 병렬 = C 의 합 (디커플링이 cap 을 여러 개 쓰는 이유의 절반 — <a href="/decoupling-capacitor/basics#frequency" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">참조</a>).
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="practice" title="5. 자주 나오는 실전 계산">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li><b>LED 전류 제한</b>: VR = (Vin − Vf) / R. 예) 5 V, Vf = 2 V, R = 330 Ω → 9 mA.</li>
+        <li><b>I²C 풀업</b>: 보통 4.7 kΩ ~ 10 kΩ. 너무 작으면 전류 낭비, 너무 크면 슬루레이트 부족.</li>
+        <li><b>리셋 RC</b>: τ = R·C. R = 10 kΩ, C = 100 nF → τ = 1 ms (전원 안정 후 reset 해제).</li>
+        <li><b>Vbat 모니터링</b>: 12 V 를 ADC(0–3.3 V) 로 → R1 = 33 kΩ, R2 = 10 kΩ → Vout ≈ 2.79 V (안전).</li>
+        <li><b>버크 FB</b>: Vout = Vfb · (1 + R1/R2). Vfb 보통 0.6 ~ 0.8 V. 데이터시트의 권장 R 범위 사용.</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>R, C 합성과 임피던스 — <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+        <li>RC 1차 필터 (high-pass / bypass) — <a href="/ac-coupling/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">AC 커플링</a></li>
+        <li>전류·온도·트레이스 폭 — <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+</TopicLayout>

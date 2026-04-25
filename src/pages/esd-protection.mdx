@@ -1,0 +1,145 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { ESD_PROTECTION } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
+import EsdLayoutGood from '../components/concept/EsdLayoutGood.astro';
+
+<TopicLayout topic={ESD_PROTECTION}>
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{ESD_PROTECTION.category}</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    ESD Protection
+    <span class="block mt-1 text-slate-500 text-xl font-normal">TVS · 커넥터 옆 배치 · IEC 61000-4-2</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    사람 손가락이 보드에 닿는 순간 수 kV 의 정전기 펄스가 들어옵니다. 칩 내부 보호도 있지만 
+    <b>외부 인터페이스 (USB·HDMI·Ethernet·버튼)</b> 는 추가 ESD 보호 부품을 반드시 둬야 합니다. 
+    이 페이지는 <b>어떤 부품을, 어디에, 어떻게</b> 의 가이드.
+  </p>
+</section>
+
+<TipBanner>
+  <b>황금 규칙</b> — TVS 다이오드는 <span class="font-semibold">커넥터 핀에서 1 cm 이내</span>. 멀어질수록 보호 효과 급감 (트레이스 인덕턴스 때문에 surge 가 다이오드를 지나쳐 IC 까지 도달).
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="what" title="1. ESD 가 뭔가? — 모델과 전압">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        ESD (Electrostatic Discharge) 는 정전기로 충전된 물체가 회로에 닿을 때 일어나는 빠른 전류 펄스. 
+        몇 가지 표준 모델:
+      </p>
+      <ul>
+        <li><b>HBM (Human Body Model)</b> — 사람이 칩을 만질 때. ±2 kV 이상 IC 는 일반적으로 통과. 100 pF / 1.5 kΩ 등가.</li>
+        <li><b>MM (Machine Model)</b> — 자동화 장비. 200 pF / 0 Ω. 더 빠른 상승.</li>
+        <li><b>CDM (Charged Device Model)</b> — 칩 자체가 충전됐다 방전. ns 단위 — 가장 빠름.</li>
+        <li><b>IEC 61000-4-2</b> — 시스템(완제품) 인증 시험. 대표값: <b>±8 kV contact discharge</b> (직접 접촉) · <b>±15 kV air discharge</b> (공기 갭 통해) · 피크 전류 30 A, 상승 시간 0.7 ~ 1 ns</li>
+      </ul>
+      <p>
+        제품 인증을 받으려면 <b>IEC 61000-4-2 ±8 kV</b> 가 보통 통과 기준. 
+        칩 자체의 HBM ±2 kV 만으로는 부족합니다 — 외부에 ESD 다이오드 추가가 필수.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="tvs" title="2. TVS 다이오드 선택 기준">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        ESD 보호의 표준 부품. surge 가 들어오면 양방향 항복 전압을 넘어 GND 로 분기되어 IC 핀의 전압을 클램프.
+      </p>
+      <p><b>핵심 스펙</b>:</p>
+      <ul>
+        <li><b>Stand-off voltage (V<sub>RWM</sub>)</b> — 정상 동작에서 다이오드가 conduct 하면 안 되는 최대 전압. <b>신호 동작 전압 + 마진</b>. 예) 5 V USB 시그널 → V<sub>RWM</sub> ≥ 5.5 V</li>
+        <li><b>Clamping voltage (V<sub>C</sub>)</b> — surge 동안의 최대 전압. <b>IC 의 absolute max 보다 낮아야</b>. 보통 V<sub>C</sub> ≤ 1.5 × V<sub>RWM</sub>.</li>
+        <li><b>Capacitance (C<sub>j</sub>)</b> — 신호 라인에 들어가는 기생 캡. <b>고속 신호일수록 작은 값 필요</b>: USB 2.0 / GPIO 면 5~10 pF OK · USB 3 / HDMI 면 ≤ 1 pF (ESD9X3, TPD4S 등) · 10 Gbps+ 면 ≤ 0.5 pF</li>
+        <li><b>Response time</b> — ns 단위 빠를수록 좋음 (대부분 TVS 는 충분).</li>
+      </ul>
+      <p><b>흔한 부품</b>:</p>
+      <ul>
+        <li><b>SP05xx / SMAJ5</b> — 일반 GPIO, 5 V tolerant</li>
+        <li><b>USBLC6-2SC6</b> — USB 2.0 데이터 라인 2 채널, ~3 pF</li>
+        <li><b>ESD9X3.3</b> — 고속, 0402, ~0.3 pF (USB 3)</li>
+        <li><b>TPD4S009 / TPD4S012</b> — HDMI 4 채널 array, 0.5 ~ 1 pF</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="layout" title="3. 레이아웃 — 어디에 두느냐가 결정적">
+    <EsdLayoutGood />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        TVS 의 위치는 <b>커넥터 입구 1 cm 이내</b>. 이유는 단순한 인덕턴스 — 트레이스가 5 cm 길면 surge 의 빠른 상승 시간(~1 ns) 동안 
+        L · di/dt 가 수백 V 의 추가 전압을 만들고, 그 전압이 IC 핀에 도달한 뒤에야 TVS 가 보호를 시작합니다 (이미 늦음).
+      </p>
+      <p><b>레이아웃 체크</b>:</p>
+      <ul>
+        <li>커넥터 핀 → TVS GND pad 까지 가능한 짧게 (수 mm)</li>
+        <li>TVS 의 GND 는 <b>chassis GND</b> 또는 <b>plane 으로 직접 via drop</b> — 트레이스 GND 금지</li>
+        <li>TVS 가 신호 라인에 직렬로 들어오는 게 아니라 <b>병렬</b> 로 (라인 → GND)</li>
+        <li>차동 페어는 array 형 ESD 다이오드 사용 (4채널 등) — 페어 균형 유지</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="extra" title="4. TVS 외에도 자주 쓰는 부품">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li><b>Common-Mode Choke (CMC)</b> — USB / Ethernet 의 차동 라인에 차동 신호는 통과시키고 공통모드 노이즈/EMI 를 차단. 패키지 4핀 (예: BNX 시리즈).</li>
+        <li><b>Ferrite Bead</b> — 전원 라인의 고주파 노이즈 흡수. <b>ESD 보호용 아님</b> (응답 너무 느림).</li>
+        <li><b>Snubber RC</b> — 큰 인덕터 부하(릴레이, 모터) 의 역기전력 흡수. ESD 와는 다른 도메인.</li>
+        <li><b>Polyfuse / PTC</b> — overcurrent 보호. 단방향 + 느림 — ESD 가 아니라 short-circuit 용.</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="signals" title="5. 보호가 필요한 핀 — 우선순위">
+    <div class="prose prose-slate max-w-none">
+      <ol>
+        <li><b>외부 커넥터 모든 핀</b> — USB, HDMI, Ethernet, GPIO 출력 헤더, 전원 입력 등</li>
+        <li><b>버튼/스위치 입력</b> — 사람 손이 닿는 모든 곳</li>
+        <li><b>케이블이 연결되는 핀</b> — 1 m 이상 케이블은 안테나처럼 ESD 모음</li>
+        <li><b>전원 입력 (5V/12V/배터리)</b> — TVS + 폴리퓨즈 조합</li>
+      </ol>
+      <p><b>우선순위 낮음</b> — 보드 내부 IC 간 신호 (외부 노출 없음), 짧은 점퍼.</p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="checklist" title="ESD 설계 체크리스트">
+    <ChecklistBlock items={[
+      { text: "외부 커넥터 모든 신호 핀에 TVS 가 있는가?", anchor: "signals" },
+      { text: "TVS 가 커넥터에서 1 cm 이내에 배치돼 있는가?", anchor: "layout" },
+      { text: "TVS 의 V_C (clamp 전압) 가 IC abs max 보다 낮은가?", anchor: "tvs" },
+      { text: "고속 신호용 TVS 의 C_j 가 사양 내인가? (USB 3 < 1 pF)", anchor: "tvs" },
+      { text: "TVS GND 가 plane 으로 바로 via drop 되어 있는가?", anchor: "layout" },
+      { text: "차동 페어는 array TVS 로 균형 유지", anchor: "layout" },
+      { text: "전원 입력에 polyfuse + TVS 조합 있는가?", anchor: "extra" },
+      { text: "IEC 61000-4-2 ±8 kV 시험을 미리 계획에 포함했는가?", anchor: "what" },
+    ]} />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>USB / HDMI / Ethernet 별 ESD 부품 권장값: <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+        <li>TVS GND 가 왜 plane 직결이어야 하는가: <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>TVS 의 C_j 가 신호 라인 임피던스에 미치는 영향: <a href="/impedance-matching/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Impedance Matching</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+</TopicLayout>

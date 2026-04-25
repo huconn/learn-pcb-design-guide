@@ -1,0 +1,51 @@
+---
+// Side-by-side comparison: bad ESD layout (TVS far from connector) vs good
+---
+<div class="not-prose grid gap-3 md:grid-cols-2">
+  <figure class="rounded-lg border border-rose-200 bg-rose-50 p-3">
+    <div class="font-mono text-xs text-rose-700">BAD — TVS 가 PHY 측</div>
+    <svg viewBox="0 0 320 130" class="mt-2 w-full">
+      <rect x="1" y="1" width="318" height="128" fill="#fff" stroke="#e2e8f0" />
+      <!-- Connector -->
+      <rect x="14" y="50" width="22" height="30" fill="#0f172a" />
+      <text x="11" y="44" font-size="9" fill="#0f172a" font-family="ui-monospace, monospace">RJ-45</text>
+      <!-- trace -->
+      <line x1="36" y1="65" x2="240" y2="65" stroke="#dc2626" stroke-width="2" />
+      <text x="80" y="58" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">긴 트레이스 — surge 가 모두 PHY 까지 도달</text>
+      <!-- TVS too far -->
+      <rect x="240" y="60" width="14" height="14" fill="#10b981" stroke="#065f46" />
+      <line x1="247" y1="74" x2="247" y2="100" stroke="#065f46" stroke-width="1.4" />
+      <line x1="240" y1="100" x2="254" y2="100" stroke="#065f46" stroke-width="1.6" />
+      <text x="222" y="115" font-size="8" fill="#065f46" font-family="ui-monospace, monospace">TVS</text>
+      <!-- PHY -->
+      <rect x="266" y="50" width="34" height="30" fill="#0f172a" />
+      <text x="272" y="68" font-size="9" fill="#fff" font-family="ui-monospace, monospace">PHY</text>
+      <!-- ESD path -->
+      <path d="M 36 30 Q 130 12 250 30" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3 2" />
+      <text x="100" y="20" font-size="9" fill="#92400e" font-family="ui-monospace, monospace">ESD pulse →</text>
+    </svg>
+    <figcaption class="mt-1 text-xs text-rose-800">surge 가 PHY 핀에 도달한 뒤에야 TVS 가 클램프 — 이미 늦었다.</figcaption>
+  </figure>
+
+  <figure class="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+    <div class="font-mono text-xs text-emerald-700">GOOD — TVS 커넥터 바로 옆</div>
+    <svg viewBox="0 0 320 130" class="mt-2 w-full">
+      <rect x="1" y="1" width="318" height="128" fill="#fff" stroke="#e2e8f0" />
+      <rect x="14" y="50" width="22" height="30" fill="#0f172a" />
+      <text x="11" y="44" font-size="9" fill="#0f172a" font-family="ui-monospace, monospace">RJ-45</text>
+      <line x1="36" y1="65" x2="280" y2="65" stroke="#0ea5e9" stroke-width="2" />
+      <!-- TVS close -->
+      <rect x="44" y="60" width="14" height="14" fill="#10b981" stroke="#065f46" />
+      <line x1="51" y1="74" x2="51" y2="100" stroke="#065f46" stroke-width="1.4" />
+      <line x1="44" y1="100" x2="58" y2="100" stroke="#065f46" stroke-width="1.6" />
+      <text x="40" y="115" font-size="8" fill="#065f46" font-family="ui-monospace, monospace">TVS</text>
+      <!-- PHY -->
+      <rect x="280" y="50" width="34" height="30" fill="#0f172a" />
+      <text x="286" y="68" font-size="9" fill="#fff" font-family="ui-monospace, monospace">PHY</text>
+      <!-- ESD path -->
+      <path d="M 36 30 Q 50 12 60 30 L 60 55" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3 2" />
+      <text x="80" y="20" font-size="9" fill="#92400e" font-family="ui-monospace, monospace">ESD → TVS clamp</text>
+    </svg>
+    <figcaption class="mt-1 text-xs text-emerald-800">surge 가 트레이스로 진입하자마자 TVS 가 GND 로 분기 — PHY 안전.</figcaption>
+  </figure>
+</div>

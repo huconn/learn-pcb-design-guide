@@ -1,0 +1,61 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { CROSSTALK } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
+import CrosstalkTimeSim from '../components/sim/CrosstalkTimeSim.svelte';
+import CrosstalkVisualizer from '../components/sim/CrosstalkVisualizer.svelte';
+
+<TopicLayout topic={CROSSTALK} activeSubSlug="lab">
+
+<div class="mt-2 mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 flex items-center justify-between gap-4">
+  <div>
+    <b>처음이신가요?</b> — 먼저 <a href="/crosstalk/basics" class="underline decoration-amber-400 hover:decoration-amber-700 font-medium">기초편</a>에서 NEXT/FEXT 개념을 잡으세요.
+  </div>
+  <a href="/crosstalk/basics" class="shrink-0 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-[13px] font-medium text-amber-800 hover:bg-amber-100">기초편 →</a>
+</div>
+
+<section class="mt-2 mb-6">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{CROSSTALK.category} · 실험실</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    Crosstalk · Time-Domain Lab
+    <span class="block mt-1 text-slate-500 text-xl font-normal">aggressor 의 rise time · 길이 · 간격 → NEXT/FEXT 파형</span>
+  </h1>
+</section>
+
+<TipBanner>
+  <b>먼저 해보기</b> — rise time 을 0.5 ns → 0.1 ns 로 줄여보세요. <b>FEXT 펄스가 5 배 커지는</b> 걸 확인. 길이 5 cm → 25 cm 도 똑같은 효과.
+</TipBanner>
+
+<Card id="time" title="① NEXT/FEXT 시간 영역 시뮬레이터">
+  <CrosstalkTimeSim client:visible />
+</Card>
+
+<div class="mt-6">
+  <Card id="static" title="② 기하 기반 결합 계산기 (정적)" subtitle="Trace Geometry 페이지에 있는 시각화 — 빠른 참조">
+    <CrosstalkVisualizer client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="checklist" title="설계 체크리스트">
+    <ChecklistBlock items={[
+      { text: "인접 신호 간 edge-to-edge ≥ 2W (3W rule)?", anchor: "static" },
+      { text: "고속 신호는 inner-layer stripline 으로? (FEXT 면역)", anchor: "time" },
+      { text: "평행으로 길게 달리는 구간 최소화 (직교 우선)?", anchor: "time" },
+      { text: "DDR/SerDes 같은 버스는 페어 간 길이 매칭", anchor: "time" },
+      { text: "guard trace 사용 시 양 끝 GND via stitching 했나?", anchor: "static" },
+      { text: "민감 회로 (ADC, 클록) 는 noisy 회로와 분리 영역", anchor: "static" },
+    ]} />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="관련 토픽">
+    - 정량 결합 비율 (s/h 의 함수): [Trace Geometry · Crosstalk](/trace-geometry/basics#crosstalk)
+    - 인터페이스별 페어 간격 권장: [고속 인터페이스](/high-speed-interfaces)
+    - return path 가 가까울수록 결합 줄어드는 이유: [Return Paths](/return-paths/basics)
+  </Card>
+</div>
+
+</TopicLayout>

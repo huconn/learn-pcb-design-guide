@@ -1,0 +1,64 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { PDN_PLANNING } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
+import TargetZCalc from '../components/sim/TargetZCalc.svelte';
+import PdnImpedance from '../components/sim/PdnImpedance.svelte';
+
+<TopicLayout topic={PDN_PLANNING} activeSubSlug="lab">
+
+<div class="mt-2 mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 flex items-center justify-between gap-4">
+  <div>
+    <b>처음이신가요?</b> — 먼저 <a href="/pdn-planning/basics" class="underline decoration-amber-400 hover:decoration-amber-700 font-medium">기초편</a>에서 PDN 의 계층 구조를 파악하세요.
+  </div>
+  <a href="/pdn-planning/basics" class="shrink-0 rounded-md border border-amber-300 bg-white px-3 py-1.5 text-[13px] font-medium text-amber-800 hover:bg-amber-100">기초편 →</a>
+</div>
+
+<section class="mt-2 mb-6">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{PDN_PLANNING.category} · 실험실</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    PDN Planning Lab
+    <span class="block mt-1 text-slate-500 text-xl font-normal">Target Z · Plane Cap · 임피던스 시뮬레이션</span>
+  </h1>
+</section>
+
+<TipBanner>
+  <b>워크플로</b> — ① Target Z 계산기로 IC 가 요구하는 임피던스 정하기 → ② 디커플링 시뮬레이터로 그 Z 를 만족하는 cap 조합 찾기 → ③ 고주파 영역은 plane 자체로 커버.
+</TipBanner>
+
+<Card id="target" title="① Target Z + Plane 캐패시턴스">
+  <TargetZCalc client:visible />
+</Card>
+
+<div class="mt-6">
+  <Card id="impedance" title="② PDN 임피던스 시뮬레이터" subtitle="디커플링 페이지의 메인 시뮬 — cap 조합으로 Z(f) 만들기">
+    <PdnImpedance client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="checklist" title="PDN 설계 체크리스트">
+    <ChecklistBlock items={[
+      { text: "각 power rail 의 Target Z 가 정해졌는가? (ΔV/ΔI)", anchor: "target" },
+      { text: "VRM ~ bulk cap ~ MLCC ~ plane 의 계층이 모두 갖춰졌는가?", anchor: "impedance" },
+      { text: "각 IC 핀 옆 100 nF MLCC 가 있는가?", anchor: "impedance" },
+      { text: "stackup 에서 Vcc/GND plane 이 가까이 있는가? (plane cap)", anchor: "target" },
+      { text: "Plane resonance 우려 주파수 점검 (보드 가장자리 ≥ 0.5 GHz)?", anchor: "target" },
+      { text: "via stitching 으로 plane 간 연결?", anchor: "target" },
+      { text: "anti-resonance peak 가 Z_target 아래에 있는가?", anchor: "impedance" },
+    ]} />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="관련 토픽 — 한 줄로 연결">
+    - 입력 측 (VRM): [VRM Selection · 핫 루프](/vrm-selection/basics)
+    - 출력 측 cap 계층: [Decoupling · 계층](/decoupling-capacitor/basics)
+    - 임피던스 그래프 보는 법: [Decoupling · Lab](/decoupling-capacitor)
+    - 인터페이스별 PDN 권장: [고속 인터페이스](/high-speed-interfaces)
+    - plane 이 깨지면 모든 게 무의미: [Return Paths](/return-paths/basics)
+  </Card>
+</div>
+
+</TopicLayout>

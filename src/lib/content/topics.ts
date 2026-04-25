@@ -89,7 +89,86 @@ export const TRACE_GEOMETRY: Topic = {
   ],
 };
 
-export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING, HIGH_SPEED_INTERFACES, TRACE_GEOMETRY];
+export const OHMS_LAW: Topic = {
+  slug: 'ohms-law',
+  title: 'Ohm의 법칙 · 전력 · 분압',
+  subtitle: 'V = I·R, P = V·I — 한 번 더 챙기는 기초',
+  category: '00 · FUNDAMENTALS',
+  readingMinutes: 4,
+  level: '초급',
+  status: 'published',
+};
+
+export const AC_COUPLING: Topic = {
+  slug: 'ac-coupling',
+  title: 'AC 커플링 · 바이패스 캡',
+  subtitle: 'DC 는 막고 AC 만 통과 — RC 1차 필터',
+  category: '00 · FUNDAMENTALS',
+  readingMinutes: 6,
+  level: '초급',
+  status: 'published',
+  subpages: [
+    { slug: 'basics', label: '기초 · 개념', href: '/ac-coupling/basics' },
+    { slug: 'lab',    label: '실험실 · HPF', href: '/ac-coupling' },
+  ],
+};
+
+export const ESD_PROTECTION: Topic = {
+  slug: 'esd-protection',
+  title: 'ESD Protection',
+  subtitle: 'TVS · 커넥터 옆 배치 · IEC 61000-4-2',
+  category: '03 · GROUNDING',
+  readingMinutes: 7,
+  level: '초급~중급',
+  status: 'published',
+};
+
+export const CROSSTALK: Topic = {
+  slug: 'crosstalk',
+  title: 'Crosstalk · NEXT/FEXT',
+  subtitle: '인접 트레이스 사이 결합 — 시간 영역 동작',
+  category: '02 · SIGNAL INTEGRITY',
+  readingMinutes: 9,
+  level: '중급',
+  status: 'published',
+  subpages: [
+    { slug: 'basics', label: '기초 · 개념',  href: '/crosstalk/basics' },
+    { slug: 'lab',    label: '실험실 · 시뮬', href: '/crosstalk' },
+  ],
+};
+
+export const VRM_SELECTION: Topic = {
+  slug: 'vrm-selection',
+  title: 'VRM Selection · Buck Layout',
+  subtitle: 'LDO vs Switching — 스펙 읽기와 핫 루프',
+  category: '01 · POWER INTEGRITY',
+  readingMinutes: 9,
+  level: '중급',
+  status: 'published',
+  subpages: [
+    { slug: 'basics', label: '기초 · 개념',  href: '/vrm-selection/basics' },
+    { slug: 'lab',    label: '실험실 · 효율', href: '/vrm-selection' },
+  ],
+};
+
+export const PDN_PLANNING: Topic = {
+  slug: 'pdn-planning',
+  title: 'PDN Planning',
+  subtitle: '전체 PDN 계획 — 스택업 · 타겟 임피던스 · plane 자원',
+  category: '01 · POWER INTEGRITY',
+  readingMinutes: 11,
+  level: '중급',
+  status: 'published',
+  subpages: [
+    { slug: 'basics', label: '기초 · 개념',  href: '/pdn-planning/basics' },
+    { slug: 'lab',    label: '실험실 · 타겟Z', href: '/pdn-planning' },
+  ],
+};
+
+export const TOPICS: Topic[] = [
+  DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING, HIGH_SPEED_INTERFACES, TRACE_GEOMETRY,
+  OHMS_LAW, AC_COUPLING, ESD_PROTECTION, CROSSTALK, VRM_SELECTION, PDN_PLANNING,
+];
 
 /** Sidebar navigation tree — includes planned/coming-soon topics for visual richness */
 export const CATEGORIES: Category[] = [
@@ -101,34 +180,21 @@ export const CATEGORIES: Category[] = [
   {
     id: 'fundamentals',
     name: 'Fundamentals',
-    topics: [
-      { slug: 'ohms-law',       title: 'Ohm의 법칙 복습',    subtitle: '', category: '00 · FUNDAMENTALS', readingMinutes: 4,  level: '초급', status: 'coming-soon' },
-      { slug: 'ac-ac-coupling', title: 'AC 커플링 기초',      subtitle: '', category: '00 · FUNDAMENTALS', readingMinutes: 5,  level: '초급', status: 'coming-soon' },
-    ],
+    topics: [OHMS_LAW, AC_COUPLING],
   },
   {
     id: 'power-integrity',
     name: 'Power Integrity',
-    topics: [
-      DECOUPLING_CAPACITOR,
-      { slug: 'pdn-planning',  title: 'PDN Planning',      subtitle: '', category: '01 · POWER INTEGRITY', readingMinutes: 14, level: '중급',     status: 'coming-soon' },
-      { slug: 'vrm-selection', title: 'VRM Selection',     subtitle: '', category: '01 · POWER INTEGRITY', readingMinutes: 10, level: '중급',     status: 'coming-soon' },
-    ],
+    topics: [DECOUPLING_CAPACITOR, PDN_PLANNING, VRM_SELECTION],
   },
   {
     id: 'signal-integrity',
     name: 'Signal Integrity',
-    topics: [
-      IMPEDANCE_MATCHING,
-      { slug: 'crosstalk',          title: 'Crosstalk',          subtitle: '', category: '02 · SIGNAL INTEGRITY', readingMinutes: 10, level: '중급~고급', status: 'coming-soon' },
-    ],
+    topics: [IMPEDANCE_MATCHING, CROSSTALK],
   },
   {
     id: 'grounding-emc',
     name: 'Grounding & EMC',
-    topics: [
-      RETURN_PATHS,
-      { slug: 'esd',          title: 'ESD Protection',            subtitle: '', category: '03 · GROUNDING', readingMinutes: 8,  level: '초급~중급', status: 'coming-soon' },
-    ],
+    topics: [RETURN_PATHS, ESD_PROTECTION],
   },
 ];

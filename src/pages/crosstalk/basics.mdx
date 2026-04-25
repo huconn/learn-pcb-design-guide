@@ -1,0 +1,136 @@
+import TopicLayout from '../../layouts/TopicLayout.astro';
+import { CROSSTALK } from '../../lib/content/topics';
+import Card from '../../components/ui/Card.astro';
+import TipBanner from '../../components/ui/TipBanner.astro';
+
+<TopicLayout topic={CROSSTALK} activeSubSlug="basics">
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{CROSSTALK.category} · 기초편</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    Crosstalk · NEXT/FEXT
+    <span class="block mt-1 text-slate-500 text-xl font-normal">옆 트레이스 신호가 내 신호에 새는 현상</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    두 트레이스가 가까이 평행으로 달리면 한 쪽 신호가 변할 때 옆 트레이스에 작은 전압이 유도됩니다 — <b>crosstalk</b>. 
+    <a href="/trace-geometry/basics#crosstalk" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a> 페이지에서 정성적인 결합 비율을 봤다면, 
+    이 페이지는 <b>시간 영역에서 어떤 모양</b>으로 나타나는지를 다룹니다.
+  </p>
+</section>
+
+<TipBanner>
+  <b>핵심 두 가지</b> — NEXT (Near-End, 근단) 는 <b>aggressor 와 같은 방향</b> 의 victim 끝에 즉시 나타나고, FEXT (Far-End) 는 <b>aggressor 가 도착하는 끝</b> 에 펄스로 나타납니다.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="mechanism" title="1. 어떻게 결합하나 — Capacitive + Inductive">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        두 평행 트레이스 사이에는 두 가지 결합이 동시에 발생합니다:
+      </p>
+      <ul>
+        <li><b>Capacitive coupling (C<sub>m</sub>)</b> — 트레이스 사이 공간의 전기장. 변화하는 V 가 전류를 유도. <b>aggressor 와 같은 방향</b> 의 victim 전류 발생.</li>
+        <li><b>Inductive coupling (L<sub>m</sub>)</b> — 트레이스 주위 자기장. aggressor 의 di/dt 가 victim 에 EMF 유도. <b>aggressor 와 반대 방향</b>.</li>
+      </ul>
+      <p>
+        두 결합이 서로 더해지거나 상쇄되어 <b>NEXT 와 FEXT</b> 라는 두 개의 다른 모양이 양 끝에 나타납니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="next" title="2. NEXT (Near-End Crosstalk) — 근단 결합">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        Aggressor 의 출발점(driver 측) 과 같은 끝의 victim 에 나타나는 신호. 
+      </p>
+      <ul>
+        <li><b>크기</b>: aggressor 진폭 × K<sub>b</sub> (backward coupling). K<sub>b</sub> 는 형상에 의존, 대략 0.05 ~ 0.25.</li>
+        <li><b>지속 시간</b>: max(t<sub>rise</sub>, 2·T<sub>d</sub>) 동안 유지. 결합 길이가 충분히 길면 <b>K<sub>b</sub>·V<sub>s</sub> 에서 saturate</b>.</li>
+        <li><b>모양</b>: 거의 평평한 펄스 (rise/fall 은 t<sub>rise</sub> 와 비슷).</li>
+      </ul>
+      <p>
+        길게 평행으로 달리는 두 신호 — 예: 같은 버스의 인접 비트 — 에서는 NEXT 가 K<sub>b</sub>·V<sub>s</sub> 까지 크게 나타날 수 있습니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="fext" title="3. FEXT (Far-End Crosstalk) — 원단 결합">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        Aggressor 의 도착점(receiver 측) 과 같은 끝의 victim 에 나타나는 신호. NEXT 와 매우 다른 모양:
+      </p>
+      <ul>
+        <li><b>크기</b>: K<sub>f</sub> × <b>length</b> × dV/dt. 즉 <b>aggressor 변화 속도(rise time 의 역수)</b> 와 <b>결합 길이</b> 에 비례.</li>
+        <li><b>도착 시간</b>: T<sub>d</sub> 후 (aggressor 와 함께 도달).</li>
+        <li><b>모양</b>: rise time 폭의 <b>펄스</b> 한 번 (같은 방향의 디지털 step 은 아님).</li>
+      </ul>
+      <p>
+        여기서 흥미로운 점: <b>stripline (양쪽이 plane)</b> 에서는 capacitive 와 inductive 결합이 정확히 상쇄돼 FEXT 가 거의 0 입니다 — 
+        <b>microstrip (한쪽 면이 공기)</b> 에서만 FEXT 가 큰 문제. 그래서 진짜 고속 신호는 <b>inner layer stripline</b> 으로 라우팅합니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="length-rise" title="4. 길이 · rise time 의 효과">
+    <div class="prose prose-slate max-w-none">
+      <p><b>FEXT 의 핵심</b> — rise time 이 짧을수록 (dV/dt 큼), 결합 길이가 길수록 — 폭은 그대로 유지되며 진폭만 커집니다.</p>
+      <ul>
+        <li>rise time 0.5 ns, length 5 cm → 작은 펄스</li>
+        <li>rise time 0.1 ns (5 Gbps), length 5 cm → <b>5 배 큰 펄스</b></li>
+        <li>rise time 0.5 ns, length 25 cm → <b>5 배 큰 펄스</b> (길이 5 배)</li>
+      </ul>
+      <p>
+        <b>NEXT 는 다릅니다</b> — 결합 길이가 t<sub>rise</sub>·v 의 절반 (= t<sub>rise</sub>/2 만큼의 신호 위치 차이) 이상이 되면 saturate 됩니다. 그 이상 길게 만들어도 NEXT 는 더 안 커집니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="mitigation" title="5. 완화 — 어떻게 줄이나">
+    <div class="prose prose-slate max-w-none">
+      <p>다 합쳐서 적용:</p>
+      <ol>
+        <li><b>3W rule</b> — center-to-center ≥ 3W (edge-to-edge ≥ 2W) 으로 −20 dB 격리. 가장 흔한 첫 단추.</li>
+        <li><b>plane 가까이 배치</b> — H 작을수록 K<sub>b</sub>, K<sub>f</sub> 모두 줄어듭니다. (return path 가 더 강하게 잡혀서)</li>
+        <li><b>stripline 사용</b> — FEXT 거의 0. 진짜 고속(SerDes, DDR) 라우팅의 표준.</li>
+        <li><b>guard trace</b> (가드) — aggressor 와 victim 사이에 GND 트레이스. <b>양 끝이 plane 으로 via stitched 돼야</b> 효과 (그렇지 않으면 오히려 결합 매개체).</li>
+        <li><b>결합 길이 제한</b> — 평행으로 길게 달리지 말고 직교 / 짧게 교차.</li>
+        <li><b>differential routing</b> — 차동 페어 자체는 common-mode crosstalk 면역.</li>
+      </ol>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>"왜 H 가 작을수록 결합이 줄어드나" 의 직관: <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>3W rule 의 정량 그림: <a href="/trace-geometry/basics#crosstalk" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · Crosstalk</a></li>
+        <li>실 인터페이스 별 페어 간격 권장: <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-8 mb-12">
+  <a href="/crosstalk" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+    <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
+    <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — NEXT/FEXT 시간영역 시뮬레이터</div>
+    <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+      Aggressor 의 rise time, 결합 길이, 트레이스 간격을 조작하면서 NEXT/FEXT 펄스가 시간영역에서 어떻게 변하는지 직접 관찰.
+    </p>
+    <div class="mt-3 inline-flex items-center gap-2 text-indigo-600 text-sm font-medium">
+      실험실로 이동 <span class="group-hover:translate-x-1 transition-transform">→</span>
+    </div>
+  </a>
+</div>
+
+</TopicLayout>

@@ -1,0 +1,132 @@
+import TopicLayout from '../../layouts/TopicLayout.astro';
+import { AC_COUPLING } from '../../lib/content/topics';
+import Card from '../../components/ui/Card.astro';
+import TipBanner from '../../components/ui/TipBanner.astro';
+
+<TopicLayout topic={AC_COUPLING} activeSubSlug="basics">
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{AC_COUPLING.category} · 기초편</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    AC 커플링 · 바이패스 캡
+    <span class="block mt-1 text-slate-500 text-xl font-normal">DC 는 막고 AC 만 통과 — 가장 자주 쓰는 1차 필터</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    "신호 라인에 캡 하나가 직렬로 들어가는 이유" — 가장 흔한 답은 <b>AC 커플링</b>입니다. 
+    오디오부터 USB 3 까지 곳곳에 등장하는 패턴.
+  </p>
+</section>
+
+<TipBanner>
+  <b>한 문장 — </b>커패시터는 <b>주파수 의존 저항</b> 처럼 동작합니다. 낮은 주파수(DC 에 가까울수록) 에서는 무한대, 높은 주파수에서는 0 에 가까워집니다.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="why" title="1. 왜 필요한가?">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        두 회로 사이에 신호를 전달할 때, 두 회로의 <b>DC 동작점(bias)</b> 이 다른 경우가 많습니다:
+      </p>
+      <ul>
+        <li>마이크의 출력은 ±수 mV (DC 0 V 기준), 마이크 앰프 입력은 1.65 V 바이어스가 필요 (싱글-서플라이 OP 앰프)</li>
+        <li>USB 3 의 TX 쪽은 IC 가 바이어스 결정, RX 쪽은 별도 IC 가 자기 바이어스 가짐 → DC 분리 필요</li>
+        <li>고음 분리 — 스피커 크로스오버 — 트위터에는 저주파를 보내지 않기</li>
+      </ul>
+      <p>
+        직류는 차단하고 교류 성분만 통과시키는 가장 단순한 회로 — <b>직렬 캡 + 풀다운/풀업 R</b> = RC 1차 high-pass filter.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="hpf" title="2. RC High-Pass Filter — 1차 식">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        신호 → C → R(다음 단 입력 또는 별도 풀다운) → GND. 신호 위치에서 본 임피던스는:
+      </p>
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-[13px]">
+        |H(f)| = (f/f<sub>c</sub>) / √(1 + (f/f<sub>c</sub>)²) &nbsp; · &nbsp; f<sub>c</sub> = 1 / (2π · R · C)
+      </p>
+      <ul>
+        <li>f ≪ f<sub>c</sub>  → 거의 0 (신호 차단)</li>
+        <li>f = f<sub>c</sub>  → −3 dB (약 70%)</li>
+        <li>f ≫ f<sub>c</sub>  → 거의 1 (신호 통과)</li>
+      </ul>
+      <p>
+        즉, <b>f<sub>c</sub> 를 신호의 가장 낮은 주파수보다 충분히 낮게</b> 설정하면 됩니다. 보통 10 배 이상 낮게.
+      </p>
+      <p>
+        <b>실 예</b>:
+      </p>
+      <ul>
+        <li>오디오 (20 Hz~20 kHz): f<sub>c</sub> = 2 Hz 정도 → 10 kΩ + 10 μF 또는 100 kΩ + 1 μF</li>
+        <li>USB 3 (5 GHz 정도): f<sub>c</sub> = 50 MHz 까지 가능 → 100 nF MLCC + 50 Ω terminator</li>
+        <li>마이크 → MCU ADC: f<sub>c</sub> = 10 Hz → 100 kΩ + 100 nF</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="droop" title="3. Droop — 사각파에서 보이는 트릭">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        사각파(사인파가 아니라 디지털 펄스) 가 AC 커플링을 통과하면 <b>긴 'high' 또는 'low'</b> 동안 신호가 천천히 0 으로 회귀합니다 — 이를 <b>droop</b> 이라고 합니다.
+      </p>
+      <p>
+        일반 식: T 시간이 지나면 step 의 amplitude 가 <span class="font-mono">exp(−T/τ)</span> 만큼만 남음 (τ = R·C).
+        예) τ = 10 ms, T = 1 ms 면 droop = 1 − exp(−0.1) ≈ 9.5 %.
+      </p>
+      <p>
+        <b>USB 3 / SerDes</b> 같은 8b/10b 인코딩은 DC 균형이 보장되어 long run 이 짧아 droop 가 작지만, 
+        <b>UART / SPI</b> 처럼 오랫동안 같은 값이 유지되는 신호는 AC 커플링이 부적합합니다.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="bypass" title="4. 바이패스 캡 (Bypass) — 같은 회로의 다른 이름">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        IC 의 전원 핀 옆 100 nF 캡(<a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">디커플링 캡</a>) 도 같은 원리:
+      </p>
+      <ul>
+        <li>고주파 노이즈 → 캡을 통해 GND 로 빠져나감 (high-pass 의 "차단" 측에서 본 시각)</li>
+        <li>DC 전원 → 캡으로는 안 흐름 → IC 핀까지 전달</li>
+      </ul>
+      <p>
+        <b>커플링</b> (직렬) 과 <b>바이패스</b> (병렬) 는 위치만 다를 뿐 <b>같은 동작 (f-dependent Z)</b> 입니다. 
+        하나는 신호 라인에서 DC 를 끊는 용도, 하나는 전원 라인에서 AC 를 GND 로 빼는 용도.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>같은 캡 식이 거꾸로 — 디커플링: <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+        <li>USB 3 의 TX 측 100 nF 캡: <a href="/high-speed-interfaces#usb3" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+        <li>RC 의 R 와 C 는 어디서 오나: <a href="/ohms-law" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Ohm 법칙</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-8 mb-12">
+  <a href="/ac-coupling" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+    <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
+    <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — RC HPF 계산기</div>
+    <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+      R, C 값을 조작하면서 cutoff f<sub>c</sub>, 신호 주파수에서의 감쇠, 사각파 droop 까지 실시간으로 확인.
+    </p>
+    <div class="mt-3 inline-flex items-center gap-2 text-indigo-600 text-sm font-medium">
+      실험실로 이동 <span class="group-hover:translate-x-1 transition-transform">→</span>
+    </div>
+  </a>
+</div>
+
+</TopicLayout>
