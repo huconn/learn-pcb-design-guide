@@ -1,0 +1,54 @@
+---
+// Side-by-side 4-layer and 6-layer recommended PCB stackups for high-speed
+// signaling. Each layer is labeled with role and recommended use.
+interface Layer { name: string; role: string; color: string; height?: number }
+interface Stackup { title: string; subtitle: string; layers: Layer[] }
+
+const stackups: Stackup[] = [
+  {
+    title: '4-layer (입문)',
+    subtitle: 'USB 2.0 / 저속 LVDS / 500 Mbps 이하',
+    layers: [
+      { name: 'L1', role: '신호 (top) — 고속 신호 우선', color: '#fbbf24' },
+      { name: 'L2', role: 'GND plane (solid) — L1 reference', color: '#94a3b8' },
+      { name: 'L3', role: 'Power plane', color: '#fb923c' },
+      { name: 'L4', role: '신호 (bottom) — 저속/디지털', color: '#fbbf24' },
+    ],
+  },
+  {
+    title: '6-layer (권장)',
+    subtitle: 'USB 3 / GbE / HDMI / DDR3+',
+    layers: [
+      { name: 'L1', role: '신호 (top) — 고속 페어',          color: '#fbbf24' },
+      { name: 'L2', role: 'GND plane (solid)',                color: '#94a3b8' },
+      { name: 'L3', role: '신호 (inner) — 저속/제어 또는 고속', color: '#fbbf24' },
+      { name: 'L4', role: 'Power plane',                       color: '#fb923c' },
+      { name: 'L5', role: 'GND plane (solid)',                color: '#94a3b8' },
+      { name: 'L6', role: '신호 (bottom) — 디지털/제어',       color: '#fbbf24' },
+    ],
+  },
+];
+---
+<div class="not-prose grid gap-4 md:grid-cols-2">
+  {stackups.map((s) => (
+    <figure class="rounded-lg border border-slate-200 bg-white p-4">
+      <div class="font-mono text-[11px] tracking-widest text-indigo-600">{s.title}</div>
+      <div class="mt-1 text-xs text-slate-500">{s.subtitle}</div>
+
+      <div class="mt-3 space-y-1">
+        {s.layers.map((l) => (
+          <div class="flex items-center gap-3 rounded border border-slate-200 px-2 py-1.5" style={`background-color: ${l.color}20`}>
+            <div class="font-mono text-[10px] tracking-widest text-slate-700 w-8">{l.name}</div>
+            <div class="h-3 w-6 rounded-sm" style={`background-color: ${l.color}`}></div>
+            <div class="text-[12px] text-slate-700 leading-tight">{l.role}</div>
+          </div>
+        ))}
+        <div class="h-2"></div>
+      </div>
+
+      <figcaption class="mt-2 text-[11px] text-slate-600 leading-relaxed">
+        고속 신호는 항상 <b>인접 층이 GND</b> 인 곳을 통과 — 그래야 return path 가 깨끗.
+      </figcaption>
+    </figure>
+  ))}
+</div>

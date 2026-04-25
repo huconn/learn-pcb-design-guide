@@ -64,10 +64,26 @@ export const IMPEDANCE_MATCHING: Topic = {
   ],
 };
 
-export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING];
+export const HIGH_SPEED_INTERFACES: Topic = {
+  slug: 'high-speed-interfaces',
+  title: '고속 인터페이스 설계',
+  subtitle: 'USB · HDMI · Ethernet — 어떤 값을 기준으로 라우팅하나',
+  category: '90 · PRACTICAL',
+  readingMinutes: 10,
+  level: '중급',
+  status: 'published',
+  // No subpages — single reference page
+};
+
+export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING, HIGH_SPEED_INTERFACES];
 
 /** Sidebar navigation tree — includes planned/coming-soon topics for visual richness */
 export const CATEGORIES: Category[] = [
+  {
+    id: 'practical',
+    name: 'Practical · 실전',
+    topics: [HIGH_SPEED_INTERFACES],
+  },
   {
     id: 'fundamentals',
     name: 'Fundamentals',

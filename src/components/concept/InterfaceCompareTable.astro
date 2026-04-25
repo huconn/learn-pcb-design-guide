@@ -1,0 +1,98 @@
+---
+interface Row {
+  name: string;
+  speed: string;
+  zDiff: string;
+  intra: string;
+  inter: string;
+  acCoupling: string;
+  notes: string;
+  tone: 'sky' | 'indigo' | 'emerald' | 'rose';
+}
+
+const rows: Row[] = [
+  {
+    name: 'USB 2.0 (HS 480 Mbps)',
+    speed: '480 Mbps',
+    zDiff: '90 Ω ± 15 %',
+    intra: '< 150 mil',
+    inter: '—',
+    acCoupling: '아니오',
+    notes: 'D+/D- 차동, 페어 사이는 무관. ESD 다이오드는 커넥터 측.',
+    tone: 'sky',
+  },
+  {
+    name: 'USB 3.2 Gen 1 (5 Gbps)',
+    speed: '5 Gbps',
+    zDiff: '90 Ω ± 10 %',
+    intra: '< 5 mil',
+    inter: '—',
+    acCoupling: 'TX 측 100 nF',
+    notes: 'TX/RX 별도 차동 페어. via stub 최소화 (필요시 back-drill). reference plane 무결성 필수.',
+    tone: 'indigo',
+  },
+  {
+    name: '1000BASE-T (GbE)',
+    speed: '1 Gbps (4 페어)',
+    zDiff: '100 Ω ± 10 %',
+    intra: '< 5 mil',
+    inter: '< 50 mil (페어 간)',
+    acCoupling: '마그네틱 트랜스포머',
+    notes: '4 페어 모두 양방향. Bob Smith 종단 (75 Ω + cap to chassis) on 미사용 핀. PHY ↔ 마그네틱 ↔ RJ45 순서.',
+    tone: 'emerald',
+  },
+  {
+    name: 'HDMI 1.4 / 2.0 (TMDS)',
+    speed: '~3.4 Gbps/lane (1.4) · 6 Gbps (2.0)',
+    zDiff: '100 Ω ± 10 %',
+    intra: '< 5 mil',
+    inter: '< 200 mil (TMDS 4 페어)',
+    acCoupling: '아니오 (DC-coupled)',
+    notes: '3 데이터 페어 + 1 클럭 페어. ESD 다이오드는 커넥터 측 필수. CEC/HPD/DDC 별도 라우팅.',
+    tone: 'rose',
+  },
+];
+
+const toneClasses: Record<string, { bg: string; border: string; text: string; chip: string }> = {
+  sky:     { bg: 'bg-sky-50',     border: 'border-sky-200',     text: 'text-sky-900',     chip: 'bg-sky-100 text-sky-800' },
+  indigo:  { bg: 'bg-indigo-50',  border: 'border-indigo-200',  text: 'text-indigo-900',  chip: 'bg-indigo-100 text-indigo-800' },
+  emerald: { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-900', chip: 'bg-emerald-100 text-emerald-800' },
+  rose:    { bg: 'bg-rose-50',    border: 'border-rose-200',    text: 'text-rose-900',    chip: 'bg-rose-100 text-rose-800' },
+};
+---
+<div class="not-prose overflow-x-auto rounded-lg border border-slate-200">
+  <table class="w-full border-collapse text-sm">
+    <thead class="bg-slate-50 text-slate-600 font-mono text-[10px] tracking-widest uppercase">
+      <tr>
+        <th class="text-left px-3 py-2 border-b border-slate-200">Interface</th>
+        <th class="text-left px-3 py-2 border-b border-slate-200">속도</th>
+        <th class="text-left px-3 py-2 border-b border-slate-200">Z<sub>diff</sub></th>
+        <th class="text-left px-3 py-2 border-b border-slate-200">Intra-pair</th>
+        <th class="text-left px-3 py-2 border-b border-slate-200">Inter-pair</th>
+        <th class="text-left px-3 py-2 border-b border-slate-200">AC coupling</th>
+        <th class="text-left px-3 py-2 border-b border-slate-200">메모</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => {
+        const c = toneClasses[r.tone];
+        return (
+          <tr class={c.bg + ' ' + c.text}>
+            <td class={'px-3 py-2 border-b ' + c.border + ' font-medium'}>{r.name}</td>
+            <td class={'px-3 py-2 border-b ' + c.border + ' font-mono text-[12px]'}>{r.speed}</td>
+            <td class={'px-3 py-2 border-b ' + c.border}>
+              <span class={'inline-block rounded px-1.5 py-0.5 font-mono text-[11px] ' + c.chip}>{r.zDiff}</span>
+            </td>
+            <td class={'px-3 py-2 border-b ' + c.border + ' font-mono text-[12px]'}>{r.intra}</td>
+            <td class={'px-3 py-2 border-b ' + c.border + ' font-mono text-[12px]'}>{r.inter}</td>
+            <td class={'px-3 py-2 border-b ' + c.border + ' text-[12px]'}>{r.acCoupling}</td>
+            <td class={'px-3 py-2 border-b ' + c.border + ' text-[12px] leading-snug'}>{r.notes}</td>
+          </tr>
+        );
+      })}
+    </tbody>
+  </table>
+</div>
+<p class="mt-2 text-xs text-slate-500">
+  ※ 위 값은 <b>전형적 가이드</b> — 실제 값은 PHY/SoC 데이터시트 (예: Intel i210, Realtek 8211, Cypress USB3 hub, ITE HDMI redriver) 의 PCB 설계 가이드를 우선합니다.
+</p>
