@@ -75,14 +75,28 @@ export const HIGH_SPEED_INTERFACES: Topic = {
   // No subpages — single reference page
 };
 
-export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING, HIGH_SPEED_INTERFACES];
+export const TRACE_GEOMETRY: Topic = {
+  slug: 'trace-geometry',
+  title: '트레이스 기하 · Geometry',
+  subtitle: '폭 · 간격 · 두께 — 임피던스와 전류용량을 결정한다',
+  category: '90 · PRACTICAL',
+  readingMinutes: 8,
+  level: '초급~중급',
+  status: 'published',
+  subpages: [
+    { slug: 'basics', label: '기초 · 개념',  href: '/trace-geometry/basics' },
+    { slug: 'lab',    label: '실험실 · 계산기', href: '/trace-geometry' },
+  ],
+};
+
+export const TOPICS: Topic[] = [DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING, HIGH_SPEED_INTERFACES, TRACE_GEOMETRY];
 
 /** Sidebar navigation tree — includes planned/coming-soon topics for visual richness */
 export const CATEGORIES: Category[] = [
   {
     id: 'practical',
     name: 'Practical · 실전',
-    topics: [HIGH_SPEED_INTERFACES],
+    topics: [TRACE_GEOMETRY, HIGH_SPEED_INTERFACES],
   },
   {
     id: 'fundamentals',

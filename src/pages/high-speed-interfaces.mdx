@@ -17,7 +17,8 @@ import StackupDiagram from '../components/concept/StackupDiagram.astro';
   <p class="mt-4 max-w-3xl text-slate-600 leading-relaxed">
     이 페이지는 실제 PCB 를 그릴 때 바로 옆에 두고 보는 <b>실전 레퍼런스</b> 입니다. 
     "이 인터페이스는 차동 임피던스가 몇 옴이고, 페어 안 길이는 몇 mil 까지 맞춰야 하고, 어디에 AC coupling 을 두느냐" 같은
-    구체적 숫자 위주로 정리했습니다. 각 항목은 앞 토픽들 ([디커플링](/decoupling-capacitor/basics) · [Return Paths](/return-paths/basics) · [Impedance Matching](/impedance-matching/basics)) 과 연결됩니다.
+    구체적 숫자 위주로 정리했습니다. 각 항목은 앞 토픽들 ([디커플링](/decoupling-capacitor/basics) · [Return Paths](/return-paths/basics) · [Impedance Matching](/impedance-matching/basics) · [Trace Geometry](/trace-geometry/basics)) 과 연결됩니다.
+    아래 표의 "Z<sub>diff</sub>" 값을 실제 폭/간격으로 변환하려면 → [Trace Geometry 실험실](/trace-geometry#diff) 의 차동 페어 계산기 사용.
   </p>
 </section>
 
@@ -178,6 +179,7 @@ import StackupDiagram from '../components/concept/StackupDiagram.astro';
 <div class="mt-6">
   <Card id="further" title="더 깊이 / 관련 토픽">
     - 차동 임피던스가 어떻게 결정되는지: [Impedance Matching](/impedance-matching/basics)
+    - 표의 Z 값을 실제 폭/간격으로 계산: [Trace Geometry · Lab](/trace-geometry#diff)
     - 페어 아래 plane 이 왜 중요한가: [Return Paths](/return-paths/basics)
     - 디커플링 cap 어디에 어떻게: [Decoupling Capacitor](/decoupling-capacitor/basics)
     - 다음 예정: PCIe / DDR4 / MIPI CSI / SATA 설계 가이드

@@ -1,0 +1,194 @@
+import TopicLayout from '../../layouts/TopicLayout.astro';
+import { TRACE_GEOMETRY } from '../../lib/content/topics';
+import Card from '../../components/ui/Card.astro';
+import TipBanner from '../../components/ui/TipBanner.astro';
+import MicrostripCrossSection from '../../components/concept/MicrostripCrossSection.astro';
+
+<TopicLayout topic={TRACE_GEOMETRY} activeSubSlug="basics">
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{TRACE_GEOMETRY.category} · 기초편</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    트레이스 폭 · 간격 · 두께
+    <span class="block mt-1 text-slate-500 text-xl font-normal">실제 보드를 그릴 때 어떤 숫자를 쓰나</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    트레이스는 단순한 "선" 이 아니라 <b>3차원 구조</b>입니다 — 폭(W) · 두께(T) · plane 까지 거리(H) · 다른 트레이스와의 간격(S) 이
+    함께 임피던스, 전류용량, 노이즈 결합을 결정합니다. 이 페이지에서 변수의 의미를 잡고, 
+    <a href="/trace-geometry" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">실험실</a> 에서 직접 숫자를 넣어 결과를 확인하세요.
+  </p>
+  <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 6분 읽기</span>
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">★ 초급~중급</span>
+    <span class="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-700">계산기 4개</span>
+  </div>
+</section>
+
+<TipBanner>
+  <b>변수가 4개</b> — W (폭) · H (유전체 두께) · T (동박 두께) · S (페어 간격). 이 네 가지로 거의 모든 PCB 의 SI/PI 가 결정됩니다.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="vars" title="1. 네 가지 변수">
+    <MicrostripCrossSection />
+    <div class="prose prose-slate max-w-none mt-3">
+      <ul>
+        <li><b>W (Width, 폭)</b> — 트레이스가 얼마나 넓은가. 임피던스에 가장 강한 영향. 전류용량도 결정.</li>
+        <li><b>H (Height, 유전체 두께)</b> — 트레이스에서 가장 가까운 plane(보통 GND) 까지의 절연체 두께. stack-up 이 결정.</li>
+        <li><b>T (Thickness, 동박 두께)</b> — 트레이스 자체의 구리 두께. 1 oz = 1.378 mil = 35 μm 이 표준. 2 oz 이면 두 배.</li>
+        <li><b>S (Spacing, 간격)</b> — 차동 페어의 두 트레이스 사이 (또는 인접 신호와의 거리). 차동 임피던스와 crosstalk 결정.</li>
+      </ul>
+      <p>
+        모든 단위는 <span class="font-mono">mil</span> (1 mil = 0.0254 mm = 25.4 μm) 또는 mm 로 표기. 미국 표준은 mil, 유럽/한국 도구는 mm. 
+        <span class="font-mono">1 mm ≈ 39.4 mil</span>.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="width-current" title="2. 폭이 결정하는 것 (1) — 전류 용량">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        트레이스를 너무 얇게 그리면 <b>구리가 녹습니다</b>. 정확히는, 동박은 저항이 있어서 전류가 흐르면 발열하고, 
+        주변 PCB 의 방열 능력을 넘으면 온도가 계속 올라가다가 끊어집니다.
+      </p>
+      <p>업계 표준은 <b>IPC-2221</b>:</p>
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
+        I = k · ΔT⁰·⁴⁴ · A⁰·⁷²⁵
+      </p>
+      <ul>
+        <li><b>I</b> — 흐를 수 있는 최대 전류 (A)</li>
+        <li><b>ΔT</b> — 허용 온도 상승 (°C). 보통 <b>10 °C</b> 보수적, <b>30 °C</b> 까지가 일반</li>
+        <li><b>A</b> — 단면적 (mil²) = W × T</li>
+        <li><b>k</b> — 0.048 외층(external) · 0.024 내층(internal) — 내층은 방열이 어려워 절반</li>
+      </ul>
+      <p>
+        실용 기준 (1 oz copper, ΔT = 10 °C, external):
+      </p>
+      <ul>
+        <li>10 mil → 약 0.7 A</li>
+        <li>20 mil → 약 1.2 A</li>
+        <li>50 mil → 약 2.4 A</li>
+        <li>100 mil → 약 4.0 A</li>
+      </ul>
+      <p>
+        실험실의 <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">트레이스 폭 계산기</a> 에서 직접 시뮬해보세요.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="width-impedance" title="3. 폭 + H 가 결정하는 것 (2) — 임피던스 Z₀">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        같은 트레이스라도 <b>plane 까지 거리(H)</b> 와 <b>폭(W)</b> 의 비율로 특성 임피던스 Z₀ 가 정해집니다. 
+        IPC-2141 의 microstrip 근사식:
+      </p>
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-[13px]">
+        Z₀ = (87 / √(ε_r + 1.41)) · ln(5.98·H / (0.8·W + T))
+      </p>
+      <p>
+        직관적으로:
+      </p>
+      <ul>
+        <li><b>W 를 늘리면</b> Z₀ 감소 (전기장 통로가 넓어짐)</li>
+        <li><b>H 를 늘리면</b> Z₀ 증가 (plane 이 멀어 결합이 약해짐)</li>
+        <li><b>ε_r (FR4 ≈ 4.2) 가 크면</b> Z₀ 감소 (유전율 높을수록 결합 강함)</li>
+      </ul>
+      <p>
+        실 PCB 에서 흔한 50 Ω microstrip 예시 (1 oz, FR4):
+      </p>
+      <ul>
+        <li>H = 4 mil → W ≈ 7 mil</li>
+        <li>H = 6 mil → W ≈ 11 mil  ← 일반 4-layer 보드 standard</li>
+        <li>H = 10 mil → W ≈ 18 mil</li>
+      </ul>
+      <p>
+        즉 stackup 이 정해지면 50 Ω 폭은 자동으로 결정됩니다. PCB fab 에 "controlled impedance" 를 요청하면 fab 이 정확한 값을 맞춰줍니다(±10% 보장).
+        → <a href="/impedance-matching/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">왜 임피던스가 중요한지</a> 는 별도 토픽으로.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="diff-pair" title="4. 폭 + S 가 결정하는 것 (3) — 차동 임피던스">
+    <MicrostripCrossSection showDifferential />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        차동 페어는 두 트레이스가 짝으로 다닙니다. <b>차동 임피던스</b> Z<sub>diff</sub> 는 같은 단일 임피던스 (Z₀) 에서 출발해
+        페어 간격 S 가 좁을수록 낮아집니다 (서로 결합 효과):
+      </p>
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-[13px]">
+        Z<sub>diff</sub> = 2 · Z₀ · (1 − 0.48 · exp(−0.96 · S / H))
+      </p>
+      <ul>
+        <li><b>S 매우 큼</b> (페어가 멀리) → Z<sub>diff</sub> ≈ 2·Z₀ (결합 거의 없음)</li>
+        <li><b>S 가 H 와 같음</b> → 약 2·Z₀ × 0.81 ≈ 1.62·Z₀</li>
+        <li><b>S 가 H 의 1/2</b> → 매우 강한 결합</li>
+      </ul>
+      <p>
+        업계 표준 차동 임피던스 (실험실 계산기에 마커로 표시됨):
+      </p>
+      <ul>
+        <li><b>USB 2.0/3.x</b>: 90 Ω</li>
+        <li><b>HDMI · GbE · DDR</b>: 100 Ω</li>
+        <li><b>PCIe</b>: 85 Ω</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="crosstalk" title="5. S + H 가 결정하는 것 (4) — Crosstalk">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        두 인접한 트레이스 사이에 <b>전기장 결합 (capacitive)</b> 과 <b>자기장 결합 (inductive)</b> 이 일어납니다. 
+        한 쪽 트레이스에 신호가 변하면 옆 트레이스에 작은 전압이 유도됩니다 — 이를 <b>crosstalk</b> 라고 합니다.
+      </p>
+      <p>1차 근사 (단순화):</p>
+      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
+        coupling ≈ 1 / (1 + (S/H)²)
+      </p>
+      <p>
+        흥미로운 점 — <b>S/W</b> 가 아니라 <b>S/H</b> 가 핵심 변수입니다. 즉 plane 이 가까울수록(H 작음) crosstalk 도 줄어듭니다. 
+        return path 가 짧을수록 인접 트레이스로 새는 양이 적기 때문입니다 ([Return Paths](/return-paths/basics) 와 같은 원리).
+      </p>
+      <p>
+        흔히 인용되는 <b>3W rule</b> — 트레이스 중심 간 거리가 트레이스 폭의 3 배 이상 (즉 edge-to-edge S = 2W). 
+        이는 <b>W = H</b> 인 일반 stackup 에서 약 -20 dB (10%) 결합으로 떨어지는 지점입니다. 더 강한 격리(>-30 dB)는 5W 이상이 필요.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="connections" title="다른 토픽과 어떻게 연결되나">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>임피던스가 왜 중요한가, 안 맞으면 어떻게 되는가 → <a href="/impedance-matching/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Impedance Matching</a></li>
+        <li>plane 이 끊기면 H 가 사실상 무한대가 되어 모든 게 깨짐 → <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>USB·HDMI·GbE 가 요구하는 차동 Z 와 length matching → <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+        <li>전원 트레이스가 굵어야 하는 이유 (디커플링 cap 까지 가는 길) → <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-8 mb-12">
+  <a href="/trace-geometry" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+    <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
+    <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — 4 종 계산기</div>
+    <p class="mt-2 text-slate-600 text-sm leading-relaxed">
+      ① 트레이스 폭 ↔ 전류 ② Microstrip Z₀ (실시간 단면 시각화) ③ 차동 페어 Z<sub>diff</sub> ④ Crosstalk 시뮬레이터.
+      값을 바꾸면 그래프와 단면이 즉시 반응합니다.
+    </p>
+    <div class="mt-3 inline-flex items-center gap-2 text-indigo-600 text-sm font-medium">
+      실험실로 이동 <span class="group-hover:translate-x-1 transition-transform">→</span>
+    </div>
+  </a>
+</div>
+
+</TopicLayout>
