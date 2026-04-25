@@ -130,13 +130,19 @@ import TipBanner from '../../components/ui/TipBanner.astro';
 
 <div class="mt-6">
   <Card id="stackup" title="5. Stackup 으로 PDN 결정하기">
+    <figure class="not-prose mb-4 rounded-lg border border-slate-200 overflow-hidden">
+      <img src="/stackup/6layer-cutaway.png" alt="6-layer PCB stackup cross-section" class="block w-full" loading="lazy" />
+      <figcaption class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
+        L1(신호) → L2(GND) → L3(신호) → L4(Vcc) → L5(GND) → L6(신호) 의 6-layer 일반 구성. <b>L4 Vcc 와 L5 GND 사이의 core dielectric</b> 이 plane 캡을 만드는 핵심 — 그 거리(H) 가 작을수록 plane cap 이 커집니다.
+      </figcaption>
+    </figure>
     <div class="prose prose-slate max-w-none">
       <p>
         Plane 캡은 <b>면적 × 1/거리</b> 에 비례 — 즉 Vcc 와 GND plane 을 <b>가까이 (거리 H 작게)</b> 두면 plane cap 이 커져 고주파 PDN 이 좋아짐. 6-layer 보드에서 흔한 구성:
       </p>
       <ul>
         <li>L1 신호 — L2 GND — L3 Vcc — L4 GND — L5 Vcc — L6 신호. → Vcc/GND 사이 거리 매우 작음 (4 mil 정도) → plane 캡 크게.</li>
-        <li>또는 L1 신호 — L2 GND — L3 신호 — L4 Vcc — L5 GND — L6 신호. → 신호 라우팅 우선.</li>
+        <li>또는 L1 신호 — L2 GND — L3 신호 — L4 Vcc — L5 GND — L6 신호. → 신호 라우팅 우선 (위 그림이 이 구성).</li>
       </ul>
       <p>
         고밀도 BGA 가 있는 보드는 첫 번째 (Vcc/GND 가깝게) 를 선호. 일반 컨슈머 보드는 두 번째.

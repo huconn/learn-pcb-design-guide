@@ -8,7 +8,10 @@
       "Bash(sips -g pixelWidth -g pixelHeight /Users/dkkang/dev/hardware-pcb-design-guide/public/hsi/length-match-serpentine.png)",
       "Bash(mkdir -p /Users/dkkang/dev/hardware-pcb-design-guide/public/pdn)",
       "Bash(cp /Users/dkkang/.claude/image-cache/26032bdf-5f04-4f6f-bbae-ff820fef9c90/7.png /Users/dkkang/dev/hardware-pcb-design-guide/public/pdn/plane-resonance.png)",
-      "Bash(sips -g pixelWidth -g pixelHeight /Users/dkkang/dev/hardware-pcb-design-guide/public/pdn/plane-resonance.png)"
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/dkkang/dev/hardware-pcb-design-guide/public/pdn/plane-resonance.png)",
+      "Bash(mkdir -p /Users/dkkang/dev/hardware-pcb-design-guide/public/stackup)",
+      "Bash(cp /Users/dkkang/.claude/image-cache/26032bdf-5f04-4f6f-bbae-ff820fef9c90/8.png /Users/dkkang/dev/hardware-pcb-design-guide/public/stackup/6layer-cutaway.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/dkkang/dev/hardware-pcb-design-guide/public/stackup/6layer-cutaway.png)"
     ]
   }
 }

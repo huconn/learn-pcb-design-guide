@@ -151,6 +151,12 @@ import StackupDiagram from '../components/concept/StackupDiagram.astro';
 <div class="mt-6">
   <Card id="stackup" title="권장 스택업" subtitle="고속 인터페이스가 안전하게 살 수 있는 층 구성">
     <StackupDiagram />
+    <figure class="not-prose mt-4 rounded-lg border border-slate-200 overflow-hidden">
+      <img src="/stackup/6layer-cutaway.png" alt="6-layer PCB stackup cross-section" class="block w-full" loading="lazy" />
+      <figcaption class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
+        실제 6-layer 보드 단면 — H = 75 μm 의 prepreg 가 L1 top signal 과 L2 GND plane 사이에 있어 50 Ω microstrip 의 표준 stackup 이 됩니다. via 두 종류 (through-hole / blind) 도 보입니다.
+      </figcaption>
+    </figure>
     <div class="prose prose-slate max-w-none mt-3">
       <p>
         4-layer 보드는 USB 2.0 / 저속 LVDS 에는 충분하지만, USB 3 이상 부터는 6-layer 가 거의 필수 — 
