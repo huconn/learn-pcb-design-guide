@@ -3,14 +3,59 @@ import { CATEGORIES } from '../../lib/content/topics';
 interface Props { activeSlug?: string; activeSubSlug?: string }
 const { activeSlug, activeSubSlug } = Astro.props;
 ---
-<aside class="hidden lg:flex fixed top-0 left-0 z-20 h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
-  <div class="px-5 pt-6 pb-4 border-b border-slate-200">
+<!-- Mobile top bar — visible below lg -->
+<header class="lg:hidden sticky top-0 z-30 flex items-center justify-between gap-3 bg-white/95 backdrop-blur border-b border-slate-200 px-4 py-3">
+  <a href="/" class="block min-w-0">
+    <div class="font-mono text-[10px] tracking-widest text-slate-500 truncate">HARDWARE · GUIDE</div>
+    <div class="text-sm font-semibold text-slate-900 truncate">PCB Design Guide</div>
+  </a>
+  <button
+    type="button"
+    id="sidebar-toggle"
+    aria-label="메뉴 열기"
+    aria-expanded="false"
+    aria-controls="sidebar"
+    class="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+  >
+    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="3" y1="6"  x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  </button>
+</header>
+
+<!-- Backdrop — only on mobile when drawer open -->
+<div
+  id="sidebar-backdrop"
+  class="lg:hidden fixed inset-0 z-30 bg-slate-900/40 opacity-0 pointer-events-none transition-opacity duration-200"
+  aria-hidden="true"
+></div>
+
+<aside
+  id="sidebar"
+  class="fixed top-0 left-0 z-40 h-screen w-72 lg:w-64 shrink-0 flex flex-col border-r border-slate-200 bg-slate-50
+         transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out"
+  aria-label="토픽 내비게이션"
+>
+  <div class="flex items-center justify-between px-5 pt-6 pb-4 border-b border-slate-200">
     <a href="/" class="block">
       <div class="font-mono text-[11px] tracking-widest text-slate-500">HARDWARE · GUIDE</div>
       <div class="mt-1 text-base font-semibold text-slate-900">PCB Design Guide</div>
     </a>
+    <button
+      type="button"
+      id="sidebar-close"
+      aria-label="메뉴 닫기"
+      class="lg:hidden shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-md text-slate-500 hover:bg-slate-200"
+    >
+      <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="6" y1="6"  x2="18" y2="18" />
+        <line x1="18" y1="6" x2="6"  y2="18" />
+      </svg>
+    </button>
   </div>
-  <nav class="flex-1 overflow-y-auto px-3 py-4 text-sm" aria-label="토픽 내비게이션">
+  <nav class="flex-1 overflow-y-auto px-3 py-4 text-sm">
     {CATEGORIES.map((cat) => (
       <div class="mb-5">
         <div class="px-3 pb-1 font-mono text-[10px] tracking-widest uppercase text-slate-400">{cat.name}</div>
@@ -65,3 +110,46 @@ const { activeSlug, activeSubSlug } = Astro.props;
     <div>© hardware-guide</div>
   </div>
 </aside>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const toggleBtn = document.getElementById('sidebar-toggle');
+  const closeBtn = document.getElementById('sidebar-close');
+
+  function openSidebar() {
+    if (!sidebar || !backdrop || !toggleBtn) return;
+    sidebar.classList.remove('-translate-x-full');
+    sidebar.classList.add('translate-x-0');
+    backdrop.classList.remove('opacity-0', 'pointer-events-none');
+    backdrop.classList.add('opacity-100');
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    if (!sidebar || !backdrop || !toggleBtn) return;
+    if (window.matchMedia('(min-width: 1024px)').matches) return;
+    sidebar.classList.add('-translate-x-full');
+    sidebar.classList.remove('translate-x-0');
+    backdrop.classList.add('opacity-0', 'pointer-events-none');
+    backdrop.classList.remove('opacity-100');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  toggleBtn?.addEventListener('click', openSidebar);
+  closeBtn?.addEventListener('click', closeSidebar);
+  backdrop?.addEventListener('click', closeSidebar);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSidebar();
+  });
+  // Reset state on viewport change to lg+
+  window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
+    if (e.matches) {
+      backdrop?.classList.add('opacity-0', 'pointer-events-none');
+      backdrop?.classList.remove('opacity-100');
+      document.body.style.overflow = '';
+      toggleBtn?.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>
