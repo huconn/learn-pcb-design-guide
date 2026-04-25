@@ -65,53 +65,89 @@ MDX 에 추가:
 **Save as**: `public/buck/buck-bad.png` 와 `public/buck/buck-good.png`
 **Aspect**: 4:3 · 1200 × 900 (각각)
 
-> **두 이미지를 각각 따로 생성**하되 **같은 스타일** 로 유지하세요. PCB CAD 뷰 + 핫 루프가 빨간 오버레이로 표시되는 형식.
+> **두 이미지를 각각 따로 생성**하되 **같은 스타일** 로 유지. PCB CAD 뷰 + 핫 루프가 IC 의 한쪽 변(V_in/PGND 측) 옆에 작은 빨간 사각형으로 표시.
+
+### 핵심 — 실제 async buck 의 핀 배치 + 외부 부품을 따를 것
+
+이전 시도들의 결정적 오류:
+1. 핫 루프가 IC 본체를 wrapping 하거나 가로지름.
+2. 외부 freewheel **다이오드 (D1)** 가 빠짐 — async buck (LM2596, MC34063 등 입문자/전형적 회로) 에서는 핫 루프의 일부.
+3. L1 / C2 가 옆으로 일렬로 놓여 있어 출력 체인이 안 보임.
+
+**실제 async buck IC 의 표준 배치**:
+- **V_in 핀과 PGND 핀이 IC 한쪽 변에 인접**해 있음 (예: LM2596, RT7297, MP2459 등의 SOIC/QFN 표준 배치).
+- **SW 핀은 반대쪽 변** 에 있음.
+- 외부 부품 체인: **C_in (V_in 옆)** → IC 내부 HS-FET → **SW 핀** → **D1 (Schottky, SW 와 GND 사이)** + **L1 (SW → V_out)** → **C2 (V_out → GND)**.
+- async buck 의 핫 루프 (commutation loop) = C_in 의 V+ → V_in 핀 → 내부 HS-FET → SW 핀 → D1.cathode → D1.anode → GND pour → C_in 의 GND → 닫힘.
+- 즉 핫 루프에 **C_in, IC, D1 모두 포함** — 셋 다 가까이 있어야 작아짐.
+
+따라서 BAD vs GOOD:
+- **GOOD**: C_in 이 V_in/PGND 핀 바로 옆 + D1 이 SW/PGND 핀 바로 옆 + L1 이 D1 다음에 SW 와 출력 사이. → 핫 루프 = IC 둘레의 작은 사각형.
+- **BAD**: C_in 이 멀리 + D1 도 SW 핀에서 멀리 떨어짐 → 핫 루프가 길게 늘어짐.
 
 ### Prompt — bad layout
 
-> Top-down view of a PCB section, rendered like a high-quality professional PCB CAD viewer (think Altium 3D viewer / KiCad 3D top-down). NOT a flat photograph, NOT a schematic, NOT a clean studio shot. The look should resemble a 3D-rendered preview of an actual board.
+> Top-down view of a PCB section, rendered like a high-quality professional PCB CAD viewer (Altium 3D viewer / KiCad 3D top-down). NOT a photograph, NOT a schematic.
 >
 > Board:
-> - 50 mm × 50 mm visible region of green FR4 (matte solder mask, deep green #0d4d2a)
-> - **Most of the visible area is covered by a copper GND pour** — shown as a subtly visible darker green/copper-tinted zone with thin clearance gaps around traces and pads. The pour is everywhere except where traces, pads, and component footprints sit.
-> - Many small **GND vias** scattered across the pour (filled gold dots, ~0.5 mm, with a darker plated ring) — at least 30 vias visible total to give a real-board density
+> - 60 mm × 45 mm visible region of green FR4 (matte solder mask, deep green #0d4d2a)
+> - **GND copper pour fills the entire visible area** except where traces, pads, and components sit. Subtly visible darker green/copper tint with thin clearance gaps around routing.
+> - **30+ small GND vias** scattered evenly across the pour as gold filled circles (~0.5 mm, with darker plated rings).
 >
-> Components (all top-side, oriented for clear viewing):
-> - **U1** at center: QFN-16 buck IC, 4mm × 4mm, matte black body, with 16 silver leads visible on the perimeter and a center exposed thermal pad. The thermal pad has 5 GND vias drilled into it (visible as small dots inside).
-> - **C1** (input ceramic cap, 0805 size): placed **far to the LEFT of U1, about 18 mm away**. Light tan body, two silver terminations.
-> - **L1** (shielded SMD inductor, ~5×5×3 mm): immediately to the right of U1, ~2 mm gap. Dark navy body.
-> - **C2** (output ceramic cap, 0805): right of L1, ~2 mm gap.
+> IC pinout (CRITICAL — REAL ASYNC BUCK CONVERTER ARRANGEMENT, like LM2596 / RT7297):
+> - **U1** placed roughly at the horizontal center of the board: SOIC-8 or small QFN buck IC, ~5 mm × 5 mm, matte black body, silver leads on the perimeter.
+> - **LEFT edge of U1 has `V_in` pin (top-left position) and `PGND` pin (bottom-left position) — they are adjacent on the SAME edge**. White silkscreen labels `Vin` and `PGND` next to those pins.
+> - **RIGHT edge of U1 has `SW` pin** (the switching output). White silkscreen `SW` next to it.
+> - Other pins (FB, EN, BST) on top/bottom — present but small, not labeled.
+>
+> External components (THE THREE THAT FORM THE COMMUTATION LOOP):
+> - **C1** (0805 ceramic input cap): placed **far to the LEFT of U1, about 18 mm away from U1's V_in pin**. Cap rotated so its V+ terminal faces right (toward U1) and its GND terminal faces left.
+> - **D1** (Schottky diode in SOD-123 package, small black body with white cathode stripe): placed below the IC's SW pin area, but **about 8 mm away from U1's SW pin** (also wrong — too far). Cathode connects to a trace going up to SW pin, anode connects to GND pour through vias.
+> - **L1** (shielded SMD inductor, ~5×5×3 mm, dark navy body): immediately to the right of U1's SW pin, ~2 mm gap. Its left terminal connects to SW pin and to D1's cathode trace; its right terminal goes to C2.
+> - **C2** (0805 ceramic output cap): to the right of L1, ~2 mm gap. V+ terminal connects to L1's right terminal; GND to GND pour.
 >
 > Routing:
-> - Thin gold trace from C1's V+ pad runs ~18 mm right across the GND pour, with a clearance gap visible around the trace, ending at U1's V_in pin (left side of U1).
-> - U1's PGND pin connects only to the GND pour through vias.
-> - SW pin of U1 → L1 → C2 forms a clean output chain.
+> - Long thin gold `V_in` trace from C1.V+ to U1.V_in (~18 mm, runs through the GND pour with clearance).
+> - Short trace from C1.GND down into GND pour via nearby vias.
+> - Short trace from U1.SW to L1.left and to D1.cathode.
+> - D1.anode connects to GND pour via several vias.
 >
-> **Hot loop highlight (THE KEY VISUAL ELEMENT)**:
-> - Draw a translucent **red dashed loop** (#dc2626, 50% opacity, 2 mm thick line) tracing the entire commutation current path: from C1's V+ terminal → along the long V_in trace → into U1's V_in pin → across U1 body → out U1's PGND → return through the GND pour back to C1's GND terminal → closing the loop.
-> - Fill the area enclosed by the loop with translucent red (15% opacity, no border).
-> - The result: a large red rectangle/ellipse roughly 22 mm × 6 mm dominating the left half of the image — clearly conveying "this loop is huge".
+> **Hot loop overlay (anatomically correct async-buck commutation loop)**:
+> - The loop is: C1.V+ → V_in trace → U1.V_in pin → (through U1's internal HS-FET) → U1.SW pin → trace right of U1 to D1.cathode → through D1 to D1.anode → GND pour → all the way back along the bottom edge of the V_in trace → up to C1.GND terminal.
+> - Draw it as a **red dashed outline** (#dc2626, 60% opacity, 2 mm line width) following this exact path:
+>   - From C1.V+, trace right along the V_in line to U1.V_in.
+>   - Across U1's top edge toward U1.SW (the loop hugs the OUTSIDE of U1, NOT crossing the body).
+>   - Down/right from U1.SW to D1.cathode.
+>   - Through D1 (small zigzag through the diode body).
+>   - From D1.anode along the GND pour back left (path goes BELOW C1's V_in trace) all the way to C1.GND.
+> - Fill the entire enclosed area (a long elongated shape ~22 mm long × ~10 mm tall, sitting between the V_in trace at the top and the GND return at the bottom, hugging the OUTSIDE of U1) with translucent red (15% opacity, no border).
+> - **The loop must NOT cross U1's body.** It runs around the perimeter only.
 >
-> White sans-serif text overlay, bottom-right corner: `BAD — hot loop ≈ 35 mm path length`
-> Component reference designators (`U1`, `C1`, `L1`, `C2`) in small white sans-serif silkscreen on the board.
->
-> Image is sharp, fully top-down (orthographic camera), evenly lit, no shadows, no motion blur, no HDR. No watermark, no rulers, no measurement scale bars.
+> Other:
+> - White text overlay, bottom-right: `BAD — hot loop ≈ 35 mm path length`
+> - Component reference designators in white silkscreen: `U1`, `C1`, `D1`, `L1`, `C2`.
+> - Image fully top-down (orthographic), evenly lit, no shadows, no motion blur. No watermark, no rulers.
 
 ### Prompt — good layout
 
-> Same scene, same camera, same components, same GND pour density, same via density — but with one critical difference:
-> - **C1 is now placed touching U1's V_in pin pad** (less than 1 mm gap). Cluster: C1 immediately to the left of U1, sharing the V_in trace through the shortest possible link.
-> - The red dashed hot loop is now a tiny rectangle (~3 mm × 2 mm) wrapping just around C1 and U1's V_in/PGND corner. Translucent red fill covers only that small area.
->
-> White text overlay, bottom-right: `GOOD — hot loop ≈ 4 mm path length`
-> Everything else identical to the BAD image — same board size, same component selection, same GND pour, same vias, same lighting.
+> Same scene, same camera, same components (U1, C1, D1, L1, C2), same GND pour density, same via density, same U1 pinout (V_in / PGND adjacent on left edge, SW on right edge) — but:
+> - **C1 is placed immediately to the LEFT of U1**, with its V+ terminal touching U1's V_in pin (~1 mm gap, very short trace) and its GND terminal directly aligned with U1's PGND pin.
+> - **D1 is placed immediately to the RIGHT of U1**, with its cathode touching U1's SW pin (~1 mm gap) and its anode going straight down into the GND pour through 2 vias right next to it.
+> - **L1** is placed to the right of D1, ~2 mm away. Its left terminal connects to D1's cathode (the SW node).
+> - **C2** is to the right of L1, output stage.
+> - The red dashed hot loop is now a **tight rectangle (~7 mm × 5 mm) hugging U1's left and right edges plus the C1 and D1 components**: from C1.V+ → U1.V_in → across U1's TOP outside edge → U1.SW → D1.cathode → D1.anode → through GND pour BELOW U1 → back to C1.GND. Translucent red fill (15% opacity) inside.
+> - The loop is much smaller than BAD because both C1 and D1 are tightly clustered against the IC.
+> - White text overlay, bottom-right: `GOOD — hot loop ≈ 4 mm path length`
+> - Everything else identical to BAD.
 
-### Why these prompts are different from before
+### Why this prompt is different (lessons learned)
 
-이전 프롬프트의 문제점 + 수정:
-- 이전: 단순 photo / GND pour 없음 → **GND pour 명시적 요청 + via 30개 + 동밀도** 추가
-- 이전: "BAD" 이유가 라벨에만 있음 → **빨간 점선 루프 + 반투명 채움 으로 핫 루프 자체를 그림에 그리도록**
-- 이전: PCB CAD 톤 부재 → **Altium 3D viewer 같은 느낌으로 명시**
+이전 두 시도의 문제 + 이번 수정:
+- ❌ 핫 루프가 IC 본체 가로지름 → ✅ "loop hugs the OUTSIDE of U1, NOT crossing the body" 명시
+- ❌ Freewheel diode (D1) 부재 → ✅ async buck 의 핵심 부품인 D1 (Schottky) 명시 추가, 핫 루프의 일부로 표시
+- ❌ L1 / C2 가 옆으로 일렬로만 놓여있음 → ✅ "U1.SW → D1.cathode + L1.left → L1.right → C2" 의 출력 체인 명시
+- ❌ V_in / PGND / SW 핀이 모호 → ✅ "left edge: V_in (top), PGND (bottom). right edge: SW" 의 표준 async buck 핀배치 명시
+- ❌ 실 IC reference 없음 → ✅ LM2596 / RT7297 같은 흔한 async buck IC 명시
 
 ### After generating
 
