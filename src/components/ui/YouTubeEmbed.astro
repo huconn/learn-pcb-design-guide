@@ -1,0 +1,99 @@
+---
+/**
+ * Lazy YouTube embed (facade pattern).
+ *
+ * Renders only a thumbnail + play button on initial load. On click it
+ * swaps in the actual <iframe> (using youtube-nocookie.com), so the page
+ * stays light even with multiple videos on it.
+ *
+ * Usage in MDX:
+ *   <YouTubeEmbed id="dQw4w9WgXcQ" title="제목" caption="짧은 설명" start={120} />
+ */
+interface Props {
+  id: string;             // YouTube video ID
+  title?: string;         // Title shown above the player
+  caption?: string;       // Short description shown below the player
+  start?: number;         // Start time in seconds (optional)
+  thumbQuality?: 'hqdefault' | 'mqdefault' | 'sddefault' | 'maxresdefault';
+}
+const {
+  id,
+  title,
+  caption,
+  start = 0,
+  thumbQuality = 'hqdefault',
+} = Astro.props;
+
+const thumb = `https://i.ytimg.com/vi/${id}/${thumbQuality}.jpg`;
+---
+<figure class="not-prose my-4 rounded-lg border border-slate-200 bg-white overflow-hidden">
+  {title && (
+    <div class="flex items-center justify-between gap-3 px-4 pt-3 pb-2">
+      <div class="font-medium text-slate-800 text-sm">{title}</div>
+      <a
+        href={`https://www.youtube.com/watch?v=${id}${start ? `&t=${start}s` : ''}`}
+        target="_blank" rel="noopener noreferrer"
+        class="font-mono text-[10px] tracking-widest text-slate-400 hover:text-slate-700 shrink-0"
+      >YOUTUBE ↗</a>
+    </div>
+  )}
+
+  <button
+    type="button"
+    class="yt-facade group relative block w-full bg-slate-950"
+    style="aspect-ratio: 16 / 9;"
+    data-id={id}
+    data-start={start}
+    aria-label={title ? `재생: ${title}` : 'YouTube 영상 재생'}
+  >
+    <img
+      src={thumb}
+      alt={title ?? 'YouTube thumbnail'}
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+    />
+    <span
+      class="absolute inset-0 flex items-center justify-center pointer-events-none"
+      aria-hidden="true"
+    >
+      <span class="flex items-center justify-center w-16 h-16 rounded-full bg-white/95 text-rose-600 shadow-lg group-hover:scale-110 transition-transform">
+        <svg viewBox="0 0 24 24" class="w-7 h-7 ml-1" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </span>
+    </span>
+    <span class="absolute bottom-2 right-2 font-mono text-[10px] tracking-widest text-white/70 bg-black/40 px-1.5 py-0.5 rounded">YouTube</span>
+  </button>
+
+  {caption && (
+    <figcaption class="px-4 pt-2 pb-3 text-xs text-slate-600 leading-relaxed">{caption}</figcaption>
+  )}
+</figure>
+
+<script>
+  // Replace facade with the real iframe on first click.
+  // Uses youtube-nocookie.com to avoid setting tracking cookies on hover.
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement | null;
+    const facade = target?.closest('.yt-facade') as HTMLButtonElement | null;
+    if (!facade) return;
+    e.preventDefault();
+    const id = facade.dataset.id;
+    if (!id) return;
+    const start = Number(facade.dataset.start || '0');
+    const params = new URLSearchParams({
+      autoplay: '1',
+      rel: '0',
+      modestbranding: '1',
+      ...(start > 0 ? { start: String(start) } : {}),
+    });
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
+    iframe.title = facade.getAttribute('aria-label') ?? 'YouTube video';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    iframe.loading = 'eager';
+    iframe.className = 'absolute inset-0 w-full h-full border-0';
+    // Wrap in same aspect-ratio container by replacing the button itself
+    facade.replaceWith(iframe);
+  });
+</script>
