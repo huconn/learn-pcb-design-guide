@@ -1,0 +1,88 @@
+---
+// Bad vs good BMS PCB layout — current path width and Kelvin sensing
+---
+<div class="not-prose grid gap-3 md:grid-cols-2">
+  <figure class="rounded-lg border border-rose-200 bg-rose-50 p-3">
+    <div class="font-mono text-xs text-rose-700">BAD — 좁은 트레이스 + 잘못된 sense 위치</div>
+    <svg viewBox="0 0 360 200" class="mt-2 w-full">
+      <rect x="1" y="1" width="358" height="198" fill="#fff" stroke="#e2e8f0" />
+
+      <!-- Battery + and pack + nodes -->
+      <text x="10" y="22" font-size="10" fill="#475569" font-family="ui-monospace, monospace">B+</text>
+      <text x="320" y="22" font-size="10" fill="#475569" font-family="ui-monospace, monospace">PACK+</text>
+
+      <!-- Q1 + Q2 + sense R (in series) — narrow trace -->
+      <line x1="20" y1="40" x2="100" y2="40" stroke="#dc2626" stroke-width="2" />
+      <rect x="100" y="30" width="40" height="20" fill="#fbbf24" stroke="#92400e" />
+      <text x="108" y="44" font-size="9" fill="#92400e" font-family="ui-monospace, monospace">Q1</text>
+      <line x1="140" y1="40" x2="180" y2="40" stroke="#dc2626" stroke-width="2" />
+      <rect x="180" y="30" width="40" height="20" fill="#fbbf24" stroke="#92400e" />
+      <text x="188" y="44" font-size="9" fill="#92400e" font-family="ui-monospace, monospace">Q2</text>
+      <line x1="220" y1="40" x2="260" y2="40" stroke="#dc2626" stroke-width="2" />
+      <rect x="260" y="30" width="30" height="20" fill="#a16207" stroke="#451a03" />
+      <text x="266" y="44" font-size="9" fill="#fff" font-family="ui-monospace, monospace">Rs</text>
+      <line x1="290" y1="40" x2="350" y2="40" stroke="#dc2626" stroke-width="2" />
+
+      <text x="40" y="60" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">↑ 좁은 트레이스 (40 mil)</text>
+      <text x="40" y="74" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">  → 자체 저항 + 발열</text>
+
+      <!-- Sense — incorrectly tapped from current trace -->
+      <line x1="260" y1="50" x2="260" y2="120" stroke="#dc2626" stroke-width="1.5" />
+      <line x1="290" y1="50" x2="290" y2="120" stroke="#dc2626" stroke-width="1.5" />
+      <rect x="240" y="120" width="80" height="30" fill="#0f172a" />
+      <text x="245" y="140" font-size="9" fill="#fff" font-family="ui-monospace, monospace">ADC / IC</text>
+
+      <text x="100" y="135" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">sense 가 current path 안에 → I·R_trace</text>
+      <text x="100" y="148" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">측정 오차 발생 (수십 mV)</text>
+
+      <text x="14" y="180" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">전류 50 A 에 트레이스 1 mΩ → 50 mV ≫ shunt 신호</text>
+    </svg>
+    <figcaption class="mt-1 text-xs text-rose-800">좁은 트레이스 자체 저항 → 발열 + 측정 오차. sense 가 main current path 와 합쳐짐.</figcaption>
+  </figure>
+
+  <figure class="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+    <div class="font-mono text-xs text-emerald-700">GOOD — 넓은 동박 + Kelvin 4-wire sense</div>
+    <svg viewBox="0 0 360 200" class="mt-2 w-full">
+      <rect x="1" y="1" width="358" height="198" fill="#fff" stroke="#e2e8f0" />
+
+      <text x="10" y="22" font-size="10" fill="#475569" font-family="ui-monospace, monospace">B+</text>
+      <text x="320" y="22" font-size="10" fill="#475569" font-family="ui-monospace, monospace">PACK+</text>
+
+      <!-- Wide copper bus, multiple vias -->
+      <rect x="20" y="35" width="80" height="20" fill="#fbbf24" stroke="#b45309" />
+      <rect x="100" y="30" width="40" height="30" fill="#fbbf24" stroke="#92400e" />
+      <text x="108" y="50" font-size="9" fill="#fff" font-family="ui-monospace, monospace">Q1</text>
+      <rect x="140" y="35" width="40" height="20" fill="#fbbf24" stroke="#b45309" />
+      <rect x="180" y="30" width="40" height="30" fill="#fbbf24" stroke="#92400e" />
+      <text x="188" y="50" font-size="9" fill="#fff" font-family="ui-monospace, monospace">Q2</text>
+      <rect x="220" y="35" width="40" height="20" fill="#fbbf24" stroke="#b45309" />
+      <rect x="260" y="30" width="30" height="30" fill="#a16207" stroke="#451a03" />
+      <text x="266" y="50" font-size="9" fill="#fff" font-family="ui-monospace, monospace">Rs</text>
+      <rect x="290" y="35" width="60" height="20" fill="#fbbf24" stroke="#b45309" />
+
+      <!-- Vias -->
+      {[26, 50, 80, 150, 168, 230, 250, 300, 320, 340].map((x) => (
+        <circle cx={x} cy="22" r="2.2" fill="#b45309" />
+      ))}
+      {[26, 50, 80, 150, 168, 230, 250, 300, 320, 340].map((x) => (
+        <circle cx={x} cy="68" r="2.2" fill="#b45309" />
+      ))}
+
+      <text x="40" y="80" font-size="9" fill="#065f46" font-family="ui-monospace, monospace">동박 영역 + via fence + 2 oz Cu</text>
+
+      <!-- Kelvin sense — taps right at the resistor terminals, separate trace -->
+      <circle cx="263" cy="58" r="2" fill="#10b981" />
+      <circle cx="287" cy="58" r="2" fill="#10b981" />
+      <line x1="263" y1="58" x2="263" y2="120" stroke="#059669" stroke-width="1" />
+      <line x1="287" y1="58" x2="287" y2="120" stroke="#059669" stroke-width="1" />
+      <text x="200" y="100" font-size="9" fill="#065f46" font-family="ui-monospace, monospace">Kelvin tap (얇은 sense 트레이스)</text>
+
+      <rect x="245" y="120" width="80" height="30" fill="#0f172a" />
+      <text x="252" y="140" font-size="9" fill="#fff" font-family="ui-monospace, monospace">ADC / IC</text>
+
+      <text x="14" y="178" font-size="9" fill="#065f46" font-family="ui-monospace, monospace">sense 트레이스에는 전류 거의 없음 → 트레이스 IR drop 영향 없음</text>
+      <text x="14" y="192" font-size="9" fill="#065f46" font-family="ui-monospace, monospace">→ shunt 의 양단 전압만 정확히 측정</text>
+    </svg>
+    <figcaption class="mt-1 text-xs text-emerald-800">넓은 동박 + via fence + Kelvin 4-wire — current trace 와 sense trace 가 분리.</figcaption>
+  </figure>
+</div>

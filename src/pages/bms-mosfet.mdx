@@ -1,0 +1,217 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { BMS_MOSFET } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
+import BackToBackMosfet from '../components/concept/BackToBackMosfet.astro';
+import BmsLayoutPath from '../components/concept/BmsLayoutPath.astro';
+import MosfetThermalCalc from '../components/sim/MosfetThermalCalc.svelte';
+
+<TopicLayout topic={BMS_MOSFET}>
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{BMS_MOSFET.category}</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    BMS · 고전류 MOSFET 스위칭
+    <span class="block mt-1 text-slate-500 text-xl font-normal">Back-to-back · I²R 발열 · Kelvin 라우팅</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    배터리 보호 스위치, eFuse, load switch — <b>FET 가 길게 ON 상태로 큰 전류를 흘리는</b> 영역. 
+    <a href="/buck-layout-deep-dive" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Buck</a> 의 스위칭 손실과 달리, 여기서는 <b>도통 손실 (I²·R_DS)</b> 이 거의 전부이고 발열은 직접적으로 R_DS·전류² 으로 결정됩니다. 이 페이지는 MOSFET 선택 + 회로 토폴로지 + 라우팅 + 발열의 통합 가이드.
+  </p>
+  <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 10분 읽기</span>
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">★ 중급</span>
+    <span class="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-700">계산기 + 토폴로지</span>
+  </div>
+</section>
+
+<TipBanner>
+  <b>핵심</b> — <span class="font-mono">P = I² · R_DS(T)</span>. R_DS 는 온도에 따라 +50% 까지 올라가고, 그게 다시 발열을 키우는 <b>양성 피드백</b>. 안전 마진 + 충분한 병렬 FET + 강한 방열이 모두 필요.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="why-different" title="1. Buck 과 무엇이 다른가?">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        Buck 의 FET 는 매 사이클 ns 단위로 ON/OFF — 손실의 큰 부분이 <b>switching loss</b> (V × I × t_trans × f_sw). 그래서 빠른 FET, 짧은 게이트 라우팅이 중요.
+      </p>
+      <p>
+        BMS / load switch 의 FET 는 <b>한 번 켜지면 수 시간/일 동안 계속 ON</b> — switching loss 거의 없음. 손실 = <b>도통 손실 I²·R_DS</b> 만. 그래서:
+      </p>
+      <ul>
+        <li><b>R_DS(on) 이 절대 우선</b> — 작을수록 좋음 (1 mΩ 급)</li>
+        <li><b>속도 (Q_g) 는 부차</b> — turn-on/off 가 1 ms 걸려도 OK (큰 cap 충전 무리 없게는 해야)</li>
+        <li><b>발열 + 방열이 핵심</b> — 1 mΩ × (50 A)² = 2.5 W per FET, 두 개 back-to-back 이면 5 W</li>
+        <li><b>트레이스도 part of R_DS</b> — 트레이스 1 mΩ 면 FET 의 R_DS 와 비슷한 추가 손실</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="topology" title="2. Back-to-back 토폴로지">
+    <BackToBackMosfet />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        BMS 의 표준 — 두 개의 N-channel MOSFET 을 source 끼리 연결한 직렬 배치. 이유는 <b>body diode</b>:
+      </p>
+      <ul>
+        <li>MOSFET 의 source-drain 사이에는 항상 body diode 가 있음 (구조상 제거 불가)</li>
+        <li>FET 한 개로는 OFF 시켜도 body diode 통해 한 방향 전류는 흐름</li>
+        <li>두 FET 을 source 묶어 back-to-back 으로 두면 body diode 가 서로 반대 방향이라 어느 쪽도 흐를 수 없음</li>
+      </ul>
+      <p><b>네이밍</b>:</p>
+      <ul>
+        <li><b>Discharge FET (DSG)</b> — 배터리에서 부하로 나가는 방향. 부하 단락 시 OFF.</li>
+        <li><b>Charge FET (CHG)</b> — 충전기에서 배터리로 들어오는 방향. 과충전 시 OFF.</li>
+      </ul>
+      <p>
+        Source 가 묶여있어 두 게이트가 같은 기준 (S 노드) 을 가지므로 driver 가 단순. BMS IC (BQ77216, BQ76930, S-8254A 등) 가 두 게이트를 직접 구동.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="select" title="3. MOSFET 선택 — 무엇을 봐야 하나">
+    <div class="prose prose-slate max-w-none">
+      <p><b>핵심 스펙</b>:</p>
+      <ul>
+        <li><b>R_DS(on) @ V_GS = 10 V</b> — 작을수록 좋음. 보통 0.5–5 mΩ. <b>100°C 에서의 값</b> 도 데이터시트에 있음 — 이게 실제 사용 조건.</li>
+        <li><b>V_DS</b> — 절대 최대 drain-source 전압. 배터리 voltage × 1.5–2 마진. 18650 4-cell (16.8 V max) → V_DS ≥ 30 V.</li>
+        <li><b>I_D 연속</b> — 데이터시트의 25 °C 기준은 광고용. <b>θ_JA 가 작은 패키지에서</b>의 실용 한계는 그 절반 이하.</li>
+        <li><b>θ_JA / θ_JC</b> — 패키지가 결정. DPAK ≈62, D2PAK ≈50, DFN5×6 ≈40 (with PCB pour). PowerPAK 같은 큰 thermal pad 패키지가 BMS 표준.</li>
+        <li><b>V_GS(th)</b> — gate threshold. logic-level (≤ 2 V) 가 driver 단순. standard (3–4 V) 는 12V driver 필요.</li>
+      </ul>
+      <p><b>흔한 BMS FET 예시</b>:</p>
+      <ul>
+        <li>Infineon <b>BSC0xxN03</b> — 30 V, 0.6–3 mΩ, PG-TDSON-8</li>
+        <li>Vishay <b>SiR882ADP</b> — 30 V, 1.5 mΩ, PowerPAK SO-8</li>
+        <li>NCE <b>NCEP30T11</b> — 30 V, 1.1 mΩ, TO-220 (대전류 용)</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="calc" title="MOSFET Thermal Calculator" subtitle="I + R_DS + θ_JA → 수렴 T_j (R_DS(T) feedback 포함)">
+    <MosfetThermalCalc client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="parallel" title="4. 병렬 MOSFET — 언제, 어떻게">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        100 A 같이 큰 전류는 한 FET 으로 어렵습니다. <b>N 개 병렬</b> 로 두면 R 이 1/N 로, 각 FET 의 발열은 1/N² 로 떨어집니다.
+      </p>
+      <p><b>현실적 제약</b>:</p>
+      <ul>
+        <li><b>전류 분배 불균형</b> — 같은 부품이라도 R_DS 산포 ±15%. 같은 트레이스 길이 / via 개수 / 위치 / 온도 환경으로 균형화.</li>
+        <li><b>R_DS 의 양성 온도계수가 도움</b> — 더 뜨거워진 FET 의 R 이 올라가면 그쪽 전류가 줄어듦 (자기 균형)</li>
+        <li><b>게이트 저항</b> — 병렬 FET 마다 작은 (10–22 Ω) 게이트 저항 추가 — gate ringing / 진동 방지</li>
+        <li><b>레이아웃 대칭</b> — driver → 각 FET 의 게이트까지 전기적으로 같은 길이</li>
+      </ul>
+      <p>
+        예: 100 A 시스템 → 2.5 mΩ FET 1 개 (P = 25 W) 대신 4 개 병렬 (각 6 W) 이 훨씬 안전.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="gate-drive" title="5. 게이트 구동 — 고측 N-ch 의 함정">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        Back-to-back N-ch 토폴로지는 source 가 배터리 + 단자가 아니라 <b>중간 노드</b> 에 있어 게이트 기준이 명확하지만, 단일 high-side N-ch 스위치는 source 가 V_in 으로 떠 있어서 게이트를 V_in + 10 V 로 끌어올려야 함:
+      </p>
+      <ul>
+        <li><b>Charge pump</b> — IC 내부에서 V_in 위로 약 10 V 만들어 공급. 대부분의 BMS / load switch IC 가 내장 (LTC4357, BQ77216, TPS25xxx 등).</li>
+        <li><b>Bootstrap cap</b> — buck 처럼 PWM 으로 charge 하는 cap 사용. 단, BMS 는 PWM 안 하므로 부적합 (오래 ON 이면 cap 방전).</li>
+        <li><b>외부 isolated supply</b> — 별도 12V → gate driver. 큰 시스템.</li>
+      </ul>
+      <p>
+        <b>P-channel 대안</b> — V_GS 가 V_in 기준 음수면 ON 이라 단순한 풀다운으로 구동 가능. 단, P-ch 은 같은 다이 면적에서 R_DS 가 N-ch 의 약 2 배 → 큰 전류엔 부적합.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="layout" title="6. 라우팅 — 동박 + Kelvin sense">
+    <BmsLayoutPath />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p><b>대전류 경로 (B+ → Q1 → Q2 → Rs → PACK+)</b>:</p>
+      <ul>
+        <li><b>가능한 넓은 동박</b> — pour 영역으로 다층에 걸쳐 분포. <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a> 의 IPC-2221 계산기로 최소 폭 산출.</li>
+        <li><b>2 oz copper 이상</b> — 표준 1 oz 의 두 배 단면적. 50 A 이상 시 거의 필수.</li>
+        <li><b>Via fence</b> — 넓은 net 을 다층으로 stitching. 하나의 via 가 약 10 A 정도 견디므로 50 A 라면 6–10 개.</li>
+        <li><b>via 는 솔더 패드 안에 두지 말 것</b> (양산 솔더 흡수). 옆에 두고 짧은 트레이스로 연결.</li>
+        <li><b>기계적 확장</b> — 보드 외곽 + 단자 lug 의 큰 표면적도 방열에 기여. 비스 + busbar 사용도 고려.</li>
+      </ul>
+      <p><b>Sense 라우팅 — Kelvin (4-wire)</b>:</p>
+      <ul>
+        <li>Shunt resistor (R_s) 의 양 단자에서 <b>별도의 얇은 sense 트레이스</b> 로 ADC / IC 까지</li>
+        <li>Sense trace 는 메인 current path 와 <b>겹치면 안 됨</b> — current path 의 IR drop 이 측정값에 더해짐</li>
+        <li>Sense trace 사이는 차동 페어처럼 가까이 (꼬임/페어) — common-mode noise 면역</li>
+        <li>저값 shunt (1 mΩ) 면 풀스케일 신호가 50 mV 정도 → 차동 amp 또는 high-precision ADC</li>
+      </ul>
+      <p><b>게이트 라우팅</b>:</p>
+      <ul>
+        <li>Driver 출력 → 게이트 트레이스는 <b>SW 노드 / 대전류 트레이스 멀리</b></li>
+        <li>병렬 FET 에는 각각 게이트 저항 (10–22 Ω) — gate oscillation 방지</li>
+        <li>Driver 출력 옆에 100 nF 디커플링 cap (<a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a>)</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="failures" title="7. 흔한 실패 모드">
+    <div class="prose prose-slate max-w-none">
+      <ol>
+        <li><b>Body diode 방전</b> — back-to-back 에서 한 FET 이 손상되어 short → body diode 통해 전류 흐름. PACK 가 꺼진 줄 알았는데 배터리 방전.</li>
+        <li><b>Thermal runaway</b> — 발열 → R_DS↑ → 발열↑ 의 양성 피드백. 보호 회로가 차단할 시간 없이 죽기도. 위 계산기에서 RUNAWAY 표시.</li>
+        <li><b>Gate oscillation</b> — 병렬 FET 사이에 LC 공진 → 100 MHz 진동 → 효율 저하 + EMI. 게이트 저항 10–22 Ω 으로 잡음.</li>
+        <li><b>Inrush 손상</b> — load switch 가 큰 cap 부하를 한 번에 ON 시키면 di/dt 가 SOA 초과. soft-start (게이트 slow ramp) 필요.</li>
+        <li><b>Hot spot</b> — 트레이스 좁은 부분 / via 한 곳이 끊어지면 그쪽이 집중 발열 → 보드 갈색으로 그을림.</li>
+        <li><b>Short-circuit 응답 늦음</b> — BMS IC 의 OCP 가 보통 ms 단위 — 그 사이 전류가 SOA 초과 가능. eFuse / 폴리퓨즈 보조.</li>
+      </ol>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="checklist" title="BMS · 고전류 스위칭 체크리스트">
+    <ChecklistBlock items={[
+      { text: "MOSFET 의 V_DS 마진 (V_pack × 1.5–2) 확보?",            anchor: "select" },
+      { text: "R_DS(on) @ 100 °C 값으로 발열 계산했는가?",                 anchor: "calc" },
+      { text: "T_j 마진 30 °C 이상 (계산기에서 '여유')?",                  anchor: "calc" },
+      { text: "필요하면 N 병렬, 게이트 저항 10–22 Ω 적용?",                 anchor: "parallel" },
+      { text: "Back-to-back N-ch 라면 source 노드 묶고 게이트 기준 일치?", anchor: "topology" },
+      { text: "고측 N-ch 면 charge-pump driver IC 사용?",                  anchor: "gate-drive" },
+      { text: "대전류 경로 2 oz 동박 + via fence?",                        anchor: "layout" },
+      { text: "Shunt 의 sense 트레이스 Kelvin 4-wire?",                     anchor: "layout" },
+      { text: "게이트 트레이스가 대전류 / SW 노드 멀리?",                   anchor: "layout" },
+      { text: "Soft-start 로 inrush 제어 (load switch 면)?",               anchor: "failures" },
+      { text: "OCP 보다 빠른 보조 보호 (eFuse / 퓨즈)?",                    anchor: "failures" },
+    ]} />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>θ_JA 모델 + plane / via 효과: <a href="/thermal" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Thermal Management</a></li>
+        <li>대전류 트레이스 폭 산출: <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭</a></li>
+        <li>VRM 의 buck 발열 (스위칭 손실): <a href="/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a> · <a href="/buck-layout-deep-dive" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Buck Layout 심화</a></li>
+        <li>대전류 경로의 EMI: <a href="/emi-radiation" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">EMI Radiation</a></li>
+        <li>fab 의 동박 두께 한계: <a href="/dfm" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">DFM</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+</TopicLayout>
