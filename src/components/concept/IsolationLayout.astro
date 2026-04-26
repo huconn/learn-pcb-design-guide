@@ -1,0 +1,76 @@
+---
+// Bad vs good isolation barrier layout
+---
+<div class="not-prose grid gap-3 md:grid-cols-2">
+  <figure class="rounded-lg border border-rose-200 bg-rose-50 p-3">
+    <div class="font-mono text-xs text-rose-700">BAD — slot 위로 신호 횡단, plane 미분리</div>
+    <svg viewBox="0 0 360 200" class="mt-2 w-full">
+      <rect x="1" y="1" width="358" height="198" fill="#fff" stroke="#e2e8f0" />
+
+      <!-- Continuous GND plane across entire board -->
+      <rect x="20" y="140" width="320" height="20" fill="#cbd5e1" stroke="#94a3b8" />
+      <text x="22" y="155" font-size="8" fill="#475569" font-family="ui-monospace, monospace">GND plane (분리 안 됨)</text>
+
+      <!-- Primary side -->
+      <rect x="30" y="40" width="120" height="80" fill="#fef3c7" stroke="#fcd34d" />
+      <text x="38" y="58" font-size="9" fill="#92400e" font-family="ui-monospace, monospace">PRIMARY 회로</text>
+
+      <!-- Isolator -->
+      <rect x="160" y="60" width="40" height="40" fill="#fff" stroke="#0f172a" />
+      <text x="168" y="84" font-size="9" fill="#0f172a" font-family="ui-monospace, monospace">ISO</text>
+
+      <!-- Secondary side -->
+      <rect x="210" y="40" width="120" height="80" fill="#dbeafe" stroke="#60a5fa" />
+      <text x="220" y="58" font-size="9" fill="#1e40af" font-family="ui-monospace, monospace">SECONDARY 회로</text>
+
+      <!-- Other signal crossing barrier -->
+      <line x1="148" y1="100" x2="212" y2="100" stroke="#dc2626" stroke-width="2" />
+      <text x="155" y="115" font-size="8" fill="#9f1239" font-family="ui-monospace, monospace">신호 트레이스</text>
+
+      <!-- Annotations -->
+      <text x="14" y="20" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">① ISO 옆을 다른 신호가 지남 — 격리 우회</text>
+      <text x="14" y="34" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">② GND plane 이 두 영역에 공통 — 사실상 격리 X</text>
+      <text x="14" y="180" font-size="9" fill="#9f1239" font-family="ui-monospace, monospace">전압 차 / 누전 / 안전 — 모두 깨짐</text>
+    </svg>
+    <figcaption class="mt-1 text-xs text-rose-800">두 영역이 plane / 다른 트레이스로 연결되면 isolator 만으로 격리 의미 사라짐.</figcaption>
+  </figure>
+
+  <figure class="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+    <div class="font-mono text-xs text-emerald-700">GOOD — PCB slot + plane 분리 + 신호 ISO 통과</div>
+    <svg viewBox="0 0 360 200" class="mt-2 w-full">
+      <rect x="1" y="1" width="358" height="198" fill="#fff" stroke="#e2e8f0" />
+
+      <!-- Two separate GND planes with slot between -->
+      <rect x="20" y="140" width="140" height="20" fill="#cbd5e1" stroke="#94a3b8" />
+      <text x="22" y="155" font-size="8" fill="#475569" font-family="ui-monospace, monospace">GND_P</text>
+      <rect x="200" y="140" width="140" height="20" fill="#bfdbfe" stroke="#60a5fa" />
+      <text x="295" y="155" font-size="8" fill="#1e40af" font-family="ui-monospace, monospace">GND_S</text>
+
+      <!-- PCB slot -->
+      <rect x="160" y="20" width="40" height="160" fill="#fef2f2" stroke="#fca5a5" stroke-dasharray="3 2" />
+      <text x="166" y="180" font-size="8" fill="#9f1239" font-family="ui-monospace, monospace" transform="rotate(-90 175 175)">PCB SLOT</text>
+
+      <!-- Primary -->
+      <rect x="30" y="40" width="120" height="80" fill="#fef3c7" stroke="#fcd34d" />
+      <text x="38" y="58" font-size="9" fill="#92400e" font-family="ui-monospace, monospace">PRIMARY 회로</text>
+
+      <!-- Isolator straddling the slot -->
+      <rect x="155" y="60" width="50" height="40" fill="#fff" stroke="#0f172a" stroke-width="1.5" />
+      <text x="163" y="84" font-size="9" fill="#0f172a" font-family="ui-monospace, monospace">ISO</text>
+
+      <!-- Secondary -->
+      <rect x="210" y="40" width="120" height="80" fill="#dbeafe" stroke="#60a5fa" />
+      <text x="220" y="58" font-size="9" fill="#1e40af" font-family="ui-monospace, monospace">SECONDARY 회로</text>
+
+      <!-- Signal goes through ISO only -->
+      <line x1="148" y1="80" x2="155" y2="80" stroke="#059669" stroke-width="2" />
+      <line x1="205" y1="80" x2="212" y2="80" stroke="#059669" stroke-width="2" />
+
+      <!-- Annotations -->
+      <text x="14" y="20" font-size="9" fill="#065f46" font-family="ui-monospace, monospace">① PCB slot 으로 plane 완전 분리</text>
+      <text x="14" y="34" font-size="9" fill="#065f46" font-family="ui-monospace, monospace">② ISO 부품만 slot 을 가로질러 배치</text>
+      <text x="14" y="190" font-size="9" fill="#065f46" font-family="ui-monospace, monospace">→ creepage / 누전 / 안전 모두 만족</text>
+    </svg>
+    <figcaption class="mt-1 text-xs text-emerald-800">PCB 에 슬롯을 만들어 plane 까지 분리, isolator 부품만 슬롯 위에 straddling.</figcaption>
+  </figure>
+</div>

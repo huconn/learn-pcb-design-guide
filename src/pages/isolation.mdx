@@ -1,0 +1,216 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { ISOLATION } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
+import IsolationBarrier from '../components/concept/IsolationBarrier.astro';
+import IsolationLayout from '../components/concept/IsolationLayout.astro';
+import CreepageCalc from '../components/sim/CreepageCalc.svelte';
+
+<TopicLayout topic={ISOLATION}>
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{ISOLATION.category}</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    Galvanic Isolation
+    <span class="block mt-1 text-slate-500 text-xl font-normal">두 ground 도메인 분리 — 안전 · 노이즈 · 전압 차</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    BMS, 의료기기, 산업 통신, AC 입력 — 두 회로의 ground 가 절대 만나면 안 되는 상황은 흔합니다. 이 페이지는 <b>왜</b>, <b>어떤 방식으로</b>, 그리고 <b>레이아웃 / creepage 거리</b> 까지의 통합 가이드.
+  </p>
+  <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 11분 읽기</span>
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">★ 중급</span>
+    <span class="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-700">creepage 계산기</span>
+  </div>
+</section>
+
+<TipBanner>
+  <b>핵심 — </b>아이솔레이션은 <b>전압 격리 (kV 급 견디기)</b> 와 <b>전류 차단 (DC 0 A)</b> 을 동시에. 단순한 cap / R 분리는 격리가 아닙니다 (DC 흐름 막아도 AC 누전 가능). 진짜 격리는 <b>물리적 갭 + 인증된 부품</b>.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="why" title="1. 왜 아이솔레이션인가? — 4가지 동기">
+    <div class="prose prose-slate max-w-none">
+      <p>거의 모든 아이솔레이션 적용은 다음 4가지 중 하나 또는 조합:</p>
+      <ol>
+        <li>
+          <b>안전 (Safety)</b> — AC mains, 의료기기 환자 누전 (patient leakage), 고압 산업 장비. 사용자 / 기술자가 만질 수 있는 부분 (저전압 측) 과 위험 전압 (mains, kV) 을 절연 → 감전 / 화재 방지. <b>법적 요건</b> (UL, IEC 60601, KC 등).
+        </li>
+        <li>
+          <b>전압 차 (Different ground potential)</b> — 두 회로의 GND 가 수십 V 이상 차이 나는 경우. 예) 100 V 모터 드라이브의 high-side gate driver, 16-cell 배터리 stack 의 high cell vs MCU GND. 두 도메인을 직접 연결하면 거대한 short / 손상.
+        </li>
+        <li>
+          <b>그라운드 루프 / 노이즈 차단</b> — 두 시스템이 별도 ground 인데 통신선으로 연결되면, 미세한 ground 전위차로 잡음 / 부식. 산업 RS-485 / CAN, USB 측정 장비 등 → isolator 로 GND 단절.
+        </li>
+        <li>
+          <b>회로 보호</b> — 한쪽 회로가 손상되어도 다른 쪽으로 전파 안 됨. 비싼 host 와 험한 환경의 sensor 사이.
+        </li>
+      </ol>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="when" title="2. 어떤 경우에 — 전형적 시나리오">
+    <div class="prose prose-slate max-w-none">
+      <table class="w-full text-sm mt-2">
+        <thead class="text-slate-500 font-mono text-[10px] uppercase">
+          <tr>
+            <th class="text-left py-1.5">시나리오</th>
+            <th class="text-left py-1.5">전압</th>
+            <th class="text-left py-1.5">동기</th>
+            <th class="text-left py-1.5">해법</th>
+          </tr>
+        </thead>
+        <tbody class="text-slate-700">
+          <tr><td>AC mains → DC 어댑터 (USB charger 등)</td><td class="font-mono">230 V</td><td>안전 + 법규</td><td>플라이백 + 옵토 피드백</td></tr>
+          <tr><td>USB → 측정 장비 (오실로스코프 input)</td><td class="font-mono">~100 V</td><td>그라운드 루프</td><td>USB isolator (ADuM4160)</td></tr>
+          <tr><td>RS-485 / CAN 산업 네트워크</td><td class="font-mono">~50 V</td><td>그라운드 루프 + 보호</td><td>isolated transceiver (ADM2587E, ISO1050)</td></tr>
+          <tr><td>BMS — high cell stack 모니터링</td><td class="font-mono">~60 V</td><td>전압 차</td><td>cell front-end IC + isolated SPI</td></tr>
+          <tr><td>모터 드라이브 high-side gate 구동</td><td class="font-mono">~600 V</td><td>전압 차 + 안전</td><td>isolated gate driver (Si827x, ACPL-339J)</td></tr>
+          <tr><td>의료 ECG / EEG 환자 인터페이스</td><td class="font-mono">5 kV transient</td><td>환자 안전 (patient leakage)</td><td>reinforced isolated amp + DC-DC</td></tr>
+          <tr><td>4-20 mA 산업 센서 루프</td><td class="font-mono">24 V</td><td>그라운드 루프</td><td>2-wire 자체가 isolated</td></tr>
+          <tr><td>고-side current sensing (모터)</td><td class="font-mono">100 V+</td><td>전압 차</td><td>isolated amp / shunt + ISO224</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="methods" title="3. 어떤 방식으로 — 4가지 isolator 종류">
+    <IsolationBarrier />
+    <div class="prose prose-slate max-w-none mt-3">
+      <ol>
+        <li>
+          <b>① Optocoupler</b> (LED + photo-transistor) — 전통적, 싸고 단순. 단점: <b>속도 느림</b> (수 100 kbps 이하), CTR (전류 전송비) 산포 ±50%, 시간에 따라 열화. AC mains 피드백, 단순 디지털 신호 격리에 여전히 흔함.
+        </li>
+        <li>
+          <b>② 디지털 isolator</b> (capacitive: TI ISO78xx / Silicon Labs Si86xx, magnetic: Analog Devices ADuM) — 칩 안에 작은 cap / 트랜스로 신호 전달. <b>매우 빠름</b> (Mbps~Gbps), CTR 안정, 수명 길고, 채널 다수. <b>현대 isolation 의 표준</b>. 비용 옵토의 2~3배.
+        </li>
+        <li>
+          <b>③ 트랜스포머</b> — 신호 + 전력 동시 전달. 이더넷의 마그네틱, USB isolator 안의 코일, isolated DC-DC 의 출력 단까지 다 트랜스 기반. <b>전력 전달도 가능</b> 하다는 게 다른 방식과의 큰 차이.
+        </li>
+        <li>
+          <b>④ Isolated DC-DC</b> — 격리된 보조 전원. isolator 의 secondary 측을 동작시키려면 보통 별도 전원 필요. 작은 power module (Murata MEU1, RECOM RxxP21) 또는 직접 transformer + flyback 설계.
+        </li>
+      </ol>
+      <p>
+        <b>실무 패턴</b> — 신호 isolator (디지털 isolator) + 격리 전원 (DC-DC isolator) 두 부품을 같이 쓰는 게 일반적. ADuM5410 / ISO7841 처럼 <b>두 기능이 한 칩</b> 인 부품도 많음.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="ratings" title="4. 격리 등급 — basic / reinforced / 인증 표준">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        부품 / 제품 격리에는 등급이 있고, 등급에 따라 요구되는 <b>creepage / clearance</b> 가 다릅니다:
+      </p>
+      <ul>
+        <li><b>Functional</b> — 단순 신호 분리. 안전 의미 없음. 그라운드 루프 차단용.</li>
+        <li><b>Basic</b> — 1중 안전. 한 단계의 절연이 정상 동작 시 안전 보장. 산업 일반 + 비의료.</li>
+        <li><b>Reinforced</b> (= 2× basic) — 두 겹의 절연 또는 강화된 한 겹. 사용자가 손 댈 수 있는 mains 인터페이스, 의료기기 (환자 응용 부분).</li>
+        <li><b>Double</b> — basic + basic 두 개를 직렬로. reinforced 와 같은 안전 등급이지만 부품 두 개 사용.</li>
+      </ul>
+      <p><b>주요 인증 표준</b>:</p>
+      <ul>
+        <li><b>UL 1577</b> (US 일반), <b>IEC 60747-17</b> (디지털 isolator 부품)</li>
+        <li><b>IEC 60601</b> (의료기기) — 환자 응용 부분 매우 엄격, 4 kV 이상</li>
+        <li><b>IEC 60950 / 62368-1</b> (IT/AV 장비)</li>
+        <li><b>UL 508A</b> (산업 제어반)</li>
+      </ul>
+      <p>
+        부품 데이터시트의 <b>V_IORM</b> (continuous working voltage) 과 <b>V_IOTM</b> (transient peak) 두 값을 봐야. V_IORM 이 시스템의 working voltage 보다 충분히 커야 함.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="creepage" title="Creepage / Clearance Calculator — IEC 60664-1" subtitle="working voltage + 환경 + 등급 → 필요한 최소 거리">
+    <CreepageCalc client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="layout" title="5. 레이아웃 — slot, plane 분리, 부품 straddling">
+    <IsolationLayout />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p><b>철칙</b>:</p>
+      <ol>
+        <li>
+          <b>Plane / GND 도 분리</b> — 두 도메인의 GND plane 을 PCB slot 으로 물리적 분리. 같은 plane 위에 두면 isolator 의미 사라짐.
+        </li>
+        <li>
+          <b>Isolator 부품만 slot 을 가로지름</b> — 다른 신호 / 전원 트레이스가 slot 을 횡단하면 안됨. <a href="/return-paths/basics#slit" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">return path</a> 도 깨지고 격리도 깨짐.
+        </li>
+        <li>
+          <b>Creepage 거리 확보</b> — 위 계산기로 산출한 mm 값보다 conductor 간 표면 거리 충분히 확보. 솔더마스크 위 실크스크린도 거리 줄임 → 깨끗한 영역.
+        </li>
+        <li>
+          <b>Isolator 의 V_IORM 확인</b> — 부품 자체 격리 등급 (예: ISO7841 = 5 kV reinforced) 이 시스템 요구 등급보다 같거나 커야.
+        </li>
+        <li>
+          <b>Y-cap 으로 mains 격리</b> — AC 입력 isolation 회로는 1차/2차 사이에 안전 인증 (Y1/Y2) cap 으로 노이즈 통과. 일반 cap 사용 금지.
+        </li>
+        <li>
+          <b>Standoff / 마운팅 점검</b> — 두 도메인이 metal chassis / 마운팅 나사 / 케이스 통해 우회 연결되지 않게.
+        </li>
+      </ol>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="pitfalls" title="6. 흔한 실수">
+    <div class="prose prose-slate max-w-none">
+      <ol>
+        <li><b>Plane 미분리</b> — isolator 부품은 있는데 plane 이 두 도메인에 공통. 사실상 격리 안 됨.</li>
+        <li><b>Slot 위 다른 신호</b> — return path 가 plane 우회 → 큰 loop area + EMI + 격리 우회.</li>
+        <li><b>Creepage 부족</b> — 250V mains 인데 conductor 간 1mm 만 띄움. 인증 시험에서 fail / 습도 높을 때 spark.</li>
+        <li><b>Y-cap 없이 일반 cap</b> — AC noise 가 타고 들어옴. 안전 인증 cap (X1/X2/Y1/Y2 표시) 만 사용.</li>
+        <li><b>Isolator 의 secondary 전원 빠짐</b> — 디지털 isolator 는 양쪽 다 전원 필요. secondary 측에 별도 isolated DC-DC 또는 통합 칩 사용.</li>
+        <li><b>나사 / 마운팅 통한 우회 GND</b> — 두 영역의 PCB 마운팅 홀이 같은 metal frame 에 닿으면 격리 우회.</li>
+        <li><b>Reinforced 라고 표기된 부품인데 단일 chip basic</b> — V_IORM 만 보지 말고 isolation type (basic / reinforced) 도 확인.</li>
+        <li><b>고전압 surge 무시</b> — 격리 부품은 working voltage 외에 surge / transient (V_IOTM) 도 견뎌야. 산업 환경은 4 kV 이상 surge 일반.</li>
+      </ol>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="checklist" title="Isolation 설계 체크리스트">
+    <ChecklistBlock items={[
+      { text: "왜 격리가 필요한지 명확? (안전 / 전압 차 / GND 루프 / 보호)", anchor: "why" },
+      { text: "필요한 격리 등급 결정 (functional / basic / reinforced)?", anchor: "ratings" },
+      { text: "Working voltage + transient surge 사양 확정?",                anchor: "ratings" },
+      { text: "Isolator 부품의 V_IORM ≥ 시스템 working voltage?",            anchor: "methods" },
+      { text: "신호 + 전력 둘 다 격리 (디지털 isolator + isolated DC-DC)?",   anchor: "methods" },
+      { text: "Creepage / clearance 계산해서 PCB 에 반영?",                   anchor: "creepage" },
+      { text: "PCB slot 으로 plane 완전 분리?",                              anchor: "layout" },
+      { text: "신호가 isolator 외 경로로 slot 횡단하지 않는가?",              anchor: "layout" },
+      { text: "AC mains 면 Y-cap 사용?",                                      anchor: "layout" },
+      { text: "마운팅 / 케이스 통한 우회 GND 차단?",                          anchor: "pitfalls" },
+      { text: "필요시 인증기관 (UL, KC, TUV) 사전 컨설트 받았는가?",          anchor: "ratings" },
+    ]} />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>Slot / plane split 의 return path 영향: <a href="/return-paths/basics#slit" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>BMS 의 cell stack 모니터링 격리: <a href="/bms-mosfet" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">BMS · 고전류 MOSFET</a></li>
+        <li>AC mains 입력 측의 EMI / 안전: <a href="/emi-radiation" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">EMI Radiation</a></li>
+        <li>External I/O 의 surge 보호 (isolation 과 다른 도메인): <a href="/esd-protection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">ESD Protection</a></li>
+        <li>creepage 가 fab 의 최소 spacing 한계와 충돌하면: <a href="/dfm" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">DFM</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+</TopicLayout>

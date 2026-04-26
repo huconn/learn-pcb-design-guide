@@ -95,6 +95,16 @@ export const BUCK_LAYOUT: Topic = {
   status: 'published',
 };
 
+export const ISOLATION: Topic = {
+  slug: 'isolation',
+  title: 'Galvanic Isolation',
+  subtitle: '왜 분리 · 어떤 방식 · creepage 와 레이아웃',
+  category: '90 · PRACTICAL',
+  readingMinutes: 11,
+  level: '중급',
+  status: 'published',
+};
+
 export const BMS_MOSFET: Topic = {
   slug: 'bms-mosfet',
   title: 'BMS · 고전류 MOSFET 스위칭',
@@ -228,7 +238,7 @@ export const PDN_PLANNING: Topic = {
 export const TOPICS: Topic[] = [
   DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING, HIGH_SPEED_INTERFACES, TRACE_GEOMETRY,
   OHMS_LAW, AC_COUPLING, ESD_PROTECTION, CROSSTALK, VRM_SELECTION, PDN_PLANNING,
-  CRYSTAL_LAYOUT, DFM, THERMAL, BUCK_LAYOUT, EMI_RADIATION, BMS_MOSFET,
+  CRYSTAL_LAYOUT, DFM, THERMAL, BUCK_LAYOUT, EMI_RADIATION, BMS_MOSFET, ISOLATION,
 ];
 
 /** Sidebar navigation tree — includes planned/coming-soon topics for visual richness */
@@ -236,7 +246,7 @@ export const CATEGORIES: Category[] = [
   {
     id: 'practical',
     name: 'Practical · 실전',
-    topics: [TRACE_GEOMETRY, CRYSTAL_LAYOUT, HIGH_SPEED_INTERFACES, DFM, THERMAL, BMS_MOSFET],
+    topics: [TRACE_GEOMETRY, CRYSTAL_LAYOUT, HIGH_SPEED_INTERFACES, DFM, THERMAL, BMS_MOSFET, ISOLATION],
   },
   {
     id: 'fundamentals',

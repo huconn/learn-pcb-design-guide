@@ -1,0 +1,97 @@
+---
+// Isolation barrier diagram with primary/secondary domains and the
+// 4 most common isolator categories.
+---
+<figure class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <svg viewBox="0 0 600 320" class="w-full" role="img" aria-label="Isolation barrier between primary and secondary domains, with optocoupler / digital isolator / transformer / isolated DC-DC examples">
+    <rect x="1" y="1" width="598" height="318" fill="#fff" stroke="#e2e8f0" />
+    <text x="14" y="20" font-size="11" font-family="ui-monospace, monospace" fill="#0f172a">아이솔레이션 배리어 — 두 ground domain</text>
+
+    <!-- Left domain (primary) -->
+    <rect x="20" y="40" width="240" height="260" fill="#fef3c7" stroke="#fcd34d" />
+    <text x="30" y="58" font-size="11" fill="#92400e" font-family="ui-monospace, monospace" font-weight="600">PRIMARY</text>
+    <text x="30" y="72" font-size="9" fill="#92400e" font-family="ui-monospace, monospace">예: AC mains · 고전압 DC · 다른 cell stack</text>
+
+    <!-- GND symbols on left -->
+    <line x1="40" y1="280" x2="80" y2="280" stroke="#92400e" stroke-width="1.5" />
+    <line x1="48" y1="285" x2="72" y2="285" stroke="#92400e" stroke-width="1" />
+    <line x1="55" y1="290" x2="65" y2="290" stroke="#92400e" stroke-width="1" />
+    <text x="38" y="275" font-size="9" fill="#92400e" font-family="ui-monospace, monospace">GND_P</text>
+
+    <!-- Right domain (secondary) -->
+    <rect x="340" y="40" width="240" height="260" fill="#dbeafe" stroke="#60a5fa" />
+    <text x="350" y="58" font-size="11" fill="#1e40af" font-family="ui-monospace, monospace" font-weight="600">SECONDARY</text>
+    <text x="350" y="72" font-size="9" fill="#1e40af" font-family="ui-monospace, monospace">예: MCU · 사용자 인터페이스 · 별도 시스템</text>
+
+    <!-- GND symbols on right -->
+    <line x1="500" y1="280" x2="540" y2="280" stroke="#1e40af" stroke-width="1.5" />
+    <line x1="508" y1="285" x2="532" y2="285" stroke="#1e40af" stroke-width="1" />
+    <line x1="515" y1="290" x2="525" y2="290" stroke="#1e40af" stroke-width="1" />
+    <text x="500" y="275" font-size="9" fill="#1e40af" font-family="ui-monospace, monospace">GND_S</text>
+
+    <!-- The barrier (slot) -->
+    <rect x="260" y="40" width="80" height="260" fill="#fff" stroke="#94a3b8" stroke-dasharray="4 3" />
+    <text x="278" y="58" font-size="10" fill="#64748b" font-family="ui-monospace, monospace" font-weight="600">BARRIER</text>
+    <text x="270" y="72" font-size="8" fill="#64748b" font-family="ui-monospace, monospace">PCB 슬롯 / 절연체</text>
+    <text x="270" y="293" font-size="8" fill="#dc2626" font-family="ui-monospace, monospace" text-anchor="start">creepage 거리</text>
+
+    <!-- Isolator 1: Optocoupler -->
+    <g transform="translate(130, 100)">
+      <rect x="0" y="0" width="340" height="36" fill="#fff" stroke="#0f172a" />
+      <text x="6" y="14" font-size="9" fill="#0f172a" font-family="ui-monospace, monospace">①</text>
+      <text x="20" y="14" font-size="9" fill="#475569" font-family="ui-monospace, monospace">Optocoupler — LED + photo-tx</text>
+      <!-- LED on left side of barrier -->
+      <polygon points="120,18 132,12 132,24" fill="#dc2626" />
+      <line x1="132" y1="12" x2="132" y2="24" stroke="#dc2626" stroke-width="1" />
+      <text x="118" y="32" font-size="7" fill="#dc2626" font-family="ui-monospace, monospace">LED</text>
+      <!-- light arrows -->
+      <line x1="138" y1="18" x2="180" y2="18" stroke="#fbbf24" stroke-width="1" stroke-dasharray="2 1" />
+      <text x="148" y="14" font-size="7" fill="#a16207" font-family="ui-monospace, monospace">light</text>
+      <!-- phototransistor on right -->
+      <circle cx="195" cy="18" r="8" fill="none" stroke="#1e40af" stroke-width="1.5" />
+      <text x="208" y="22" font-size="7" fill="#1e40af" font-family="ui-monospace, monospace">photo-tx</text>
+    </g>
+
+    <!-- Isolator 2: Digital isolator (capacitive / magnetic) -->
+    <g transform="translate(130, 150)">
+      <rect x="0" y="0" width="340" height="36" fill="#fff" stroke="#0f172a" />
+      <text x="6" y="14" font-size="9" fill="#0f172a" font-family="ui-monospace, monospace">②</text>
+      <text x="20" y="14" font-size="9" fill="#475569" font-family="ui-monospace, monospace">Digital isolator — capacitive (Si86xx) / magnetic (ADuM)</text>
+      <!-- TX driver -->
+      <rect x="115" y="10" width="20" height="16" fill="#fbbf24" />
+      <text x="118" y="22" font-size="7" fill="#92400e" font-family="ui-monospace, monospace">TX</text>
+      <!-- Cap symbols across barrier -->
+      <line x1="135" y1="14" x2="155" y2="14" stroke="#0f172a" stroke-width="1.5" />
+      <line x1="135" y1="22" x2="155" y2="22" stroke="#0f172a" stroke-width="1.5" />
+      <line x1="155" y1="10" x2="155" y2="18" stroke="#0f172a" stroke-width="1" />
+      <line x1="159" y1="10" x2="159" y2="18" stroke="#0f172a" stroke-width="1" />
+      <text x="143" y="34" font-size="7" fill="#475569" font-family="ui-monospace, monospace">on-die cap</text>
+      <!-- RX -->
+      <rect x="180" y="10" width="20" height="16" fill="#60a5fa" />
+      <text x="183" y="22" font-size="7" fill="#1e40af" font-family="ui-monospace, monospace">RX</text>
+    </g>
+
+    <!-- Isolator 3: Transformer -->
+    <g transform="translate(130, 200)">
+      <rect x="0" y="0" width="340" height="36" fill="#fff" stroke="#0f172a" />
+      <text x="6" y="14" font-size="9" fill="#0f172a" font-family="ui-monospace, monospace">③</text>
+      <text x="20" y="14" font-size="9" fill="#475569" font-family="ui-monospace, monospace">Transformer — 신호 + 전력 (Ethernet, isolated DC-DC)</text>
+      <!-- Two coils with magnetic core line -->
+      <path d="M 125 14 q 4 0 4 4 q 0 4 -4 4 q -4 0 -4 4 q 0 4 4 4" fill="none" stroke="#0f172a" stroke-width="1" />
+      <line x1="135" y1="10" x2="135" y2="30" stroke="#94a3b8" stroke-width="2" />
+      <line x1="139" y1="10" x2="139" y2="30" stroke="#94a3b8" stroke-width="2" />
+      <path d="M 145 14 q 4 0 4 4 q 0 4 -4 4 q -4 0 -4 4 q 0 4 4 4" fill="none" stroke="#0f172a" stroke-width="1" />
+      <text x="115" y="32" font-size="7" fill="#475569" font-family="ui-monospace, monospace">primary</text>
+      <text x="145" y="32" font-size="7" fill="#475569" font-family="ui-monospace, monospace">secondary</text>
+    </g>
+
+    <!-- Isolator 4: Isolated DC-DC -->
+    <g transform="translate(130, 250)">
+      <rect x="0" y="0" width="340" height="36" fill="#fff" stroke="#0f172a" />
+      <text x="6" y="14" font-size="9" fill="#0f172a" font-family="ui-monospace, monospace">④</text>
+      <text x="20" y="14" font-size="9" fill="#475569" font-family="ui-monospace, monospace">Isolated DC-DC — 격리된 전원 공급 (5V → 5V_iso)</text>
+      <rect x="115" y="8" width="100" height="20" fill="#10b981" />
+      <text x="125" y="22" font-size="9" fill="#fff" font-family="ui-monospace, monospace">DC-DC</text>
+    </g>
+  </svg>
+</figure>
