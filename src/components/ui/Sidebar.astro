@@ -1,5 +1,6 @@
 ---
 import { CATEGORIES } from '../../lib/content/topics';
+import SearchBox from './SearchBox.astro';
 interface Props { activeSlug?: string; activeSubSlug?: string }
 const { activeSlug, activeSubSlug } = Astro.props;
 ---
@@ -54,6 +55,9 @@ const { activeSlug, activeSubSlug } = Astro.props;
         <line x1="18" y1="6" x2="6"  y2="18" />
       </svg>
     </button>
+  </div>
+  <div class="px-3 pt-3 pb-2 border-b border-slate-200">
+    <SearchBox />
   </div>
   <nav class="flex-1 overflow-y-auto px-3 py-4 text-sm">
     {CATEGORIES.map((cat) => (
