@@ -371,59 +371,88 @@ MDX 에 추가:
 **Save as**: `public/bms/back-to-back-schematic.png`
 **Aspect**: 16:9 · 1600 × 900
 
+> 첫 시도 (#10) 의 문제:
+> 1. CHG / DSG 제어 선이 게이트 (G) 가 아닌 source/MID 쪽에서 끝남
+> 2. MOSFET 표준 심볼이 어그러져 있어 channel / substrate / arrow 가 불분명
+> 3. Body diode 가 FET 옆 외부에 그려져 D-S 사이의 내재 다이오드인 게 시각적으로 안 묶임
+>
+> 해법 — image generation 은 표준 schematic symbol 을 자주 틀리므로, **단순 박스형 FET 심볼 + 박스 안에 body diode 를 명시적으로 그려넣는 방식** 으로 변경.
+
 ### Prompt
 
-> Clean, modern engineering schematic — professional PDF datasheet aesthetic. NOT hand-drawn, NOT a photo, NOT a 3D render. Crisp white background with thin black lines for wiring and component bodies. Subtle accent colors for educational annotations. Think TI / ADI application-note quality — uncluttered, every label legible at small zoom.
+> Clean engineering schematic illustration — professional PDF datasheet aesthetic, white background, thin black lines, sans-serif text. NOT hand-drawn, NOT a photo, NOT a 3D render, NOT a confusing standard MOSFET symbol — use the **simplified labeled-rectangle convention** described below.
 >
-> The schematic depicts a **low-side back-to-back N-channel MOSFET BMS bidirectional switch**. Layout horizontal, left to right:
+> Subject: **low-side back-to-back N-channel MOSFET BMS bidirectional switch**. Horizontal layout, 1600 × 900 aspect.
 >
-> Far left:
-> - A vertical battery symbol (rectangle with rounded corners, dark green fill, white "Li-ion BAT" label inside).
-> - Top terminal labeled **B+** in bold sans-serif, bottom terminal labeled **B−**.
+> Far left — battery:
+> - Vertical green (#10b981) rectangle labeled "Li-ion BAT" in white centered.
+> - Top terminal labeled **B+**, bottom terminal **B−** in bold black sans-serif.
 >
-> Top wire:
-> - A single straight black horizontal wire from B+ all the way to PACK+ on the right side. No components on it.
+> Top wire (B+ direct to PACK+):
+> - One straight horizontal black wire from B+ to PACK+ (right side of the image). No components.
+> - Above this wire, a green arrow pointing right with label "discharge →" in green (#10b981).
 >
-> Bottom MOSFET path (this is the focus):
-> - From B− a wire goes right toward two N-channel MOSFETs placed side by side.
-> - **Q1 (CHG FET)** — left MOSFET. Standard schematic symbol for an N-channel enhancement-mode MOSFET drawn vertically:
->   * Drain (D) at the top-left side of the symbol, connected to the wire from B−. Pin labeled "D" in small sans-serif next to the pin.
->   * Source (S) at the bottom-right side, connected to the MID node. Pin labeled "S".
->   * Gate (G) extending upward, labeled "G".
->   * **Intrinsic body diode drawn next to the channel symbol with its anode at the source (S, right side) and cathode at the drain (D, left side)** — triangle pointing LEFT (toward D), with a vertical bar at the cathode side. Use red color (#dc2626) for the diode to make it pop.
->   * Below the symbol, a small label "Q1 (CHG)" in dark amber (#92400e) bold.
-> - **Wire labeled MID** between Q1.S and Q2.S — a single black wire with a small filled dot indicating the node, and the text "MID" above the wire in indigo (#4f46e5) bold.
-> - **Q2 (DSG FET)** — right MOSFET. Mirror image of Q1:
->   * Source (S) at the top-left of the symbol, connected to MID node. Pin labeled "S".
->   * Drain (D) at the bottom-right, connected to a wire going right to PACK−. Pin labeled "D".
->   * Gate (G) extending upward.
->   * **Body diode anode at S (left side), cathode at D (right side)** — triangle pointing RIGHT, vertical bar at the cathode (right). Same red color.
->   * Below: "Q2 (DSG)" in dark amber.
-> - The wire continues from Q2.D to PACK− on the right.
+> Center — the two MOSFETs (THIS IS THE CRITICAL PART):
 >
-> **Key visual emphasis**: the two body diodes face OPPOSITE directions (Q1's diode points outward toward B−, Q2's diode points outward toward PACK−). This is the entire point of back-to-back — make it visually unmissable.
+> Each MOSFET is drawn as a **labeled white rectangle (200 × 220 px)** with these EXACT internal contents:
 >
-> Top of schematic:
-> - A horizontal rectangle labeled "BMS IC" in white sans-serif on dark slate (#0f172a) fill, centered above the two FETs.
-> - Two thin blue (#1e40af) wires drop from the IC: one labeled "CHG" going to Q1.G, the other labeled "DSG" going to Q2.G.
+> - The rectangle has a thick black 2px border.
+> - At the TOP of the rectangle: a single short pin extending UP, labeled "G" in small black text. This is the gate.
+> - On the LEFT side of the rectangle: a pin extending LEFT, labeled "D" in small black text.
+> - On the RIGHT side: a pin extending RIGHT, labeled "S" in small black text.
+> - Inside the rectangle, in the center:
+>   * The text "N-ch MOSFET" in small slate sans-serif.
+>   * Below that, a CLEARLY VISIBLE diode symbol drawn between the D and S pins inside the box: a red (#dc2626) triangle (filled) with a perpendicular bar at the cathode end. This is the body diode.
+>   * The diode's two endpoints connect via thin red lines to the inside of the D pin and S pin pads, so it's UNMISTAKABLE that this diode is part of THIS MOSFET (between its own D and S).
 >
-> Far right:
-> - A vertical rectangle labeled "PACK / load / charger" in white text on dark slate fill.
-> - Top terminal labeled **PACK+**, bottom **PACK−**, with the appropriate wires connecting.
+> **Q1 (CHG FET) — placed left of center**:
+> - D pin connects via wire to the left, eventually reaching B−.
+> - S pin connects via wire to the right, into the MID node.
+> - Body diode INSIDE the box: anode at S (right edge of diode symbol), cathode at D (left edge). The triangle points LEFT, the bar is on the LEFT side (cathode). Forward direction = MID → B− (right to left).
+> - Below the box, in dark amber (#92400e) bold: "Q1 — CHG FET"
 >
-> Educational arrows (transparent, secondary):
-> - A green arrow at the top wire pointing rightward labeled "discharge →" in green (#10b981).
-> - A green arrow at the bottom wire pointing leftward (since current returns through the FETs from PACK− back to B−).
-> - Optionally a yellow arrow opposite direction labeled "charge ←" (use lighter opacity so it doesn't compete).
+> **Q2 (DSG FET) — placed right of center, MIRROR IMAGE of Q1**:
+> - S pin connects via wire to the LEFT, into the MID node.
+> - D pin connects via wire to the RIGHT, going to PACK−.
+> - Body diode INSIDE the box: anode at S (left edge of diode), cathode at D (right edge). The triangle points RIGHT, the bar is on the RIGHT side. Forward direction = MID → PACK− (left to right).
+> - Below the box, in dark amber bold: "Q2 — DSG FET"
 >
-> Bottom annotations (small monospaced font, slate gray):
+> **The two body diodes MUST face opposite directions** — Q1's points LEFT, Q2's points RIGHT. This is the visual anchor of the whole diagram.
+>
+> Between Q1 and Q2 — MID node:
+> - A horizontal black wire connecting Q1.S (right pin) to Q2.S (left pin).
+> - A small filled black dot at the wire's midpoint.
+> - The label "MID" in indigo (#4f46e5) bold ABOVE the wire, near the dot.
+>
+> Top — BMS IC and gate connections (CRITICAL, was wrong in the first attempt):
+> - A horizontal rounded rectangle labeled "BMS IC" in white sans-serif on dark slate (#0f172a) fill, centered horizontally above the two MOSFETs.
+> - From the BMS IC, **two distinct blue (#1e40af) lines** drop down:
+>   * The LEFT line is labeled "CHG" in blue. It goes DOWN, then turns and meets exactly Q1's G pin (the pin extending UP from the top of Q1's box). The wire physically touches the G pin tip.
+>   * The RIGHT line is labeled "DSG" in blue. It goes DOWN to Q2's G pin in the same way.
+> - **Each blue control line MUST END at the G pin of its respective FET** — not at the source, not at the MID node, not somewhere ambiguous. Make this connection unmistakable.
+>
+> Far right — PACK connector:
+> - Vertical dark slate (#0f172a) rectangle with white text "PACK" stacked vertically (or "PACK / load / charger").
+> - Top terminal **PACK+** wire to the top horizontal wire.
+> - Bottom terminal **PACK−** wire from Q2's D pin.
+>
+> Below the bottom wire:
+> - A green arrow pointing LEFT (since discharge return current flows PACK− → ... → B−), labeled in faint green.
+> - A yellow dashed arrow opposite (pointing RIGHT) labeled "charge ←" in muted orange (#d97706).
+>
+> Bottom-of-image annotations (small monospaced font, slate gray):
 > - "두 FET 모두 ON → 양방향 도통 (정상)"
 > - "CHG OFF (Q1) → 충전 차단 (충전 시 전류 B−→MID 방향이 Q1 body diode 의 reverse 방향)"
 > - "DSG OFF (Q2) → 방전 차단 (방전 시 전류 PACK−→MID 방향이 Q2 body diode 의 reverse 방향)"
 >
-> NO unrelated component (no decoupling caps, no shunt resistor, no current sense — this diagram is about the back-to-back FET pair only). Crisp lines, no shadows, no gradient backgrounds, no chip artwork — schematic-style only.
->
-> Image is sharp, all text legible at 1600 × 900, every label clear. White background. No watermark.
+> Constraints:
+> - White background, no shadows, no gradients
+> - All text in clean sans-serif, no decorative fonts
+> - NO standard "two parallel lines + arrow" MOSFET symbol — use the labeled-rectangle convention described above for clarity
+> - NO extra components (no shunt resistor, no decoupling caps, no current sense)
+> - All wires are thin black lines (1.5–2 px), only blue for gate control and red for body diodes
+> - Every label legible at 1600 × 900 zoom
+> - No watermark, no rulers
 
 ### After generating
 
