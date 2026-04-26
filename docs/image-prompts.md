@@ -365,6 +365,81 @@ MDX 에 추가:
 
 ---
 
+## 7. BMS Back-to-back N-channel 스키매틱 (low-side)
+
+**Goes to**: `/bms-mosfet` 페이지의 "Back-to-back 토폴로지" 카드 (현재 SVG 자리 또는 옆에 추가)
+**Save as**: `public/bms/back-to-back-schematic.png`
+**Aspect**: 16:9 · 1600 × 900
+
+### Prompt
+
+> Clean, modern engineering schematic — professional PDF datasheet aesthetic. NOT hand-drawn, NOT a photo, NOT a 3D render. Crisp white background with thin black lines for wiring and component bodies. Subtle accent colors for educational annotations. Think TI / ADI application-note quality — uncluttered, every label legible at small zoom.
+>
+> The schematic depicts a **low-side back-to-back N-channel MOSFET BMS bidirectional switch**. Layout horizontal, left to right:
+>
+> Far left:
+> - A vertical battery symbol (rectangle with rounded corners, dark green fill, white "Li-ion BAT" label inside).
+> - Top terminal labeled **B+** in bold sans-serif, bottom terminal labeled **B−**.
+>
+> Top wire:
+> - A single straight black horizontal wire from B+ all the way to PACK+ on the right side. No components on it.
+>
+> Bottom MOSFET path (this is the focus):
+> - From B− a wire goes right toward two N-channel MOSFETs placed side by side.
+> - **Q1 (CHG FET)** — left MOSFET. Standard schematic symbol for an N-channel enhancement-mode MOSFET drawn vertically:
+>   * Drain (D) at the top-left side of the symbol, connected to the wire from B−. Pin labeled "D" in small sans-serif next to the pin.
+>   * Source (S) at the bottom-right side, connected to the MID node. Pin labeled "S".
+>   * Gate (G) extending upward, labeled "G".
+>   * **Intrinsic body diode drawn next to the channel symbol with its anode at the source (S, right side) and cathode at the drain (D, left side)** — triangle pointing LEFT (toward D), with a vertical bar at the cathode side. Use red color (#dc2626) for the diode to make it pop.
+>   * Below the symbol, a small label "Q1 (CHG)" in dark amber (#92400e) bold.
+> - **Wire labeled MID** between Q1.S and Q2.S — a single black wire with a small filled dot indicating the node, and the text "MID" above the wire in indigo (#4f46e5) bold.
+> - **Q2 (DSG FET)** — right MOSFET. Mirror image of Q1:
+>   * Source (S) at the top-left of the symbol, connected to MID node. Pin labeled "S".
+>   * Drain (D) at the bottom-right, connected to a wire going right to PACK−. Pin labeled "D".
+>   * Gate (G) extending upward.
+>   * **Body diode anode at S (left side), cathode at D (right side)** — triangle pointing RIGHT, vertical bar at the cathode (right). Same red color.
+>   * Below: "Q2 (DSG)" in dark amber.
+> - The wire continues from Q2.D to PACK− on the right.
+>
+> **Key visual emphasis**: the two body diodes face OPPOSITE directions (Q1's diode points outward toward B−, Q2's diode points outward toward PACK−). This is the entire point of back-to-back — make it visually unmissable.
+>
+> Top of schematic:
+> - A horizontal rectangle labeled "BMS IC" in white sans-serif on dark slate (#0f172a) fill, centered above the two FETs.
+> - Two thin blue (#1e40af) wires drop from the IC: one labeled "CHG" going to Q1.G, the other labeled "DSG" going to Q2.G.
+>
+> Far right:
+> - A vertical rectangle labeled "PACK / load / charger" in white text on dark slate fill.
+> - Top terminal labeled **PACK+**, bottom **PACK−**, with the appropriate wires connecting.
+>
+> Educational arrows (transparent, secondary):
+> - A green arrow at the top wire pointing rightward labeled "discharge →" in green (#10b981).
+> - A green arrow at the bottom wire pointing leftward (since current returns through the FETs from PACK− back to B−).
+> - Optionally a yellow arrow opposite direction labeled "charge ←" (use lighter opacity so it doesn't compete).
+>
+> Bottom annotations (small monospaced font, slate gray):
+> - "두 FET 모두 ON → 양방향 도통 (정상)"
+> - "CHG OFF (Q1) → 충전 차단 (충전 시 전류 B−→MID 방향이 Q1 body diode 의 reverse 방향)"
+> - "DSG OFF (Q2) → 방전 차단 (방전 시 전류 PACK−→MID 방향이 Q2 body diode 의 reverse 방향)"
+>
+> NO unrelated component (no decoupling caps, no shunt resistor, no current sense — this diagram is about the back-to-back FET pair only). Crisp lines, no shadows, no gradient backgrounds, no chip artwork — schematic-style only.
+>
+> Image is sharp, all text legible at 1600 × 900, every label clear. White background. No watermark.
+
+### After generating
+
+```mdx
+<figure class="not-prose rounded-lg border border-slate-200 overflow-hidden">
+  <img src="/bms/back-to-back-schematic.png" alt="Low-side back-to-back N-channel MOSFET BMS topology" class="block w-full" loading="lazy" />
+  <figcaption class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
+    Low-side back-to-back 토폴로지 — 두 N-ch MOSFET 의 source 가 MID 에서 묶이고, body diode 가 서로 반대 방향. CHG OFF 면 충전 차단, DSG OFF 면 방전 차단, 둘 다 ON 일 때만 양방향 도통.
+  </figcaption>
+</figure>
+```
+
+기존 `BackToBackMosfet.astro` SVG 컴포넌트는 그대로 두고 이 사진을 카드 안에 추가하거나 SVG 를 details 안으로 접어 넣으면 됩니다.
+
+---
+
 ## 작업 순서 추천
 
 1. **#1 ESD 파형** — 가장 임팩트 큼 (현재 텍스트만)
