@@ -61,13 +61,16 @@ import MosfetThermalCalc from '../components/sim/MosfetThermalCalc.svelte';
         <li>FET 한 개로는 OFF 시켜도 body diode 통해 한 방향 전류는 흐름</li>
         <li>두 FET 을 source 묶어 back-to-back 으로 두면 body diode 가 서로 반대 방향이라 어느 쪽도 흐를 수 없음</li>
       </ul>
-      <p><b>네이밍</b>:</p>
+      <p><b>네이밍</b> (역할 기준):</p>
       <ul>
-        <li><b>Discharge FET (DSG)</b> — 배터리에서 부하로 나가는 방향. 부하 단락 시 OFF.</li>
-        <li><b>Charge FET (CHG)</b> — 충전기에서 배터리로 들어오는 방향. 과충전 시 OFF.</li>
+        <li><b>Discharge FET (DSG)</b> — 방전 전류 흐름을 차단하는 FET. 부하 단락 / 과방전 시 OFF.</li>
+        <li><b>Charge FET (CHG)</b> — 충전 전류 흐름을 차단하는 FET. 과충전 시 OFF.</li>
       </ul>
       <p>
         Source 가 묶여있어 두 게이트가 같은 기준 (S 노드) 을 가지므로 driver 가 단순. BMS IC (BQ77216, BQ76930, S-8254A 등) 가 두 게이트를 직접 구동.
+      </p>
+      <p>
+        <b>위치 — low-side vs high-side</b>: 위 다이어그램은 <b>low-side</b> (B− / PACK− 경로) 토폴로지로, 현대 Li-ion BMS 의 표준입니다. 이유는 게이트 기준이 낮은 전압이라 charge pump 없이 구동 가능. <b>High-side</b> (B+ / PACK+ 경로) 도 가능하지만 게이트를 V_pack + 10 V 까지 끌어올려야 해 별도 IC / charge pump 필요. 동작 원리 (back-to-back, body diode 반대 방향) 는 동일.
       </p>
     </div>
   </Card>
