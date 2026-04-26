@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Sidebar from '../components/ui/Sidebar.astro';
 import { TOPICS } from '../lib/content/topics';
+import { SITE_VERSION } from '../lib/version';
 ---
 <!doctype html>
 <html lang="ko">
@@ -50,7 +51,7 @@ import { TOPICS } from '../lib/content/topics';
             <span class="text-slate-300" aria-hidden="true">·</span>
             <a href="https://x.com/hulryung" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-700">x.com/hulryung</a>
           </div>
-          <span class="font-mono">v0.1</span>
+          <a href="/changelog" class="font-mono text-slate-500 hover:text-indigo-700" title="Changelog">v{SITE_VERSION}</a>
         </div>
       </footer>
     </div>

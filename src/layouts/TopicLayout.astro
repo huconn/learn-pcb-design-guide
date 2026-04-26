@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import type { Topic } from '../lib/content/topics';
 import Sidebar from '../components/ui/Sidebar.astro';
+import { SITE_VERSION } from '../lib/version';
 
 interface Props { topic: Topic; activeSubSlug?: string }
 const { topic, activeSubSlug } = Astro.props;
@@ -33,7 +34,7 @@ const { topic, activeSubSlug } = Astro.props;
             <span class="text-slate-300" aria-hidden="true">·</span>
             <a href="https://x.com/hulryung" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-700">x.com/hulryung</a>
           </div>
-          <span class="font-mono">v0.1</span>
+          <a href="/changelog" class="font-mono text-slate-500 hover:text-indigo-700" title="Changelog">v{SITE_VERSION}</a>
         </div>
       </footer>
     </div>
