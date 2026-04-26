@@ -1,0 +1,73 @@
+---
+// Pierce oscillator schematic — most common crystal circuit.
+// MCU has internal inverter between XIN and XOUT, external X-tal + 2 caps.
+---
+<figure class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <svg viewBox="0 0 480 240" class="w-full" role="img" aria-label="Pierce oscillator schematic — crystal between XIN and XOUT with two load capacitors">
+    <rect x="1" y="1" width="478" height="238" fill="#fff" stroke="#e2e8f0" />
+    <text x="14" y="20" font-size="11" font-family="ui-monospace, monospace" fill="#0f172a">Pierce 발진 회로 — 가장 흔한 형태</text>
+
+    <!-- MCU box -->
+    <rect x="40" y="60" width="120" height="120" fill="#0f172a" />
+    <text x="78" y="124" font-size="11" fill="#fff" font-family="ui-monospace, monospace">MCU</text>
+
+    <!-- Internal inverter symbol (triangle) -->
+    <polygon points="76,90 76,150 116,120" fill="#1e293b" stroke="#475569" stroke-width="1" />
+    <circle cx="120" cy="120" r="3" fill="none" stroke="#475569" stroke-width="1" />
+
+    <!-- Pin labels -->
+    <text x="44" y="100" font-size="9" fill="#22d3a5" font-family="ui-monospace, monospace">XIN</text>
+    <text x="44" y="148" font-size="9" fill="#fbbf24" font-family="ui-monospace, monospace">XOUT</text>
+
+    <!-- Wires from MCU pins -->
+    <line x1="160" y1="95" x2="220" y2="95" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="160" y1="145" x2="220" y2="145" stroke="#0f172a" stroke-width="1.5" />
+
+    <!-- Crystal (rectangle with bars) -->
+    <rect x="240" y="80" width="20" height="80" fill="#fff" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="232" y1="100" x2="232" y2="140" stroke="#0f172a" stroke-width="2" />
+    <line x1="268" y1="100" x2="268" y2="140" stroke="#0f172a" stroke-width="2" />
+    <text x="270" y="92" font-size="10" fill="#0f172a" font-family="ui-monospace, monospace">Y1</text>
+    <text x="246" y="200" font-size="9" fill="#475569" font-family="ui-monospace, monospace" text-anchor="middle">crystal</text>
+
+    <!-- Wires to crystal -->
+    <line x1="220" y1="95" x2="220" y2="100" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="220" y1="100" x2="232" y2="100" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="268" y1="100" x2="280" y2="100" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="220" y1="140" x2="220" y2="145" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="220" y1="140" x2="232" y2="140" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="268" y1="140" x2="280" y2="140" stroke="#0f172a" stroke-width="1.5" />
+
+    <!-- Cap C1 (top) -->
+    <line x1="170" y1="95" x2="170" y2="60" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="155" y1="60" x2="185" y2="60" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="160" y1="55" x2="180" y2="55" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="170" y1="55" x2="170" y2="35" stroke="#0f172a" stroke-width="1.5" />
+    <text x="180" y="48" font-size="10" fill="#4f46e5" font-family="ui-monospace, monospace">C1</text>
+
+    <!-- Cap C2 (bottom) -->
+    <line x1="170" y1="145" x2="170" y2="180" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="155" y1="180" x2="185" y2="180" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="160" y1="185" x2="180" y2="185" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="170" y1="185" x2="170" y2="205" stroke="#0f172a" stroke-width="1.5" />
+    <text x="180" y="190" font-size="10" fill="#4f46e5" font-family="ui-monospace, monospace">C2</text>
+
+    <!-- GND symbols at C1 top and C2 bottom -->
+    <line x1="160" y1="35" x2="180" y2="35" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="163" y1="32" x2="177" y2="32" stroke="#0f172a" stroke-width="1" />
+    <line x1="166" y1="29" x2="174" y2="29" stroke="#0f172a" stroke-width="1" />
+
+    <line x1="160" y1="205" x2="180" y2="205" stroke="#0f172a" stroke-width="1.5" />
+    <line x1="163" y1="208" x2="177" y2="208" stroke="#0f172a" stroke-width="1" />
+    <line x1="166" y1="211" x2="174" y2="211" stroke="#0f172a" stroke-width="1" />
+
+    <!-- Annotations -->
+    <text x="320" y="64" font-size="10" fill="#4f46e5" font-family="ui-monospace, monospace" font-weight="600">C_L = (C1·C2)/(C1+C2) + C_stray</text>
+    <text x="320" y="80" font-size="9" fill="#64748b" font-family="ui-monospace, monospace">crystal 데이터시트의 load cap</text>
+
+    <text x="320" y="120" font-size="9" fill="#475569" font-family="ui-monospace, monospace">대칭: C1 = C2 = 2·(C_L − C_stray)</text>
+
+    <text x="320" y="150" font-size="9" fill="#94a3b8" font-family="ui-monospace, monospace">C_stray ≈ 3–7 pF</text>
+    <text x="320" y="164" font-size="9" fill="#94a3b8" font-family="ui-monospace, monospace">(MCU 핀 + PCB 트레이스)</text>
+  </svg>
+</figure>
