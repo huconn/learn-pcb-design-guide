@@ -1,0 +1,148 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { BUCK_LAYOUT } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
+import SnubberCalc from '../components/sim/SnubberCalc.svelte';
+
+<TopicLayout topic={BUCK_LAYOUT}>
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{BUCK_LAYOUT.category}</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    Buck Layout 심화 · Snubber 설계
+    <span class="block mt-1 text-slate-500 text-xl font-normal">SW 노드 ringing 잡기 · FB 트레이스 · soft-start</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    <a href="/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a> 페이지가 "어떤 종류 고를까" 라면, 이 페이지는 buck IC 데이터시트의 권장 레이아웃을 따라했는데도 SW 노드에 ringing 이 보이고 EMI 가 떨어질 때 — <b>그 다음에 무엇을 할 것인가</b> 의 가이드.
+  </p>
+  <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 9분 읽기</span>
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">★ 중급</span>
+    <span class="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-700">snubber 계산기</span>
+  </div>
+</section>
+
+<TipBanner>
+  <b>전제</b> — VRM Selection 의 핫 루프 룰 (Cin 핀 옆) 은 이미 적용된 상태. 그래도 남는 ringing / EMI 문제 해결 단계.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="ringing" title="1. SW 노드 ringing 의 정체">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        Buck 의 HS-FET 가 turn-on 하는 순간, SW 노드 전압이 빠르게 0 → V_in 으로 점프합니다 (수 ns rise time). 이때:
+      </p>
+      <ul>
+        <li>SW 노드 자체에 <b>기생 캡 (C_par)</b>: FET output cap (~50–200 pF), 트레이스 plane 캡, 인덕터 winding cap 합</li>
+        <li>SW 노드까지의 트레이스에 <b>기생 인덕턴스 (L_par)</b>: 5–50 nH</li>
+        <li>L_par + C_par = LC 공진회로 → <b>ringing</b> 발생, 주파수 <span class="font-mono">f_r = 1 / (2π √(LC))</span></li>
+      </ul>
+      <p>
+        스코프로 잡힌 ringing 주파수가 보통 50 ~ 300 MHz. 이 주파수가 그대로 EMI 시험의 한 피크로 나타나고, 인접 회로에 결합 (crosstalk) 합니다.
+      </p>
+      <p>
+        해결 — <b>RC snubber</b> 를 SW 와 GND 사이에 추가해 LC 공진의 Q 를 낮추기.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="snubber" title="Snubber RC 계산기" subtitle="측정한 ringing 주파수 → R, C 권장값">
+    <SnubberCalc client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="snubber-rule" title="2. Snubber 설계 — 정량 룰">
+    <div class="prose prose-slate max-w-none">
+      <p><b>표준 절차</b> (TI app note SLVA255 / Sandler):</p>
+      <ol>
+        <li>스코프로 ringing 주파수 <b>f_r</b> 측정 (snubber 추가 전)</li>
+        <li>SW 노드의 <b>C_par</b> 추정 (FET 데이터시트의 C_oss + 50 pF 정도)</li>
+        <li>L_par = 1 / ((2π·f_r)² · C_par) 으로 기생 L 역산</li>
+        <li><b>C_snub = 2 · C_par</b> (충분히 크게)</li>
+        <li><b>R_snub = √(L_par / C_par)</b> (matched / critical damping)</li>
+        <li>R_snub 의 전력 손실 = C_snub · V_in² · f_sw → 정격 W 의 R 선택</li>
+      </ol>
+      <p>
+        실제 보드에 적용 후 다시 스코프로 확인 — ringing amplitude 30~50 % 감소가 일반적. 더 강한 감쇠가 필요하면 R 을 약간 줄이고 C 를 약간 늘려 시도.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="fb" title="3. Feedback (FB) 트레이스 — 잡히기 쉬운 함정">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        FB 핀은 출력 전압을 분압해서 받는 매우 작은 신호 (보통 0.6 ~ 1.2 V). 이 트레이스가 <b>SW 노드 옆을 지나가거나</b>, <b>잡음 GND 영역에 위치</b>하면 출력 전압이 흔들리고 컨트롤 루프가 발진하기도 합니다.
+      </p>
+      <p><b>FB 라우팅 룰</b>:</p>
+      <ul>
+        <li><b>SW 노드 / 인덕터 / 핫 루프 영역 멀리</b> — 최소 5 mm 이상 떨어지기</li>
+        <li><b>깨끗한 GND plane 위</b> — 디지털 GND, SW return 영역 피하기</li>
+        <li><b>FB 분압기를 IC 옆</b> — V_out 에서 FB 분압기까지의 트레이스는 길어도 OK, FB → IC 까지가 짧아야 함</li>
+        <li>differential sensing 이 가능한 IC 라면 사용 (FB+ / FB-) — common-mode noise 제거</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="other" title="4. soft-start · enable · power-good">
+    <div class="prose prose-slate max-w-none">
+      <p><b>Soft-start</b> — 시작 시 출력 전압을 천천히 올려 inrush 전류 / overshoot 막기. 보통 SS 핀 + 외부 cap (10–100 nF) 으로 시간 설정. 출력 cap 큰 보드에서는 길게 (수 ms) 잡기.</p>
+      <p><b>Enable (EN)</b> — V_in 의 분압으로 under-voltage lockout 만들기 자주. 예: 12 V 입력에서 V_in 9 V 이하면 EN = 0 으로 떨어지도록 R 분압 설정.</p>
+      <p><b>Power-good (PG / PGOOD)</b> — open-drain 출력. 보통 풀업 R (10 kΩ) 으로 V_out 에 연결하고, MCU 의 input 으로 받음. 시퀀싱 (다음 레일 enable) 트리거에도 사용.</p>
+      <p><b>Bootstrap (BST) cap</b> — HS-FET gate 구동용. 보통 100 nF MLCC, BST → SW 사이. 거의 모든 buck IC 에 필요. 데이터시트 권장값 따르기.</p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="emi" title="5. Spread-Spectrum / 주파수 dithering — EMI 줄이기">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        스위칭 주파수가 정확히 fixed 면 EMI 시험에서 그 주파수 + 고조파 가 좁고 큰 피크로 나타남. 많은 modern buck IC 가 <b>spread-spectrum</b> (frequency dithering) 옵션 제공 — f_sw 를 ±5~10 % 정도 무작위 변조해서 에너지를 분산.
+      </p>
+      <p>
+        활성화하면 같은 평균 EMI 라도 피크 측정값이 5~10 dB 떨어집니다 (peak detector 측정 기준). FCC Class B 같은 시험에서 fail/pass 차이를 만들 수 있음.
+      </p>
+      <p>
+        주의 — audio band (20 Hz~20 kHz) 와 가까운 dithering frequency 는 오디오 노이즈 발생. 일부 IC 는 dithering 주기가 fixed 라 회피 가능.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="checklist" title="Buck Layout 심화 체크리스트">
+    <ChecklistBlock items={[
+      { text: "Cin → V_in / PGND 핀 1~2 mm (핫 루프)?",                     anchor: "ringing" },
+      { text: "스코프로 SW ringing 측정해봤는가?",                         anchor: "snubber" },
+      { text: "필요시 RC snubber 추가 (계산기 사용)?",                       anchor: "snubber" },
+      { text: "FB 트레이스가 SW 노드 멀리, 깨끗한 GND 위?",                  anchor: "fb" },
+      { text: "Bootstrap cap (보통 100 nF) 정확한 값?",                     anchor: "other" },
+      { text: "Soft-start cap 으로 inrush 제어?",                           anchor: "other" },
+      { text: "Spread-spectrum 옵션 사용 검토?",                             anchor: "emi" },
+      { text: "Thermal 측면 OK (T_j 마진)?",                                 anchor: "emi" },
+    ]} />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>VRM 종류 선택 + 핫 루프 기초: <a href="/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a></li>
+        <li>SW 노드 ringing → EMI 시험: <a href="/emi-radiation" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">EMI Radiation</a></li>
+        <li>buck IC 발열: <a href="/thermal" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Thermal Management</a></li>
+        <li>출력 cap 의 디커플링 계층: <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+</TopicLayout>

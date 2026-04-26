@@ -1,0 +1,148 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { THERMAL } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
+import HeatFlowDiagram from '../components/concept/HeatFlowDiagram.astro';
+import JunctionTempCalc from '../components/sim/JunctionTempCalc.svelte';
+
+<TopicLayout topic={THERMAL}>
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{THERMAL.category}</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    Thermal Management
+    <span class="block mt-1 text-slate-500 text-xl font-normal">발열 → junction 온도 · 방열 비아 · 동박 영역</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    IC 가 1 W 만 손실해도 작은 SOIC 패키지면 junction 온도가 100 °C 를 쉽게 넘깁니다. 이 페이지는 <b>발열 → 온도 → 신뢰성</b> 의 사슬과 PCB 가 할 수 있는 방열 — <b>동박 영역 + 방열 비아</b> — 가 어떻게 효과를 내는지를 다룹니다.
+  </p>
+  <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 8분 읽기</span>
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">★ 초급~중급</span>
+    <span class="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-700">계산기 포함</span>
+  </div>
+</section>
+
+<TipBanner>
+  <b>핵심 식</b> — <span class="font-mono">T_j = T_a + θ_JA × P</span>. junction 온도는 ambient 에 (열저항 × 손실 전력) 을 더한 값. T_j_max (보통 125 또는 150 °C) 를 넘기면 데이터시트 보장 깨짐.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="why" title="1. 왜 발열이 문제인가?">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        반도체는 온도에 매우 민감합니다. 일반적인 영향:
+      </p>
+      <ul>
+        <li><b>수명 절반 룰</b> — junction 온도가 10 °C 올라가면 수명 약 절반. 110 °C 운전은 80 °C 운전 대비 수명 1/8 수준.</li>
+        <li><b>스펙 보장 깨짐</b> — T_j_max (125 / 150 °C) 넘으면 데이터시트의 정확도/속도/전류 보장 깨짐.</li>
+        <li><b>thermal runaway</b> — BJT 와 일부 MOSFET 은 더울수록 전류가 더 흘러 더 더워지는 양성 피드백.</li>
+        <li><b>주변 부품 영향</b> — 한 IC 의 발열이 옆 IC 까지 데움. 인근 전해 cap 의 ESR 증가, 수명 감소.</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="path" title="2. 열은 어디로 가나 — θ 의 분해">
+    <HeatFlowDiagram />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        IC die 에서 발생한 열이 ambient 까지 가는 경로 = 여러 개의 열저항 (θ) 의 직렬 합:
+      </p>
+      <ul>
+        <li><b>θ_jc (junction → case)</b> — 칩 내부. 데이터시트가 줌. 보통 1 ~ 5 °C/W. 작을수록 좋음.</li>
+        <li><b>θ_cb (case → board)</b> — 패키지 → PCB. exposed thermal pad 가 있으면 작음 (~2 °C/W), 일반 SOIC 면 큼.</li>
+        <li><b>θ_ba (board → ambient)</b> — PCB → 공기. <b>설계자가 가장 크게 영향을 주는 부분</b>. 동박 영역, 방열 비아, plane 두께가 결정.</li>
+      </ul>
+      <p>
+        보통 데이터시트의 θ_JA 값은 <b>1 in² (645 mm²) 의 동박 1 oz</b> 위 표준 측정 (JESD51-3) 기준입니다. 실 보드가 그것보다 작으면 θ_JA 가 더 큼 (즉 더 뜨거워짐). 더 크면 더 시원함.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="calc" title="Junction Temperature Calculator" subtitle="θ_JA + 동박/비아 보정 → T_j">
+    <JunctionTempCalc client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="vias" title="3. 방열 비아 — 몇 개, 얼마나 효과?">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        IC 의 exposed thermal pad 아래에 GND plane 까지 뚫는 비아. 한 개의 비아 (0.3 mm 직경, 25 μm 동박 plating) 의 열저항은 약 50 °C/W. N 개 병렬이면 약 50/N °C/W.
+      </p>
+      <ul>
+        <li><b>4 개</b> — 약 12 °C/W 추가 절약 (적당)</li>
+        <li><b>9 개 (3×3 grid)</b> — 약 5 °C/W (대부분의 buck/LDO IC)</li>
+        <li><b>16 개</b> — 약 3 °C/W (큰 발열 IC 만)</li>
+      </ul>
+      <p>
+        주의 — 비아를 thermal pad 안에 두면 솔더가 빨려들어가 부착 불량 가능. 양산은 <b>비아 plug + cap</b> (epoxy filled, 표면 평탄화) 이 표준. prototype 에서는 thermal pad 옆 영역에 비아 두기.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="copper" title="4. 동박 영역 — 큰 ground pour 의 효과">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        IC 의 thermal pad 가 GND plane 의 큰 영역에 연결되면 그 plane 자체가 방열판 역할. 효과는 면적에 따라 점감 (saturating):
+      </p>
+      <ul>
+        <li><b>1 in² (645 mm²)</b> — 약 30~40 % θ 감소 (표준 측정값과 동일)</li>
+        <li><b>4 in²</b> — 약 50 % 감소</li>
+        <li><b>그 이상</b> — 효과 제한적 (열이 plane 을 따라 spread 하는 거리가 ~ 25 mm 정도)</li>
+      </ul>
+      <p>
+        2 oz copper 사용도 도움 — 단면적 ~2배 → plane 의 thermal conductivity 약 2배. 비용 약 +20~30 %.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="pitfalls" title="5. 흔한 실수">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li><b>θ_JA 데이터시트 값 그대로 적용</b> — 표준 1 in² 측정 기준임을 모르고 작은 보드에 그대로 쓰면 실제는 더 뜨거움</li>
+        <li><b>thermal pad 를 GND 트레이스 한 가닥으로 연결</b> — plane 으로 면적 확보해야 의미 있음</li>
+        <li><b>QFN 의 thermal pad 솔더링 불량</b> — 비아가 솔더 흡수 → IC 가 뜸 → θ 폭증. 양산 X-ray 검사 필수</li>
+        <li><b>컨베이어 / 케이스가 ambient 를 가두는 것을 잊음</b> — T_a 는 박스 안 온도가 기준. 실내 25 °C 가 아님</li>
+        <li><b>LDO 의 dropout 손실 무시</b> — 12 V → 3.3 V LDO @ 200 mA 에 1.74 W. SOT-23 패키지 (θ_JA ~250 °C/W) 는 곧 사망</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="checklist" title="Thermal 체크리스트">
+    <ChecklistBlock items={[
+      { text: "각 IC 의 dissipation 계산 (P_loss = ?) 했는가?",        anchor: "calc" },
+      { text: "데이터시트 θ_JA 값과 표준 측정 조건 확인했는가?",       anchor: "path" },
+      { text: "예상 ambient (박스 안 온도) 를 알고 있는가?",            anchor: "calc" },
+      { text: "T_j 계산 결과가 T_j_max - 30 °C 이상 마진?",            anchor: "calc" },
+      { text: "thermal pad 가 큰 plane 에 연결돼 있는가?",              anchor: "copper" },
+      { text: "방열 비아 4~16 개 (전력 IC) 가 thermal pad 에 분포?",   anchor: "vias" },
+      { text: "양산 시 thermal pad solder 검사 (X-ray) 계획 있는가?", anchor: "pitfalls" },
+    ]} />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽과 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>전류 → 트레이스 발열 (IPC-2221): <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭 계산기</a></li>
+        <li>VRM 의 전력 손실: <a href="/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection · Lab</a></li>
+        <li>비아 / plane 의 fab 한계: <a href="/dfm" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">DFM</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+</TopicLayout>

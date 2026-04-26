@@ -1,0 +1,158 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { EMI_RADIATION } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
+import EmiRadiationModes from '../components/concept/EmiRadiationModes.astro';
+import FerriteBeadPlot from '../components/sim/FerriteBeadPlot.svelte';
+
+<TopicLayout topic={EMI_RADIATION}>
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{EMI_RADIATION.category}</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    EMI · Radiation
+    <span class="block mt-1 text-slate-500 text-xl font-normal">공통모드 · 페라이트 비드 · FCC / CE 한계</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    <a href="/esd-protection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">ESD</a> 가 외부의 충격을 막는 거라면, <b>EMI</b> 는 내가 만드는 잡음이 외부 (다른 기기 / 시험 안테나) 로 새는 걸 막는 일입니다. 양산 직전 인증 시험 (FCC Class B / EN 55022) 에서 fail 하면 출시 지연. 이 페이지는 메커니즘 + 기본 처방 + 페라이트 비드의 정확한 해석.
+  </p>
+  <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 8분 읽기</span>
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">★ 중급</span>
+    <span class="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-700">Bode plot 시뮬</span>
+  </div>
+</section>
+
+<TipBanner>
+  <b>한 줄</b> — EMI 는 "loop area × dI/dt" 가 안테나가 됩니다. 작은 루프 + 느린 edge + 가까운 plane = EMI 적음.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="modes" title="1. Differential vs Common Mode — 두 종류의 방사">
+    <EmiRadiationModes />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p>
+        <b>Differential mode (DM)</b> 는 정상적인 신호 — 두 트레이스를 반대 방향으로 흐르는 같은 크기의 전류. 좋은 라우팅이면 멀리서 자기장이 거의 상쇄돼 방사 적음.
+      </p>
+      <p>
+        <b>Common mode (CM)</b> 는 잡음 — 두 트레이스에 <b>같은 방향</b> 으로 흐르는 작은 전류. 양 (μA 급) 도 작은데 케이블 전체가 안테나처럼 작용해 방사 폭증. <b>EMI fail 의 대부분 (80%) 이 공통모드</b>.
+      </p>
+      <p>
+        CM 잡음의 흔한 원인 — return path 가 깨끗하지 않거나, ground plane 에 잡음이 있거나, 차동 페어가 균형 깨짐.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="ferrite" title="2. 페라이트 비드 — 잡음 흡수">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        가장 흔한 EMI 대처 부품. 데이터시트는 보통 <b>"Z = 600 Ω @ 100 MHz"</b> 처럼 한 주파수의 |Z| 만 줍니다. 하지만 실제는 주파수에 따라 매우 다른 모양:
+      </p>
+      <ul>
+        <li><b>저주파 (저 MHz)</b> — 인덕터처럼 동작 (Z = jωL). 잡음을 <b>반사</b> 해서 시스템에 가둠.</li>
+        <li><b>피크 주파수 (~100 MHz)</b> — 저항처럼 동작. 잡음을 <b>열로 손실</b> — 진짜 흡수.</li>
+        <li><b>고주파 (수 GHz)</b> — 기생 cap 때문에 |Z| 떨어짐. 효과 사라짐.</li>
+      </ul>
+      <p>
+        설계 시 핵심 — <b>잡음이 있는 주파수에서 R 부분이 큰 비드</b> 를 선택. 같은 600 Ω 비드라도 피크 주파수가 다르면 효과 다름.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="bead-plot" title="Ferrite Bead Impedance Plot" subtitle="|Z|, R, X 을 주파수별로 분해해서 보기">
+    <FerriteBeadPlot client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="cmc" title="3. Common-Mode Choke — CM 만 막기">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        같은 토로이드 코어에 두 트레이스를 같은 방향으로 감은 4-pin 인덕터. 차동 신호 (두 트레이스 반대 방향) 는 자속이 상쇄돼 인덕턴스 거의 0 — <b>통과</b>. 공통모드 (같은 방향) 는 자속이 더해져 큰 인덕턴스 — <b>차단</b>.
+      </p>
+      <p><b>적용</b>:</p>
+      <ul>
+        <li>USB 데이터 라인 (D+/D-) 의 CM choke — 보통 90 Ω @ 100 MHz</li>
+        <li>이더넷 RJ-45 의 마그네틱 (이미 CM choke 내장)</li>
+        <li>전원 라인 (AC 입력) 의 CM choke — mH 급 큰 코어</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="limits" title="4. FCC / CE 한계 — 어디까지 줄여야?">
+    <div class="prose prose-slate max-w-none">
+      <p>대표적인 인증 시험 한계 (radiated emissions, 3 m 거리):</p>
+      <table class="w-full text-sm mt-2">
+        <thead class="text-slate-500 font-mono text-[10px] uppercase">
+          <tr>
+            <th class="text-left py-1.5">규제</th>
+            <th class="text-left py-1.5">대상</th>
+            <th class="text-left py-1.5">30–230 MHz</th>
+            <th class="text-left py-1.5">230 MHz–1 GHz</th>
+            <th class="text-left py-1.5">{`>1 GHz`}</th>
+          </tr>
+        </thead>
+        <tbody class="text-slate-700">
+          <tr><td>FCC Class B</td><td>가전용</td><td class="font-mono">40 dBμV/m</td><td class="font-mono">47 dBμV/m</td><td class="font-mono">54–74</td></tr>
+          <tr><td>FCC Class A</td><td>업무용</td><td class="font-mono">49</td><td class="font-mono">54</td><td class="font-mono">61–80</td></tr>
+          <tr><td>EN 55022 Class B</td><td>EU 가전</td><td class="font-mono">30</td><td class="font-mono">37</td><td class="font-mono">50–70</td></tr>
+        </tbody>
+      </table>
+      <p class="mt-2">
+        Class B 가 가장 엄격. 일반 IoT/소비자 제품 = Class B. 시험은 제3자 인증기관 (UL, TUV, KTL 등) 에서 실시. 비용 보통 200~500 만원 / 시도. <b>fail 하면 디자인 → 시도 다시 → 비용 + 시간 폭증</b>.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="rules" title="5. EMI 줄이는 통합 룰">
+    <div class="prose prose-slate max-w-none">
+      <ol>
+        <li><b>Loop area 최소화</b> — 모든 신호 / 전원에 적용. <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a> 의 핵심.</li>
+        <li><b>edge rate 늦추기</b> — 가능하면 driver 의 slew-rate 옵션 활성화 (USB, GPIO 등). 빠를수록 EMI 큼.</li>
+        <li><b>전원 입력에 페라이트 비드 + cap</b> (LC π 필터) — 모든 외부 전원 인입에.</li>
+        <li><b>USB / 이더넷 입력에 CM choke</b> — 케이블 안테나 효과 막기.</li>
+        <li><b>스위칭 컨버터에 spread-spectrum</b> ([Buck Layout 심화](/buck-layout-deep-dive#emi)) — 피크 측정값 5–10 dB 감소.</li>
+        <li><b>cable shielding</b> — 외부 cable 은 shielded + chassis GND 연결.</li>
+        <li><b>모듈 단위 차폐 (Faraday cage)</b> — 위 다 해도 안 되면 메탈 캔.</li>
+      </ol>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="checklist" title="EMI 설계 체크리스트">
+    <ChecklistBlock items={[
+      { text: "고속 신호 · 전원 라인의 loop area 최소화 됨?",        anchor: "rules" },
+      { text: "외부 전원 인입에 페라이트 비드 + bypass cap?",         anchor: "ferrite" },
+      { text: "USB / 이더넷 라인에 CM choke?",                          anchor: "cmc" },
+      { text: "스위칭 컨버터에 spread-spectrum 옵션?",                  anchor: "rules" },
+      { text: "차동 페어가 잘 매칭 (length, impedance)?",                anchor: "modes" },
+      { text: "cable 모두 shielded + chassis GND?",                     anchor: "rules" },
+      { text: "FCC / CE Class B 한계 사전 simulation 또는 pre-scan?",   anchor: "limits" },
+    ]} />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>loop area = radiation: <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>외부 충격 막기: <a href="/esd-protection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">ESD Protection</a></li>
+        <li>스위칭 노이즈가 EMI 의 큰 원인: <a href="/buck-layout-deep-dive" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Buck Layout 심화</a></li>
+        <li>고속 인터페이스 (USB / GbE / HDMI) 별 EMI 부품: <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+</TopicLayout>

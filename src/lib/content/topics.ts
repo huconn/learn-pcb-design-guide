@@ -75,6 +75,36 @@ export const HIGH_SPEED_INTERFACES: Topic = {
   // No subpages — single reference page
 };
 
+export const THERMAL: Topic = {
+  slug: 'thermal',
+  title: 'Thermal Management',
+  subtitle: '발열 → junction 온도 · 방열 비아 · 동박 영역',
+  category: '90 · PRACTICAL',
+  readingMinutes: 8,
+  level: '초급~중급',
+  status: 'published',
+};
+
+export const BUCK_LAYOUT: Topic = {
+  slug: 'buck-layout-deep-dive',
+  title: 'Buck Layout 심화 · Snubber',
+  subtitle: 'SW 노드 ringing · snubber RC · FB 트레이스',
+  category: '01 · POWER INTEGRITY',
+  readingMinutes: 9,
+  level: '중급',
+  status: 'published',
+};
+
+export const EMI_RADIATION: Topic = {
+  slug: 'emi-radiation',
+  title: 'EMI · Radiation',
+  subtitle: '공통모드 · 페라이트 비드 · FCC/CE 한계',
+  category: '03 · GROUNDING',
+  readingMinutes: 8,
+  level: '중급',
+  status: 'published',
+};
+
 export const DFM: Topic = {
   slug: 'dfm',
   title: 'DFM · 제조 한계',
@@ -188,7 +218,7 @@ export const PDN_PLANNING: Topic = {
 export const TOPICS: Topic[] = [
   DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING, HIGH_SPEED_INTERFACES, TRACE_GEOMETRY,
   OHMS_LAW, AC_COUPLING, ESD_PROTECTION, CROSSTALK, VRM_SELECTION, PDN_PLANNING,
-  CRYSTAL_LAYOUT, DFM,
+  CRYSTAL_LAYOUT, DFM, THERMAL, BUCK_LAYOUT, EMI_RADIATION,
 ];
 
 /** Sidebar navigation tree — includes planned/coming-soon topics for visual richness */
@@ -196,7 +226,7 @@ export const CATEGORIES: Category[] = [
   {
     id: 'practical',
     name: 'Practical · 실전',
-    topics: [TRACE_GEOMETRY, CRYSTAL_LAYOUT, HIGH_SPEED_INTERFACES, DFM],
+    topics: [TRACE_GEOMETRY, CRYSTAL_LAYOUT, HIGH_SPEED_INTERFACES, DFM, THERMAL],
   },
   {
     id: 'fundamentals',
@@ -206,7 +236,7 @@ export const CATEGORIES: Category[] = [
   {
     id: 'power-integrity',
     name: 'Power Integrity',
-    topics: [DECOUPLING_CAPACITOR, PDN_PLANNING, VRM_SELECTION],
+    topics: [DECOUPLING_CAPACITOR, PDN_PLANNING, VRM_SELECTION, BUCK_LAYOUT],
   },
   {
     id: 'signal-integrity',
@@ -216,6 +246,6 @@ export const CATEGORIES: Category[] = [
   {
     id: 'grounding-emc',
     name: 'Grounding & EMC',
-    topics: [RETURN_PATHS, ESD_PROTECTION],
+    topics: [RETURN_PATHS, ESD_PROTECTION, EMI_RADIATION],
   },
 ];
