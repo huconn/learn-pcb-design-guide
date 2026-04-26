@@ -1,0 +1,150 @@
+import TopicLayout from '../layouts/TopicLayout.astro';
+import { DFM } from '../lib/content/topics';
+import Card from '../components/ui/Card.astro';
+import TipBanner from '../components/ui/TipBanner.astro';
+import ChecklistBlock from '../components/ui/ChecklistBlock.astro';
+import FabCapabilityTable from '../components/concept/FabCapabilityTable.astro';
+import DfmChecker from '../components/sim/DfmChecker.svelte';
+
+<TopicLayout topic={DFM}>
+
+<section class="mt-2 mb-8">
+  <div class="font-mono text-[11px] tracking-widest text-indigo-600">{DFM.category}</div>
+  <h1 class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+    DFM · 제조 가능 한계
+    <span class="block mt-1 text-slate-500 text-xl font-normal">이론 ↔ 실제 fab 능력</span>
+  </h1>
+  <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
+    <a href="/trace-geometry" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a> 의 계산기는 "이론적으로 50 Ω 이 되는 폭" 을 줍니다. 
+    하지만 그 폭이 <b>fab 의 최소 능력보다 작으면 만들 수 없습니다</b>. 이 페이지는 fab 의 한계와 비용을 알아보고, 내 디자인이 어느 tier 에서 만들 수 있는지 확인하는 곳.
+  </p>
+  <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 7분 읽기</span>
+    <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">★ 초급~중급</span>
+    <span class="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-700">호환 체커</span>
+  </div>
+</section>
+
+<TipBanner>
+  <b>설계 단계의 핵심 결정</b> — 어느 tier 의 fab 을 쓸지 <b>먼저</b> 정한 뒤 트레이스 폭/간격을 정해야 합니다. 거꾸로 가면 "이론값 → 만들 수 없음 → 처음부터 다시" 의 함정.
+</TipBanner>
+
+<div class="mt-6">
+  <Card id="ipc" title="1. IPC Class — 보드 등급의 표준">
+    <div class="prose prose-slate max-w-none">
+      <p>
+        IPC-A-600 / IPC-6012 가 정의하는 세 가지 등급. 같은 fab 도 검증/검사를 더 엄격하게 할수록 비용 증가:
+      </p>
+      <ul>
+        <li><b>Class 1 — General Electronic</b>: 가전 / 장난감. 동작만 하면 됨.</li>
+        <li><b>Class 2 — Dedicated Service</b> (대부분의 보드): 가전 고급, 산업용. 안정 동작 + 적당한 신뢰성.</li>
+        <li><b>Class 3 — High Reliability</b>: 의료 / 항공 / 군수. 검증 엄격. 트레이스 자체보다 검사 / 수율이 차이.</li>
+      </ul>
+      <p>
+        대부분의 입문 / 일반 보드는 <b>IPC Class 2</b>. 이 페이지의 capability 표도 Class 2 기준.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="fab-tiers" title="2. Fab 능력 tier — 표">
+    <FabCapabilityTable />
+    <div class="prose prose-slate max-w-none mt-3">
+      <p><b>tier 가 올라갈수록 비용 증가하는 진짜 이유</b>:</p>
+      <ul>
+        <li>좁은 트레이스 → 식각(etch) 정확도 ↑ → 더 비싼 공정</li>
+        <li>작은 드릴 → 더 비싼 비트 + 느린 가공 + 깨질 확률</li>
+        <li>Blind/buried/HDI via → 적층 공정 추가</li>
+        <li>Class 3 검증 → x-ray + cross-section + 더 많은 검사 시간</li>
+      </ul>
+      <p>
+        실 양산 비용을 좌우하는 건 <b>가장 작은 단 하나의 형상</b> — 보드 99% 가 Economy tier 인데 BGA 한 개 때문에 4 mil 트레이스가 있으면 전체가 Precision tier 가격. 그래서 fanout 영역만 4 mil, 나머지는 8 mil 으로 가는 식의 절충이 흔함.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="check" title="DFM Checker — 내 디자인 호환성" subtitle="입력값으로 어느 tier 에서 만들 수 있는지 즉시 확인">
+    <DfmChecker client:visible />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="constraints" title="3. 그 외 자주 만나는 제약">
+    <div class="prose prose-slate max-w-none">
+      <p><b>솔더마스크 / 페이스트마스크</b>:</p>
+      <ul>
+        <li>마스크 댐 (두 패드 사이 마스크) 최소 4 mil — 그 이하면 마스크 안 그려짐</li>
+        <li>BGA 의 SMD vs NSMD 결정 — NSMD (마스크 정의 X) 가 양산 안정</li>
+        <li>페이스트 stencil 두께 보통 4–5 mil → 작은 부품(0201)은 reduction 적용</li>
+      </ul>
+      <p><b>실크스크린</b>:</p>
+      <ul>
+        <li>최소 글자 높이 32 mil (0.8 mm) — 그 이하면 읽기 어려움</li>
+        <li>최소 선 두께 6 mil — 그 이하 잉크가 spread / 사라짐</li>
+        <li>패드 위에 실크 인쇄하지 말 것 (솔더에 휩쓸려 사라짐)</li>
+      </ul>
+      <p><b>보드 외곽 / 가공</b>:</p>
+      <ul>
+        <li>외곽 ~ 가까운 트레이스 최소 0.3 mm (V-cut) ~ 0.5 mm (라우터)</li>
+        <li>마운팅 홀 주변 keep-out 영역 (보통 4 mm 직경)</li>
+        <li>패널라이징 — V-cut 0.4 mm 폭, 마우스 바이트 1 mm</li>
+      </ul>
+      <p><b>표면 처리</b>:</p>
+      <ul>
+        <li><b>HASL</b> (납 / 무연납) — 가장 싸지만 미세 부품엔 부적합 (불균일)</li>
+        <li><b>ENIG</b> (Au over Ni) — 평탄, BGA / 미세 핀치 OK. +25–35% 비용</li>
+        <li><b>OSP / Immersion silver</b> — 중간 가격</li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="cost" title="4. 비용 큰 영향 5가지 — 가격 줄이려면">
+    <div class="prose prose-slate max-w-none">
+      <ol>
+        <li><b>층 수</b> — 4-layer → 6-layer 약 1.5×, 6 → 8 약 1.3×. <b>최대한 적게.</b></li>
+        <li><b>최소 트레이스 / spacing</b> — 5 mil → 4 mil 보통 +20%, 4 → 3 mil 또 +30%.</li>
+        <li><b>드릴 직경</b> — 0.3 mm 미만은 micro-drill, 시간/비용 ↑.</li>
+        <li><b>Via 종류</b> — through-hole 만 vs blind/buried — buried 가 들어가면 +50% 이상.</li>
+        <li><b>표면 처리</b> — HASL → ENIG = +25%, ENIG → 골드도금 = +50% 이상.</li>
+      </ol>
+      <p>
+        보드 수가 적을수록 (소량) NRE (one-time setup) 비중이 커져 위 차이가 더 크게 보입니다. 양산 (1000+) 단계에서는 트레이스 폭 0.5 mil 차이도 큰 단가 영향.
+      </p>
+    </div>
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="checklist" title="DFM 체크리스트 — 양산 직전 확인">
+    <ChecklistBlock items={[
+      { text: "타겟 fab tier 가 정해졌는가? (Economy / Precision / HDI)", anchor: "fab-tiers" },
+      { text: "최소 트레이스 폭 / spacing 이 tier 안에 들어오는가?",   anchor: "check" },
+      { text: "최소 드릴 직경이 tier 안에 들어오는가?",                anchor: "check" },
+      { text: "Annular ring 마진이 충분한가?",                          anchor: "check" },
+      { text: "마스크 댐 4 mil 이상?",                                  anchor: "constraints" },
+      { text: "실크스크린 글자 높이 32 mil 이상?",                       anchor: "constraints" },
+      { text: "외곽 ~ 트레이스 0.3 mm 이상?",                            anchor: "constraints" },
+      { text: "표면 처리 결정 (HASL / ENIG / OSP)?",                     anchor: "constraints" },
+      { text: "양산 수량에 맞는 가격 견적 받았는가?",                    anchor: "cost" },
+    ]} />
+  </Card>
+</div>
+
+<div class="mt-6">
+  <Card id="related" title="다른 토픽으로 연결">
+    <div class="prose prose-slate max-w-none">
+      <ul>
+        <li>이론적 트레이스 폭 / 간격 계산: <a href="/trace-geometry" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a></li>
+        <li>고속 인터페이스의 정밀 트레이스 요구: <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">High-speed Interfaces</a></li>
+        <li>전류용량 계산이 fab 의 최소 폭과 충돌: <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭</a></li>
+      </ul>
+    </div>
+  </Card>
+</div>
+
+</TopicLayout>

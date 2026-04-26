@@ -75,6 +75,16 @@ export const HIGH_SPEED_INTERFACES: Topic = {
   // No subpages — single reference page
 };
 
+export const DFM: Topic = {
+  slug: 'dfm',
+  title: 'DFM · 제조 한계',
+  subtitle: 'Fab 능력 표 + 내 디자인 호환성 체크',
+  category: '90 · PRACTICAL',
+  readingMinutes: 7,
+  level: '초급~중급',
+  status: 'published',
+};
+
 export const CRYSTAL_LAYOUT: Topic = {
   slug: 'crystal-layout',
   title: 'Crystal · 오실레이터',
@@ -178,7 +188,7 @@ export const PDN_PLANNING: Topic = {
 export const TOPICS: Topic[] = [
   DECOUPLING_CAPACITOR, RETURN_PATHS, IMPEDANCE_MATCHING, HIGH_SPEED_INTERFACES, TRACE_GEOMETRY,
   OHMS_LAW, AC_COUPLING, ESD_PROTECTION, CROSSTALK, VRM_SELECTION, PDN_PLANNING,
-  CRYSTAL_LAYOUT,
+  CRYSTAL_LAYOUT, DFM,
 ];
 
 /** Sidebar navigation tree — includes planned/coming-soon topics for visual richness */
@@ -186,7 +196,7 @@ export const CATEGORIES: Category[] = [
   {
     id: 'practical',
     name: 'Practical · 실전',
-    topics: [TRACE_GEOMETRY, CRYSTAL_LAYOUT, HIGH_SPEED_INTERFACES],
+    topics: [TRACE_GEOMETRY, CRYSTAL_LAYOUT, HIGH_SPEED_INTERFACES, DFM],
   },
   {
     id: 'fundamentals',
