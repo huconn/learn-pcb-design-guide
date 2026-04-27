@@ -49,7 +49,7 @@ import StackupDiagram from '../components/concept/StackupDiagram.astro';
         <li>D+/D- 가 plane 의 slit 위를 지나감 → 컴플라이언스 테스트에서 eye diagram 깨짐</li>
         <li>VBUS bulk cap 이 멀리 있어 enumeration 단계에서 droop</li>
       </ul>
-      <p><b>관련 링크</b> — <a href="/return-paths/basics#slit">slit 재앙</a> · <a href="/decoupling-capacitor/basics#hierarchical">계층 디커플링</a></p>
+      <p><b>관련 링크</b> — <a href="/pcb/return-paths/basics#slit">slit 재앙</a> · <a href="/pcb/decoupling-capacitor/basics#hierarchical">계층 디커플링</a></p>
     </div>
   </Card>
 </div>
@@ -72,7 +72,7 @@ import StackupDiagram from '../components/concept/StackupDiagram.astro';
         <li>AC coupling cap 위치에서 임피던스가 살짝 흔들리는 게 정상. cap 풋프린트는 길이를 짧게(0402 또는 0201).</li>
         <li>코너 라우팅 시 45° 두 번 (mitred) 또는 둥근 호 — 90° 직각 금지.</li>
       </ul>
-      <p><b>관련 링크</b> — <a href="/impedance-matching/basics#reflection">반사 계수</a> · <a href="/return-paths/basics">return paths</a></p>
+      <p><b>관련 링크</b> — <a href="/pcb/impedance-matching/basics#reflection">반사 계수</a> · <a href="/pcb/return-paths/basics">return paths</a></p>
     </div>
   </Card>
 </div>
@@ -80,7 +80,7 @@ import StackupDiagram from '../components/concept/StackupDiagram.astro';
 <div class="mt-6">
   <Card id="length-match" title="Length matching — 사형(serpentine) 그리는 법" subtitle="페어 안 길이 차이를 어디에서 어떻게 보정하나">
     <figure class="not-prose rounded-lg border border-slate-200 overflow-hidden">
-      <img src="/hsi/length-match-serpentine.png" alt="differential pair length compensation serpentine" class="block w-full" loading="lazy" />
+      <img src="/pcb/hsi/length-match-serpentine.png" alt="differential pair length compensation serpentine" class="block w-full" loading="lazy" />
     </figure>
     <div class="prose prose-slate max-w-none mt-3">
       <p>
@@ -152,7 +152,7 @@ import StackupDiagram from '../components/concept/StackupDiagram.astro';
   <Card id="stackup" title="권장 스택업" subtitle="고속 인터페이스가 안전하게 살 수 있는 층 구성">
     <StackupDiagram />
     <figure class="not-prose mt-4 rounded-lg border border-slate-200 overflow-hidden">
-      <img src="/stackup/6layer-cutaway.png" alt="6-layer PCB stackup cross-section" class="block w-full" loading="lazy" />
+      <img src="/pcb/stackup/6layer-cutaway.png" alt="6-layer PCB stackup cross-section" class="block w-full" loading="lazy" />
       <figcaption class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
         실제 6-layer 보드 단면 — H = 75 μm 의 prepreg 가 L1 top signal 과 L2 GND plane 사이에 있어 50 Ω microstrip 의 표준 stackup 이 됩니다. via 두 종류 (through-hole / blind) 도 보입니다.
       </figcaption>

@@ -13,8 +13,8 @@ import OhmsCalc from '../components/sim/OhmsCalc.svelte';
     <span class="block mt-1 text-slate-500 text-xl font-normal">한 페이지 복습 — 곳곳에서 다시 만나는 식들</span>
   </h1>
   <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
-    전체 가이드의 가장 기초가 되는 식들. 다른 토픽(<a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">디커플링</a>, 
-    <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">return paths</a>) 에서 계속 인용되니 가볍게 다시 보세요.
+    전체 가이드의 가장 기초가 되는 식들. 다른 토픽(<a href="/pcb/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">디커플링</a>, 
+    <a href="/pcb/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">return paths</a>) 에서 계속 인용되니 가볍게 다시 보세요.
   </p>
 </section>
 
@@ -57,7 +57,7 @@ import OhmsCalc from '../components/sim/OhmsCalc.svelte';
       <ul>
         <li><b>저항이 견디는 전력</b> — 1/4 W 저항(가장 흔한 쓰루홀)에 1 W 가 흐르면 타버립니다. SMD 0603 은 0.1 W, 0805 는 0.125 W 정도.</li>
         <li><b>LDO 전력 손실</b> — Vin = 5 V, Vout = 3.3 V, Iout = 200 mA → 손실 = (5−3.3) × 0.2 = 0.34 W. SOT-23 LDO 면 발열 위험.</li>
-        <li><b>트레이스 발열</b> — 트레이스 저항 r 에 전류 I 가 흐르면 I²·r 만큼 열. → <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">폭 계산기</a> 가 이걸 IPC-2221 식으로 변환.</li>
+        <li><b>트레이스 발열</b> — 트레이스 저항 r 에 전류 I 가 흐르면 I²·r 만큼 열. → <a href="/pcb/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">폭 계산기</a> 가 이걸 IPC-2221 식으로 변환.</li>
       </ul>
     </div>
   </Card>
@@ -95,7 +95,7 @@ import OhmsCalc from '../components/sim/OhmsCalc.svelte';
         <li>병렬에서 한 쪽이 매우 작으면 그쪽이 거의 결과 (1 Ω ‖ 1 MΩ ≈ 1 Ω)</li>
       </ul>
       <p>
-        비슷한 식이 cap 에는 거꾸로 적용됩니다. 캡 병렬 = C 의 합 (디커플링이 cap 을 여러 개 쓰는 이유의 절반 — <a href="/decoupling-capacitor/basics#frequency" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">참조</a>).
+        비슷한 식이 cap 에는 거꾸로 적용됩니다. 캡 병렬 = C 의 합 (디커플링이 cap 을 여러 개 쓰는 이유의 절반 — <a href="/pcb/decoupling-capacitor/basics#frequency" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">참조</a>).
       </p>
     </div>
   </Card>
@@ -119,9 +119,9 @@ import OhmsCalc from '../components/sim/OhmsCalc.svelte';
   <Card id="related" title="다른 토픽으로 연결">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>R, C 합성과 임피던스 — <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
-        <li>RC 1차 필터 (high-pass / bypass) — <a href="/ac-coupling/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">AC 커플링</a></li>
-        <li>전류·온도·트레이스 폭 — <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a></li>
+        <li>R, C 합성과 임피던스 — <a href="/pcb/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+        <li>RC 1차 필터 (high-pass / bypass) — <a href="/pcb/ac-coupling/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">AC 커플링</a></li>
+        <li>전류·온도·트레이스 폭 — <a href="/pcb/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a></li>
       </ul>
     </div>
   </Card>

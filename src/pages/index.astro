@@ -9,7 +9,7 @@ import { SITE_VERSION } from '../lib/version';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/pcb/favicon.svg" />
     <title>PCB Design Guide · 인터랙티브 하드웨어 설계 가이드</title>
     <meta name="description" content="주니어 HW 엔지니어와 SW/FW 개발자를 위한 인터랙티브 PCB 설계 가이드 — 디커플링, 임피던스 매칭, 트레이스 기하, 고속 인터페이스, PDN, ESD 등 11개 토픽." />
     <meta name="author" content="hulryung" />
@@ -27,7 +27,7 @@ import { SITE_VERSION } from '../lib/version';
         <ul class="mt-12 grid gap-4 sm:grid-cols-2">
           {TOPICS.map((t) => (
             <li>
-              <a href={t.subpages && t.subpages.length ? t.subpages[0].href : `/${t.slug}`} class="block rounded-lg border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-sm transition">
+              <a href={t.subpages && t.subpages.length ? t.subpages[0].href : `/pcb/${t.slug}`} class="block rounded-lg border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-sm transition">
                 <div class="font-mono text-[11px] tracking-widest text-indigo-600">{t.category}</div>
                 <div class="mt-2 text-lg font-semibold text-slate-900">{t.title}</div>
                 <div class="mt-1 text-sm text-slate-600">{t.subtitle}</div>
@@ -51,7 +51,7 @@ import { SITE_VERSION } from '../lib/version';
             <span class="text-slate-300" aria-hidden="true">·</span>
             <a href="https://x.com/hulryung" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-700">x.com/hulryung</a>
           </div>
-          <a href="/changelog" class="font-mono text-slate-500 hover:text-indigo-700" title="Changelog">v{SITE_VERSION}</a>
+          <a href="/pcb/changelog" class="font-mono text-slate-500 hover:text-indigo-700" title="Changelog">v{SITE_VERSION}</a>
         </div>
       </footer>
     </div>

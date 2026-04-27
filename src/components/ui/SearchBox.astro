@@ -60,7 +60,7 @@
   async function loadPagefind() {
     if (pagefind) return pagefind;
     try {
-      pagefind = await import('/pagefind/pagefind.js');
+      pagefind = await import('/pcb/pagefind/pagefind.js');
       return pagefind;
     } catch (e) {
       console.error('Pagefind index not found. Did you run `npm run build`?', e);

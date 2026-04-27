@@ -17,7 +17,7 @@ import MosfetThermalCalc from '../components/sim/MosfetThermalCalc.svelte';
   </h1>
   <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
     배터리 보호 스위치, eFuse, load switch — <b>FET 가 길게 ON 상태로 큰 전류를 흘리는</b> 영역. 
-    <a href="/buck-layout-deep-dive" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Buck</a> 의 스위칭 손실과 달리, 여기서는 <b>도통 손실 (I²·R_DS)</b> 이 거의 전부이고 발열은 직접적으로 R_DS·전류² 으로 결정됩니다. 이 페이지는 MOSFET 선택 + 회로 토폴로지 + 라우팅 + 발열의 통합 가이드.
+    <a href="/pcb/buck-layout-deep-dive" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Buck</a> 의 스위칭 손실과 달리, 여기서는 <b>도통 손실 (I²·R_DS)</b> 이 거의 전부이고 발열은 직접적으로 R_DS·전류² 으로 결정됩니다. 이 페이지는 MOSFET 선택 + 회로 토폴로지 + 라우팅 + 발열의 통합 가이드.
   </p>
   <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
     <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 10분 읽기</span>
@@ -147,7 +147,7 @@ import MosfetThermalCalc from '../components/sim/MosfetThermalCalc.svelte';
     <div class="prose prose-slate max-w-none mt-3">
       <p><b>대전류 경로 (B+ → Q1 → Q2 → Rs → PACK+)</b>:</p>
       <ul>
-        <li><b>가능한 넓은 동박</b> — pour 영역으로 다층에 걸쳐 분포. <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a> 의 IPC-2221 계산기로 최소 폭 산출.</li>
+        <li><b>가능한 넓은 동박</b> — pour 영역으로 다층에 걸쳐 분포. <a href="/pcb/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a> 의 IPC-2221 계산기로 최소 폭 산출.</li>
         <li><b>2 oz copper 이상</b> — 표준 1 oz 의 두 배 단면적. 50 A 이상 시 거의 필수.</li>
         <li><b>Via fence</b> — 넓은 net 을 다층으로 stitching. 하나의 via 가 약 10 A 정도 견디므로 50 A 라면 6–10 개.</li>
         <li><b>via 는 솔더 패드 안에 두지 말 것</b> (양산 솔더 흡수). 옆에 두고 짧은 트레이스로 연결.</li>
@@ -164,7 +164,7 @@ import MosfetThermalCalc from '../components/sim/MosfetThermalCalc.svelte';
       <ul>
         <li>Driver 출력 → 게이트 트레이스는 <b>SW 노드 / 대전류 트레이스 멀리</b></li>
         <li>병렬 FET 에는 각각 게이트 저항 (10–22 Ω) — gate oscillation 방지</li>
-        <li>Driver 출력 옆에 100 nF 디커플링 cap (<a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a>)</li>
+        <li>Driver 출력 옆에 100 nF 디커플링 cap (<a href="/pcb/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a>)</li>
       </ul>
     </div>
   </Card>
@@ -207,11 +207,11 @@ import MosfetThermalCalc from '../components/sim/MosfetThermalCalc.svelte';
   <Card id="related" title="다른 토픽으로 연결">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>θ_JA 모델 + plane / via 효과: <a href="/thermal" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Thermal Management</a></li>
-        <li>대전류 트레이스 폭 산출: <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭</a></li>
-        <li>VRM 의 buck 발열 (스위칭 손실): <a href="/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a> · <a href="/buck-layout-deep-dive" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Buck Layout 심화</a></li>
-        <li>대전류 경로의 EMI: <a href="/emi-radiation" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">EMI Radiation</a></li>
-        <li>fab 의 동박 두께 한계: <a href="/dfm" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">DFM</a></li>
+        <li>θ_JA 모델 + plane / via 효과: <a href="/pcb/thermal" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Thermal Management</a></li>
+        <li>대전류 트레이스 폭 산출: <a href="/pcb/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭</a></li>
+        <li>VRM 의 buck 발열 (스위칭 손실): <a href="/pcb/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a> · <a href="/pcb/buck-layout-deep-dive" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Buck Layout 심화</a></li>
+        <li>대전류 경로의 EMI: <a href="/pcb/emi-radiation" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">EMI Radiation</a></li>
+        <li>fab 의 동박 두께 한계: <a href="/pcb/dfm" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">DFM</a></li>
       </ul>
     </div>
   </Card>

@@ -55,7 +55,7 @@ import GroundBounce from '../../components/concept/GroundBounce.astro';
     <div class="prose prose-slate max-w-none mt-3">
       <p>
         같은 신호라도 return 이 어떤 경로를 타느냐에 따라 <b>인덕턴스가 10 배 이상</b> 차이 납니다. 
-        reference plane (보통 인접 층의 GND plane) 이 있으면 return 은 신호 트레이스 바로 아래 유전체 두께(<a href="/trace-geometry/basics#vars" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">H 변수</a>, 보통 0.1 mm)만큼의 얇은 loop 을 만듭니다. 
+        reference plane (보통 인접 층의 GND plane) 이 있으면 return 은 신호 트레이스 바로 아래 유전체 두께(<a href="/pcb/trace-geometry/basics#vars" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">H 변수</a>, 보통 0.1 mm)만큼의 얇은 loop 을 만듭니다. 
         plane 이 없으면 return 이 수 mm 떨어진 GND 배선까지 우회하고 — 그 순간 고주파 회로는 망가집니다.
       </p>
     </div>
@@ -120,7 +120,7 @@ import GroundBounce from '../../components/concept/GroundBounce.astro';
 </div>
 
 <div class="mt-8 mb-12">
-  <a href="/return-paths" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+  <a href="/pcb/return-paths" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
     <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
     <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — 루프 인덕턴스 계산기</div>
     <p class="mt-2 text-slate-600 text-sm leading-relaxed">

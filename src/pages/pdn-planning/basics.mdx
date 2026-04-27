@@ -12,10 +12,10 @@ import TipBanner from '../../components/ui/TipBanner.astro';
     <span class="block mt-1 text-slate-500 text-xl font-normal">VRM → 보드 → IC die 까지의 전체 전원 구조 설계</span>
   </h1>
   <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
-    개별 토픽 — <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">디커플링</a>, 
-    <a href="/vrm-selection/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM</a>, 
-    <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">return paths</a>, 
-    <a href="/trace-geometry/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">trace geometry</a> — 
+    개별 토픽 — <a href="/pcb/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">디커플링</a>, 
+    <a href="/pcb/vrm-selection/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM</a>, 
+    <a href="/pcb/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">return paths</a>, 
+    <a href="/pcb/trace-geometry/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">trace geometry</a> — 
     가 각자 풀려있는 동안, 이 페이지는 그것들을 <b>한 보드에서 통합</b> 하는 관점입니다.
   </p>
 </section>
@@ -64,7 +64,7 @@ import TipBanner from '../../components/ui/TipBanner.astro';
         예: 1.2 V CPU 코어 · 50 mV 허용 · ΔI = 5 A → Z_target = 10 mΩ. 이 값을 <b>DC – 수백 MHz 까지</b> 유지.
       </p>
       <p>
-        실험실의 <a href="/pdn-planning#target" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Target Z 계산기</a> 로 직접 입력해서 어느 등급(여유/권장/엄격/극단) 인지 확인하세요.
+        실험실의 <a href="/pcb/pdn-planning#target" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Target Z 계산기</a> 로 직접 입력해서 어느 등급(여유/권장/엄격/극단) 인지 확인하세요.
       </p>
     </div>
   </Card>
@@ -120,7 +120,7 @@ import TipBanner from '../../components/ui/TipBanner.astro';
     </div>
 
     <figure class="not-prose mt-4 rounded-lg border border-slate-200 bg-white overflow-hidden">
-      <img src="/pdn/plane-resonance.png" alt="PDN Vcc/GND plane impedance — first cavity resonance breaks through Z_target" class="block w-full" loading="lazy" />
+      <img src="/pcb/pdn/plane-resonance.png" alt="PDN Vcc/GND plane impedance — first cavity resonance breaks through Z_target" class="block w-full" loading="lazy" />
       <figcaption class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
         Vcc / GND plane 사이의 PDN 임피던스 — 100 MHz 까지는 plane cap 덕분에 깨끗하지만, 약 <b>500 MHz 의 첫 cavity resonance</b> 에서 임피던스가 <b>2 Ω</b> 까지 치솟아 Z_target (50 mΩ) 을 한참 위로 뚫고 올라갑니다. 이 영역은 디커플링 cap 으로 잡을 수 없고, plane 가장자리에 stitching via 와 damping cap 을 분포시켜 Q 를 낮추는 게 표준 처방.
       </figcaption>
@@ -131,7 +131,7 @@ import TipBanner from '../../components/ui/TipBanner.astro';
 <div class="mt-6">
   <Card id="stackup" title="5. Stackup 으로 PDN 결정하기">
     <figure class="not-prose mb-4 rounded-lg border border-slate-200 overflow-hidden">
-      <img src="/stackup/6layer-cutaway.png" alt="6-layer PCB stackup cross-section" class="block w-full" loading="lazy" />
+      <img src="/pcb/stackup/6layer-cutaway.png" alt="6-layer PCB stackup cross-section" class="block w-full" loading="lazy" />
       <figcaption class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
         L1(신호) → L2(GND) → L3(신호) → L4(Vcc) → L5(GND) → L6(신호) 의 6-layer 일반 구성. <b>L4 Vcc 와 L5 GND 사이의 core dielectric</b> 이 plane 캡을 만드는 핵심 — 그 거리(H) 가 작을수록 plane cap 이 커집니다.
       </figcaption>
@@ -155,17 +155,17 @@ import TipBanner from '../../components/ui/TipBanner.astro';
   <Card id="related" title="다른 토픽으로 연결">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>VRM 선택과 입력 측 디커플링: <a href="/vrm-selection/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a></li>
-        <li>cap 계층의 주파수 응답 (실시간 시뮬): <a href="/decoupling-capacitor" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling · Lab</a></li>
-        <li>고속 인터페이스 별 권장 PDN: <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
-        <li>Plane 이 조각나면 PDN 이 깨짐: <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>VRM 선택과 입력 측 디커플링: <a href="/pcb/vrm-selection/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a></li>
+        <li>cap 계층의 주파수 응답 (실시간 시뮬): <a href="/pcb/decoupling-capacitor" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling · Lab</a></li>
+        <li>고속 인터페이스 별 권장 PDN: <a href="/pcb/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+        <li>Plane 이 조각나면 PDN 이 깨짐: <a href="/pcb/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
       </ul>
     </div>
   </Card>
 </div>
 
 <div class="mt-8 mb-12">
-  <a href="/pdn-planning" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+  <a href="/pcb/pdn-planning" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
     <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
     <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — Target Z + Plane Cap 계산기</div>
     <p class="mt-2 text-slate-600 text-sm leading-relaxed">

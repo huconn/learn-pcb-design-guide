@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "astro build && rm -rf .build-tmp && mv dist .build-tmp && mkdir dist && mv .build-tmp dist/pcb && pagefind --site dist --output-subdir pcb/pagefind",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",

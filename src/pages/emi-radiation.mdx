@@ -15,7 +15,7 @@ import FerriteBeadPlot from '../components/sim/FerriteBeadPlot.svelte';
     <span class="block mt-1 text-slate-500 text-xl font-normal">공통모드 · 페라이트 비드 · FCC / CE 한계</span>
   </h1>
   <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
-    <a href="/esd-protection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">ESD</a> 가 외부의 충격을 막는 거라면, <b>EMI</b> 는 내가 만드는 잡음이 외부 (다른 기기 / 시험 안테나) 로 새는 걸 막는 일입니다. 양산 직전 인증 시험 (FCC Class B / EN 55022) 에서 fail 하면 출시 지연. 이 페이지는 메커니즘 + 기본 처방 + 페라이트 비드의 정확한 해석.
+    <a href="/pcb/esd-protection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">ESD</a> 가 외부의 충격을 막는 거라면, <b>EMI</b> 는 내가 만드는 잡음이 외부 (다른 기기 / 시험 안테나) 로 새는 걸 막는 일입니다. 양산 직전 인증 시험 (FCC Class B / EN 55022) 에서 fail 하면 출시 지연. 이 페이지는 메커니즘 + 기본 처방 + 페라이트 비드의 정확한 해석.
   </p>
   <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
     <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 8분 읽기</span>
@@ -116,7 +116,7 @@ import FerriteBeadPlot from '../components/sim/FerriteBeadPlot.svelte';
   <Card id="rules" title="5. EMI 줄이는 통합 룰">
     <div class="prose prose-slate max-w-none">
       <ol>
-        <li><b>Loop area 최소화</b> — 모든 신호 / 전원에 적용. <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a> 의 핵심.</li>
+        <li><b>Loop area 최소화</b> — 모든 신호 / 전원에 적용. <a href="/pcb/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a> 의 핵심.</li>
         <li><b>edge rate 늦추기</b> — 가능하면 driver 의 slew-rate 옵션 활성화 (USB, GPIO 등). 빠를수록 EMI 큼.</li>
         <li><b>전원 입력에 페라이트 비드 + cap</b> (LC π 필터) — 모든 외부 전원 인입에.</li>
         <li><b>USB / 이더넷 입력에 CM choke</b> — 케이블 안테나 효과 막기.</li>
@@ -146,10 +146,10 @@ import FerriteBeadPlot from '../components/sim/FerriteBeadPlot.svelte';
   <Card id="related" title="다른 토픽으로 연결">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>loop area = radiation: <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
-        <li>외부 충격 막기: <a href="/esd-protection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">ESD Protection</a></li>
-        <li>스위칭 노이즈가 EMI 의 큰 원인: <a href="/buck-layout-deep-dive" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Buck Layout 심화</a></li>
-        <li>고속 인터페이스 (USB / GbE / HDMI) 별 EMI 부품: <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+        <li>loop area = radiation: <a href="/pcb/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>외부 충격 막기: <a href="/pcb/esd-protection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">ESD Protection</a></li>
+        <li>스위칭 노이즈가 EMI 의 큰 원인: <a href="/pcb/buck-layout-deep-dive" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Buck Layout 심화</a></li>
+        <li>고속 인터페이스 (USB / GbE / HDMI) 별 EMI 부품: <a href="/pcb/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
       </ul>
     </div>
   </Card>

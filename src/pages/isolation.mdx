@@ -145,7 +145,7 @@ import CreepageCalc from '../components/sim/CreepageCalc.svelte';
           <b>Plane / GND 도 분리</b> — 두 도메인의 GND plane 을 PCB slot 으로 물리적 분리. 같은 plane 위에 두면 isolator 의미 사라짐.
         </li>
         <li>
-          <b>Isolator 부품만 slot 을 가로지름</b> — 다른 신호 / 전원 트레이스가 slot 을 횡단하면 안됨. <a href="/return-paths/basics#slit" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">return path</a> 도 깨지고 격리도 깨짐.
+          <b>Isolator 부품만 slot 을 가로지름</b> — 다른 신호 / 전원 트레이스가 slot 을 횡단하면 안됨. <a href="/pcb/return-paths/basics#slit" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">return path</a> 도 깨지고 격리도 깨짐.
         </li>
         <li>
           <b>Creepage 거리 확보</b> — 위 계산기로 산출한 mm 값보다 conductor 간 표면 거리 충분히 확보. 솔더마스크 위 실크스크린도 거리 줄임 → 깨끗한 영역.
@@ -203,11 +203,11 @@ import CreepageCalc from '../components/sim/CreepageCalc.svelte';
   <Card id="related" title="다른 토픽으로 연결">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>Slot / plane split 의 return path 영향: <a href="/return-paths/basics#slit" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
-        <li>BMS 의 cell stack 모니터링 격리: <a href="/bms-mosfet" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">BMS · 고전류 MOSFET</a></li>
-        <li>AC mains 입력 측의 EMI / 안전: <a href="/emi-radiation" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">EMI Radiation</a></li>
-        <li>External I/O 의 surge 보호 (isolation 과 다른 도메인): <a href="/esd-protection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">ESD Protection</a></li>
-        <li>creepage 가 fab 의 최소 spacing 한계와 충돌하면: <a href="/dfm" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">DFM</a></li>
+        <li>Slot / plane split 의 return path 영향: <a href="/pcb/return-paths/basics#slit" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>BMS 의 cell stack 모니터링 격리: <a href="/pcb/bms-mosfet" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">BMS · 고전류 MOSFET</a></li>
+        <li>AC mains 입력 측의 EMI / 안전: <a href="/pcb/emi-radiation" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">EMI Radiation</a></li>
+        <li>External I/O 의 surge 보호 (isolation 과 다른 도메인): <a href="/pcb/esd-protection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">ESD Protection</a></li>
+        <li>creepage 가 fab 의 최소 spacing 한계와 충돌하면: <a href="/pcb/dfm" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">DFM</a></li>
       </ul>
     </div>
   </Card>

@@ -8,6 +8,9 @@ import rehypeKatex from 'rehype-katex';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://hulryung.com',
+  base: '/pcb',
+  trailingSlash: 'never',
   integrations: [svelte(), mdx()],
   vite: { plugins: [tailwindcss()] },
   markdown: {

@@ -31,8 +31,8 @@ export const DECOUPLING_CAPACITOR: Topic = {
   level: '초급~중급',
   status: 'published',
   subpages: [
-    { slug: 'basics', label: '기초 · 개념',  href: '/decoupling-capacitor/basics' },
-    { slug: 'lab',    label: '실험실 · 시뮬', href: '/decoupling-capacitor' },
+    { slug: 'basics', label: '기초 · 개념',  href: '/pcb/decoupling-capacitor/basics' },
+    { slug: 'lab',    label: '실험실 · 시뮬', href: '/pcb/decoupling-capacitor' },
   ],
 };
 
@@ -45,8 +45,8 @@ export const RETURN_PATHS: Topic = {
   level: '초급~중급',
   status: 'published',
   subpages: [
-    { slug: 'basics', label: '기초 · 개념',  href: '/return-paths/basics' },
-    { slug: 'lab',    label: '실험실 · 계산', href: '/return-paths' },
+    { slug: 'basics', label: '기초 · 개념',  href: '/pcb/return-paths/basics' },
+    { slug: 'lab',    label: '실험실 · 계산', href: '/pcb/return-paths' },
   ],
 };
 
@@ -59,8 +59,8 @@ export const IMPEDANCE_MATCHING: Topic = {
   level: '중급',
   status: 'published',
   subpages: [
-    { slug: 'basics', label: '기초 · 개념',  href: '/impedance-matching/basics' },
-    { slug: 'lab',    label: '실험실 · 반사', href: '/impedance-matching' },
+    { slug: 'basics', label: '기초 · 개념',  href: '/pcb/impedance-matching/basics' },
+    { slug: 'lab',    label: '실험실 · 반사', href: '/pcb/impedance-matching' },
   ],
 };
 
@@ -154,8 +154,8 @@ export const TRACE_GEOMETRY: Topic = {
   level: '초급~중급',
   status: 'published',
   subpages: [
-    { slug: 'basics', label: '기초 · 개념',  href: '/trace-geometry/basics' },
-    { slug: 'lab',    label: '실험실 · 계산기', href: '/trace-geometry' },
+    { slug: 'basics', label: '기초 · 개념',  href: '/pcb/trace-geometry/basics' },
+    { slug: 'lab',    label: '실험실 · 계산기', href: '/pcb/trace-geometry' },
   ],
 };
 
@@ -178,8 +178,8 @@ export const AC_COUPLING: Topic = {
   level: '초급',
   status: 'published',
   subpages: [
-    { slug: 'basics', label: '기초 · 개념', href: '/ac-coupling/basics' },
-    { slug: 'lab',    label: '실험실 · HPF', href: '/ac-coupling' },
+    { slug: 'basics', label: '기초 · 개념', href: '/pcb/ac-coupling/basics' },
+    { slug: 'lab',    label: '실험실 · HPF', href: '/pcb/ac-coupling' },
   ],
 };
 
@@ -202,8 +202,8 @@ export const CROSSTALK: Topic = {
   level: '중급',
   status: 'published',
   subpages: [
-    { slug: 'basics', label: '기초 · 개념',  href: '/crosstalk/basics' },
-    { slug: 'lab',    label: '실험실 · 시뮬', href: '/crosstalk' },
+    { slug: 'basics', label: '기초 · 개념',  href: '/pcb/crosstalk/basics' },
+    { slug: 'lab',    label: '실험실 · 시뮬', href: '/pcb/crosstalk' },
   ],
 };
 
@@ -216,8 +216,8 @@ export const VRM_SELECTION: Topic = {
   level: '중급',
   status: 'published',
   subpages: [
-    { slug: 'basics', label: '기초 · 개념',  href: '/vrm-selection/basics' },
-    { slug: 'lab',    label: '실험실 · 효율', href: '/vrm-selection' },
+    { slug: 'basics', label: '기초 · 개념',  href: '/pcb/vrm-selection/basics' },
+    { slug: 'lab',    label: '실험실 · 효율', href: '/pcb/vrm-selection' },
   ],
 };
 
@@ -230,8 +230,8 @@ export const PDN_PLANNING: Topic = {
   level: '중급',
   status: 'published',
   subpages: [
-    { slug: 'basics', label: '기초 · 개념',  href: '/pdn-planning/basics' },
-    { slug: 'lab',    label: '실험실 · 타겟Z', href: '/pdn-planning' },
+    { slug: 'basics', label: '기초 · 개념',  href: '/pcb/pdn-planning/basics' },
+    { slug: 'lab',    label: '실험실 · 타겟Z', href: '/pcb/pdn-planning' },
   ],
 };
 

@@ -15,7 +15,7 @@ import MicrostripCrossSection from '../../components/concept/MicrostripCrossSect
   <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
     트레이스는 단순한 "선" 이 아니라 <b>3차원 구조</b>입니다 — 폭(W) · 두께(T) · plane 까지 거리(H) · 다른 트레이스와의 간격(S) 이
     함께 임피던스, 전류용량, 노이즈 결합을 결정합니다. 이 페이지에서 변수의 의미를 잡고, 
-    <a href="/trace-geometry" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">실험실</a> 에서 직접 숫자를 넣어 결과를 확인하세요.
+    <a href="/pcb/trace-geometry" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">실험실</a> 에서 직접 숫자를 넣어 결과를 확인하세요.
   </p>
   <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
     <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 6분 읽기</span>
@@ -45,7 +45,7 @@ import MicrostripCrossSection from '../../components/concept/MicrostripCrossSect
     </div>
 
     <figure class="not-prose mt-4 rounded-lg border border-slate-200 overflow-hidden">
-      <img src="/stackup/6layer-cutaway.png" alt="6-layer PCB stackup cross-section with H, W, total thickness annotations" class="block w-full" loading="lazy" />
+      <img src="/pcb/stackup/6layer-cutaway.png" alt="6-layer PCB stackup cross-section with H, W, total thickness annotations" class="block w-full" loading="lazy" />
       <figcaption class="px-4 py-3 text-sm text-slate-700 leading-relaxed">
         실제 6-layer 보드의 단면 — W 와 H 가 어디서 오는지 한 눈에. 1.6 mm 보드에 H = 75 μm 가 일반적이고, W 0.18 mm 면 50 Ω microstrip. 
         through-hole via (왼쪽) 와 blind via (오른쪽 위) 가 보입니다.
@@ -81,7 +81,7 @@ import MicrostripCrossSection from '../../components/concept/MicrostripCrossSect
         <li>100 mil → 약 4.0 A</li>
       </ul>
       <p>
-        실험실의 <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">트레이스 폭 계산기</a> 에서 직접 시뮬해보세요.
+        실험실의 <a href="/pcb/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">트레이스 폭 계산기</a> 에서 직접 시뮬해보세요.
       </p>
     </div>
   </Card>
@@ -115,7 +115,7 @@ import MicrostripCrossSection from '../../components/concept/MicrostripCrossSect
       </ul>
       <p>
         즉 stackup 이 정해지면 50 Ω 폭은 자동으로 결정됩니다. PCB fab 에 "controlled impedance" 를 요청하면 fab 이 정확한 값을 맞춰줍니다(±10% 보장).
-        → <a href="/impedance-matching/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">왜 임피던스가 중요한지</a> 는 별도 토픽으로.
+        → <a href="/pcb/impedance-matching/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">왜 임피던스가 중요한지</a> 는 별도 토픽으로.
       </p>
     </div>
   </Card>
@@ -176,17 +176,17 @@ import MicrostripCrossSection from '../../components/concept/MicrostripCrossSect
   <Card id="connections" title="다른 토픽과 어떻게 연결되나">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>임피던스가 왜 중요한가, 안 맞으면 어떻게 되는가 → <a href="/impedance-matching/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Impedance Matching</a></li>
-        <li>plane 이 끊기면 H 가 사실상 무한대가 되어 모든 게 깨짐 → <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
-        <li>USB·HDMI·GbE 가 요구하는 차동 Z 와 length matching → <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
-        <li>전원 트레이스가 굵어야 하는 이유 (디커플링 cap 까지 가는 길) → <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+        <li>임피던스가 왜 중요한가, 안 맞으면 어떻게 되는가 → <a href="/pcb/impedance-matching/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Impedance Matching</a></li>
+        <li>plane 이 끊기면 H 가 사실상 무한대가 되어 모든 게 깨짐 → <a href="/pcb/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>USB·HDMI·GbE 가 요구하는 차동 Z 와 length matching → <a href="/pcb/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+        <li>전원 트레이스가 굵어야 하는 이유 (디커플링 cap 까지 가는 길) → <a href="/pcb/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
       </ul>
     </div>
   </Card>
 </div>
 
 <div class="mt-8 mb-12">
-  <a href="/trace-geometry" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+  <a href="/pcb/trace-geometry" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
     <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
     <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — 4 종 계산기</div>
     <p class="mt-2 text-slate-600 text-sm leading-relaxed">

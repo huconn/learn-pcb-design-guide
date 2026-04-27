@@ -12,7 +12,7 @@ const { topic, activeSubSlug } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/pcb/favicon.svg" />
     <title>{topic.title} · PCB Design Guide</title>
     <meta name="description" content={topic.subtitle} />
     <meta name="author" content="hulryung" />
@@ -34,7 +34,7 @@ const { topic, activeSubSlug } = Astro.props;
             <span class="text-slate-300" aria-hidden="true">·</span>
             <a href="https://x.com/hulryung" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-700">x.com/hulryung</a>
           </div>
-          <a href="/changelog" class="font-mono text-slate-500 hover:text-indigo-700" title="Changelog">v{SITE_VERSION}</a>
+          <a href="/pcb/changelog" class="font-mono text-slate-500 hover:text-indigo-700" title="Changelog">v{SITE_VERSION}</a>
         </div>
       </footer>
     </div>

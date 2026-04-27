@@ -15,7 +15,7 @@ import DfmChecker from '../components/sim/DfmChecker.svelte';
     <span class="block mt-1 text-slate-500 text-xl font-normal">이론 ↔ 실제 fab 능력</span>
   </h1>
   <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
-    <a href="/trace-geometry" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a> 의 계산기는 "이론적으로 50 Ω 이 되는 폭" 을 줍니다. 
+    <a href="/pcb/trace-geometry" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a> 의 계산기는 "이론적으로 50 Ω 이 되는 폭" 을 줍니다. 
     하지만 그 폭이 <b>fab 의 최소 능력보다 작으면 만들 수 없습니다</b>. 이 페이지는 fab 의 한계와 비용을 알아보고, 내 디자인이 어느 tier 에서 만들 수 있는지 확인하는 곳.
   </p>
   <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
@@ -139,9 +139,9 @@ import DfmChecker from '../components/sim/DfmChecker.svelte';
   <Card id="related" title="다른 토픽으로 연결">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>이론적 트레이스 폭 / 간격 계산: <a href="/trace-geometry" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a></li>
-        <li>고속 인터페이스의 정밀 트레이스 요구: <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">High-speed Interfaces</a></li>
-        <li>전류용량 계산이 fab 의 최소 폭과 충돌: <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭</a></li>
+        <li>이론적 트레이스 폭 / 간격 계산: <a href="/pcb/trace-geometry" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a></li>
+        <li>고속 인터페이스의 정밀 트레이스 요구: <a href="/pcb/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">High-speed Interfaces</a></li>
+        <li>전류용량 계산이 fab 의 최소 폭과 충돌: <a href="/pcb/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭</a></li>
       </ul>
     </div>
   </Card>

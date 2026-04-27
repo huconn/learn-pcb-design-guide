@@ -40,7 +40,7 @@ import TerminationTopologies from '../../components/concept/TerminationTopologie
       <p>
         신호가 "지금 보는 임피던스" 는 <b>저항도, 커패시턴스도, 인덕턴스도 아닌</b> <span class="font-semibold text-indigo-700">특성 임피던스 Z₀</span> 입니다. 
         Z₀ 는 트레이스의 <b>기하(폭·두께·유전체·plane 거리)</b> 가 결정하는 값으로, PCB 는 보통 <span class="font-mono">50 Ω</span> 또는 차동에서는 <span class="font-mono">100 Ω</span> 으로 설계합니다.
-        구체적으로 어떤 폭에서 얼마가 나오는지 → <a href="/trace-geometry/basics#width-impedance" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">트레이스 기하편</a> 에서 식과 계산기 제공.
+        구체적으로 어떤 폭에서 얼마가 나오는지 → <a href="/pcb/trace-geometry/basics#width-impedance" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">트레이스 기하편</a> 에서 식과 계산기 제공.
       </p>
     </div>
   </Card>
@@ -126,16 +126,16 @@ import TerminationTopologies from '../../components/concept/TerminationTopologie
   <Card id="related" title="다른 토픽과 어떻게 연결되나">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>Z₀ 가 어떤 폭/유전체에서 50 Ω 이 되는지 식과 계산기 → <a href="/trace-geometry/basics#width-impedance" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a></li>
-        <li>plane 이 끊기면 Z₀ 가 흐트러져 반사 발생 → <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
-        <li>실 인터페이스의 권장 Z 값 (USB/HDMI/GbE) → <a href="/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+        <li>Z₀ 가 어떤 폭/유전체에서 50 Ω 이 되는지 식과 계산기 → <a href="/pcb/trace-geometry/basics#width-impedance" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry</a></li>
+        <li>plane 이 끊기면 Z₀ 가 흐트러져 반사 발생 → <a href="/pcb/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths</a></li>
+        <li>실 인터페이스의 권장 Z 값 (USB/HDMI/GbE) → <a href="/pcb/high-speed-interfaces" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
       </ul>
     </div>
   </Card>
 </div>
 
 <div class="mt-8 mb-12">
-  <a href="/impedance-matching" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+  <a href="/pcb/impedance-matching" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
     <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
     <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — 반사 시뮬레이터</div>
     <p class="mt-2 text-slate-600 text-sm leading-relaxed">

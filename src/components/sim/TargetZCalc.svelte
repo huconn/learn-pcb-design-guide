@@ -104,7 +104,7 @@
     </div>
 
     <div class="text-[11px] text-slate-500 leading-relaxed pt-2 border-t border-slate-200">
-      각 주파수 대역마다 다른 부품이 담당 — <a href="/decoupling-capacitor/basics#hierarchical" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">계층 디커플링</a> 의 핵심.
+      각 주파수 대역마다 다른 부품이 담당 — <a href="/pcb/decoupling-capacitor/basics#hierarchical" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">계층 디커플링</a> 의 핵심.
     </div>
   </div>
 </div>

@@ -90,7 +90,7 @@ import TipBanner from '../../components/ui/TipBanner.astro';
   <Card id="bypass" title="4. 바이패스 캡 (Bypass) — 같은 회로의 다른 이름">
     <div class="prose prose-slate max-w-none">
       <p>
-        IC 의 전원 핀 옆 100 nF 캡(<a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">디커플링 캡</a>) 도 같은 원리:
+        IC 의 전원 핀 옆 100 nF 캡(<a href="/pcb/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">디커플링 캡</a>) 도 같은 원리:
       </p>
       <ul>
         <li>고주파 노이즈 → 캡을 통해 GND 로 빠져나감 (high-pass 의 "차단" 측에서 본 시각)</li>
@@ -108,16 +108,16 @@ import TipBanner from '../../components/ui/TipBanner.astro';
   <Card id="related" title="다른 토픽으로 연결">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>같은 캡 식이 거꾸로 — 디커플링: <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
-        <li>USB 3 의 TX 측 100 nF 캡: <a href="/high-speed-interfaces#usb3" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
-        <li>RC 의 R 와 C 는 어디서 오나: <a href="/ohms-law" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Ohm 법칙</a></li>
+        <li>같은 캡 식이 거꾸로 — 디커플링: <a href="/pcb/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+        <li>USB 3 의 TX 측 100 nF 캡: <a href="/pcb/high-speed-interfaces#usb3" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">고속 인터페이스</a></li>
+        <li>RC 의 R 와 C 는 어디서 오나: <a href="/pcb/ohms-law" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Ohm 법칙</a></li>
       </ul>
     </div>
   </Card>
 </div>
 
 <div class="mt-8 mb-12">
-  <a href="/ac-coupling" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+  <a href="/pcb/ac-coupling" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
     <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
     <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — RC HPF 계산기</div>
     <p class="mt-2 text-slate-600 text-sm leading-relaxed">

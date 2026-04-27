@@ -14,7 +14,7 @@ import SnubberCalc from '../components/sim/SnubberCalc.svelte';
     <span class="block mt-1 text-slate-500 text-xl font-normal">SW 노드 ringing 잡기 · FB 트레이스 · soft-start</span>
   </h1>
   <p class="mt-4 max-w-2xl text-slate-600 leading-relaxed">
-    <a href="/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a> 페이지가 "어떤 종류 고를까" 라면, 이 페이지는 buck IC 데이터시트의 권장 레이아웃을 따라했는데도 SW 노드에 ringing 이 보이고 EMI 가 떨어질 때 — <b>그 다음에 무엇을 할 것인가</b> 의 가이드.
+    <a href="/pcb/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a> 페이지가 "어떤 종류 고를까" 라면, 이 페이지는 buck IC 데이터시트의 권장 레이아웃을 따라했는데도 SW 노드에 ringing 이 보이고 EMI 가 떨어질 때 — <b>그 다음에 무엇을 할 것인가</b> 의 가이드.
   </p>
   <div class="mt-5 flex flex-wrap gap-2 font-mono text-[11px]">
     <span class="rounded-md border border-slate-200 bg-white px-2 py-1 text-slate-700">⏱ 9분 읽기</span>
@@ -136,10 +136,10 @@ import SnubberCalc from '../components/sim/SnubberCalc.svelte';
   <Card id="related" title="다른 토픽으로 연결">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>VRM 종류 선택 + 핫 루프 기초: <a href="/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a></li>
-        <li>SW 노드 ringing → EMI 시험: <a href="/emi-radiation" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">EMI Radiation</a></li>
-        <li>buck IC 발열: <a href="/thermal" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Thermal Management</a></li>
-        <li>출력 cap 의 디커플링 계층: <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+        <li>VRM 종류 선택 + 핫 루프 기초: <a href="/pcb/vrm-selection" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">VRM Selection</a></li>
+        <li>SW 노드 ringing → EMI 시험: <a href="/pcb/emi-radiation" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">EMI Radiation</a></li>
+        <li>buck IC 발열: <a href="/pcb/thermal" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Thermal Management</a></li>
+        <li>출력 cap 의 디커플링 계층: <a href="/pcb/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
       </ul>
     </div>
   </Card>

@@ -61,10 +61,10 @@ import BuckHotLoop from '../../components/concept/BuckHotLoop.astro';
   <Card id="hot-loop" title="3. Buck 의 핫 루프 — 가장 중요한 레이아웃 룰">
     <div class="not-prose space-y-3 mb-3">
       <figure class="rounded-lg border border-slate-200 overflow-hidden">
-        <img src="/buck/buck-bad.png" alt="BAD buck layout" class="block w-full" loading="lazy" />
+        <img src="/pcb/buck/buck-bad.png" alt="BAD buck layout" class="block w-full" loading="lazy" />
       </figure>
       <figure class="rounded-lg border border-slate-200 overflow-hidden">
-        <img src="/buck/buck-good.png" alt="GOOD buck layout" class="block w-full" loading="lazy" />
+        <img src="/pcb/buck/buck-good.png" alt="GOOD buck layout" class="block w-full" loading="lazy" />
       </figure>
     </div>
     <div class="prose prose-slate max-w-none mt-3">
@@ -103,17 +103,17 @@ import BuckHotLoop from '../../components/concept/BuckHotLoop.astro';
   <Card id="related" title="다른 토픽으로 연결">
     <div class="prose prose-slate max-w-none">
       <ul>
-        <li>VRM 출력에서 IC 까지의 디커플링 cap 계층: <a href="/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
-        <li>전체 PDN 관점: <a href="/pdn-planning/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">PDN Planning</a></li>
-        <li>전원 트레이스 폭 결정: <a href="/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭</a></li>
-        <li>핫 루프의 di/dt 가 EMI 가 되는 메커니즘: <a href="/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths · Ground Bounce</a></li>
+        <li>VRM 출력에서 IC 까지의 디커플링 cap 계층: <a href="/pcb/decoupling-capacitor/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Decoupling</a></li>
+        <li>전체 PDN 관점: <a href="/pcb/pdn-planning/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">PDN Planning</a></li>
+        <li>전원 트레이스 폭 결정: <a href="/pcb/trace-geometry#width" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Trace Geometry · 폭</a></li>
+        <li>핫 루프의 di/dt 가 EMI 가 되는 메커니즘: <a href="/pcb/return-paths/basics" class="text-indigo-600 underline decoration-indigo-200 hover:decoration-indigo-600">Return Paths · Ground Bounce</a></li>
       </ul>
     </div>
   </Card>
 </div>
 
 <div class="mt-8 mb-12">
-  <a href="/vrm-selection" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
+  <a href="/pcb/vrm-selection" class="group block rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:border-indigo-400 hover:shadow-md transition-all">
     <div class="font-mono text-[11px] tracking-widest text-indigo-600">다음 단계 →</div>
     <div class="mt-2 text-xl font-semibold text-slate-900 group-hover:text-indigo-700">실험실 — Buck 효율 계산기</div>
     <p class="mt-2 text-slate-600 text-sm leading-relaxed">
