@@ -25,9 +25,9 @@ import OhmsCalc from '../components/sim/OhmsCalc.svelte';
 <div class="mt-6">
   <Card id="ohms" title="1. Ohm 의 법칙">
     <div class="prose prose-slate max-w-none">
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-base">
-        V = I · R
-      </p>
+
+      $$V = I \cdot R$$
+
       <ul>
         <li><b>V</b> — 전압 (V) · 두 점 사이 위치 에너지 차</li>
         <li><b>I</b> — 전류 (A) · 단위 시간당 흐르는 전하량</li>
@@ -48,9 +48,9 @@ import OhmsCalc from '../components/sim/OhmsCalc.svelte';
 <div class="mt-6">
   <Card id="power" title="2. 전력 (Power)">
     <div class="prose prose-slate max-w-none">
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-base">
-        P = V · I = I² · R = V² / R
-      </p>
+
+      $$P = V \cdot I = I^2 \cdot R = \dfrac{V^2}{R}$$
+
       <p>
         같은 식의 세 가지 표현. 어느 두 변수를 알고 있느냐에 따라 골라 쓰세요. 자주 만나는 시나리오:
       </p>
@@ -67,9 +67,9 @@ import OhmsCalc from '../components/sim/OhmsCalc.svelte';
   <Card id="divider" title="3. 분압 (Voltage Divider)">
     <OhmsCalc client:visible />
     <div class="prose prose-slate max-w-none mt-3">
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-base">
-        Vout = Vin · R2 / (R1 + R2)
-      </p>
+
+      $$V_{\text{out}} = V_{\text{in}} \cdot \dfrac{R_2}{R_1 + R_2}$$
+
       <p>
         가장 많이 쓰이는 회로 — ADC 입력 범위 줄이기, MCU 전원으로 12 V 배터리 모니터링, FB(Feedback) 핀 설정 등. 
         주의 — <b>부하가 R2 와 비슷한 임피던스</b> 면 식이 깨집니다. ADC 같은 고임피던스 입력(MΩ 급) 으로 받을 때만 안전.

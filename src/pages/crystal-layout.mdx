@@ -50,13 +50,13 @@ import LoadCapCalc from '../components/sim/LoadCapCalc.svelte';
   <Card id="loadcap" title="2. Load capacitance — 가장 중요한 식">
     <div class="prose prose-slate max-w-none">
       <p>Crystal 데이터시트의 <b>C_L (load capacitance)</b> — 이 값에 맞춰 발진해야 정격 주파수가 나옵니다. 회로의 두 cap 이 만드는 직렬 합성 + 트레이스/MCU 의 stray cap 이 함께 C_L 을 만듭니다:</p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-base">
-        C_L = (C1 · C2) / (C1 + C2) + C_stray
-      </p>
+
+      $$C_L = \dfrac{C_1 \cdot C_2}{C_1 + C_2} + C_{\text{stray}}$$
+
       <p>대칭으로 (C1 = C2) 두면 풀이가 간단합니다:</p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
-        C1 = C2 = 2 · (C_L − C_stray)
-      </p>
+
+      $$C_1 = C_2 = 2 \cdot (C_L - C_{\text{stray}})$$
+
       <p>
         예) C_L = 18 pF, C_stray = 5 pF → C1 = C2 = 26 pF → 표준 값 22 또는 27 pF 로 round.
       </p>

@@ -51,11 +51,11 @@ import TerminationTopologies from '../../components/concept/TerminationTopologie
     <ReflectionScenarios />
     <div class="prose prose-slate max-w-none mt-3">
       <p>
-        파동이 Z₀ 인 선을 달리다가 끝에서 <b>Z_L</b> 인 다른 임피던스를 만나면, 반사 계수 <b>Γ</b> 만큼의 파동이 되돌아갑니다:
+        파동이 $Z_0$ 인 선을 달리다가 끝에서 <b>$Z_L$</b> 인 다른 임피던스를 만나면, 반사 계수 <b>$\Gamma$</b> 만큼의 파동이 되돌아갑니다:
       </p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
-        Γ = (Z_L − Z₀) / (Z_L + Z₀)
-      </p>
+
+      $$\Gamma = \dfrac{Z_L - Z_0}{Z_L + Z_0}$$
+
       <ul>
         <li><b>Matched</b> (Z_L = Z₀) → Γ = 0, 반사 없음 · 이상적</li>
         <li><b>Open</b> (Z_L = ∞)  → Γ = +1, 전파 반사 · 로드 전압이 2배로 튐</li>
@@ -75,9 +75,9 @@ import TerminationTopologies from '../../components/concept/TerminationTopologie
       <p>
         모든 트레이스가 전송선은 아닙니다. 경험 규칙:
       </p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
-        length &gt; (t_rise × v_prop) / 6
-      </p>
+
+      $$\text{length} > \dfrac{t_{\text{rise}} \times v_{\text{prop}}}{6}$$
+
       <p>
         즉, 신호의 <b>상승 시간(rise time) 동안 전파하는 거리</b> 의 <b>1/6</b> 보다 트레이스가 길면 전송선 효과가 중요해집니다. 
         v_prop ≈ 15 cm/ns 를 대입하면:

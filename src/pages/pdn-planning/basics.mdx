@@ -53,9 +53,9 @@ import TipBanner from '../../components/ui/TipBanner.astro';
   <Card id="target" title="2. Target Impedance — 목표값 정하기">
     <div class="prose prose-slate max-w-none">
       <p>가장 중요한 한 식:</p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
-        Z_target = ΔV / ΔI
-      </p>
+
+      $$Z_{\text{target}} = \dfrac{\Delta V}{\Delta I}$$
+
       <ul>
         <li><b>ΔV</b> — IC 가 허용하는 ripple. 보통 V_rail 의 1–5 % (3.3 V 면 30–150 mV).</li>
         <li><b>ΔI</b> — IC 가 만드는 과도 전류. 데이터시트의 dynamic load step.</li>
@@ -110,9 +110,9 @@ import TipBanner from '../../components/ui/TipBanner.astro';
       <p>
         plane 가장자리에서 신호가 반사되어 <b>cavity resonance</b> 가 형성됩니다. 첫 공진 주파수:
       </p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-[13px]">
-        f_res ≈ c / (2 · L · √ε_r) &nbsp;&nbsp; (L = plane 의 가장 긴 변)
-      </p>
+
+      $$f_{\text{res}} \approx \dfrac{c}{2 \cdot L \cdot \sqrt{\varepsilon_r}} \quad (L = \text{plane 의 가장 긴 변})$$
+
       <p>
         예: 10 cm × 15 cm 보드, ε_r = 4.2 → f_res ≈ 0.49 GHz. 이 주파수 부근에서 plane impedance 가 폭증 (anti-resonance).
         대처법 — plane 가장자리에 <b>다수의 stitching via</b> 와 <b>damping cap</b> 으로 Q 낮추기.

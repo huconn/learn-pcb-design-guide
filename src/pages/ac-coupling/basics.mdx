@@ -45,9 +45,9 @@ import TipBanner from '../../components/ui/TipBanner.astro';
       <p>
         신호 → C → R(다음 단 입력 또는 별도 풀다운) → GND. 신호 위치에서 본 임피던스는:
       </p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-[13px]">
-        |H(f)| = (f/f<sub>c</sub>) / √(1 + (f/f<sub>c</sub>)²) &nbsp; · &nbsp; f<sub>c</sub> = 1 / (2π · R · C)
-      </p>
+
+      $$|H(f)| = \dfrac{f/f_c}{\sqrt{1 + (f/f_c)^2}}, \quad f_c = \dfrac{1}{2\pi R C}$$
+
       <ul>
         <li>f ≪ f<sub>c</sub>  → 거의 0 (신호 차단)</li>
         <li>f = f<sub>c</sub>  → −3 dB (약 70%)</li>

@@ -62,9 +62,9 @@ import MicrostripCrossSection from '../../components/concept/MicrostripCrossSect
         주변 PCB 의 방열 능력을 넘으면 온도가 계속 올라가다가 끊어집니다.
       </p>
       <p>업계 표준은 <b>IPC-2221</b>:</p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
-        I = k · ΔT⁰·⁴⁴ · A⁰·⁷²⁵
-      </p>
+
+      $$I = k \cdot \Delta T^{0.44} \cdot A^{0.725}$$
+
       <ul>
         <li><b>I</b> — 흐를 수 있는 최대 전류 (A)</li>
         <li><b>ΔT</b> — 허용 온도 상승 (°C). 보통 <b>10 °C</b> 보수적, <b>30 °C</b> 까지가 일반</li>
@@ -94,9 +94,9 @@ import MicrostripCrossSection from '../../components/concept/MicrostripCrossSect
         같은 트레이스라도 <b>plane 까지 거리(H)</b> 와 <b>폭(W)</b> 의 비율로 특성 임피던스 Z₀ 가 정해집니다. 
         IPC-2141 의 microstrip 근사식:
       </p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-[13px]">
-        Z₀ = (87 / √(ε_r + 1.41)) · ln(5.98·H / (0.8·W + T))
-      </p>
+
+      $$Z_0 = \dfrac{87}{\sqrt{\varepsilon_r + 1.41}} \cdot \ln\dfrac{5.98 H}{0.8 W + T}$$
+
       <p>
         직관적으로:
       </p>
@@ -129,9 +129,9 @@ import MicrostripCrossSection from '../../components/concept/MicrostripCrossSect
         차동 페어는 두 트레이스가 짝으로 다닙니다. <b>차동 임피던스</b> Z<sub>diff</sub> 는 같은 단일 임피던스 (Z₀) 에서 출발해
         페어 간격 S 가 좁을수록 낮아집니다 (서로 결합 효과):
       </p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2 text-[13px]">
-        Z<sub>diff</sub> = 2 · Z₀ · (1 − 0.48 · exp(−0.96 · S / H))
-      </p>
+
+      $$Z_{\text{diff}} = 2 \cdot Z_0 \cdot \left(1 - 0.48 \cdot e^{-0.96\, S/H}\right)$$
+
       <ul>
         <li><b>S 매우 큼</b> (페어가 멀리) → Z<sub>diff</sub> ≈ 2·Z₀ (결합 거의 없음)</li>
         <li><b>S 가 H 와 같음</b> → 약 2·Z₀ × 0.81 ≈ 1.62·Z₀</li>
@@ -157,9 +157,9 @@ import MicrostripCrossSection from '../../components/concept/MicrostripCrossSect
         한 쪽 트레이스에 신호가 변하면 옆 트레이스에 작은 전압이 유도됩니다 — 이를 <b>crosstalk</b> 라고 합니다.
       </p>
       <p>1차 근사 (단순화):</p>
-      <p class="font-mono text-center text-slate-800 bg-slate-50 border border-slate-200 rounded px-3 py-2">
-        coupling ≈ 1 / (1 + (S/H)²)
-      </p>
+
+      $$\text{coupling} \approx \dfrac{1}{1 + (S/H)^2}$$
+
       <p>
         흥미로운 점 — <b>S/W</b> 가 아니라 <b>S/H</b> 가 핵심 변수입니다. 즉 plane 이 가까울수록(H 작음) crosstalk 도 줄어듭니다. 
         return path 가 짧을수록 인접 트레이스로 새는 양이 적기 때문입니다 ([Return Paths](/return-paths/basics) 와 같은 원리).
