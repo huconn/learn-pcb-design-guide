@@ -31,9 +31,10 @@
     <polygon points="76,121 84,125 76,129" fill="#fbbf24" />
     <text x="90" y="120" font-size="9" fill="#a16207" font-family="ui-monospace, monospace">i(t)</text>
 
-    <!-- voltage drop annotation -->
-    <g font-family="ui-monospace, monospace" font-size="10">
-      <text x="200" y="195" fill="#b91c1c">V_bounce = L · di/dt   (수 ns 에 수백 mA 바뀌면 수십–수백 mV)</text>
+    <!-- voltage drop annotation — split across two lines so it fits the viewBox on narrow viewports -->
+    <g font-family="ui-monospace, monospace" text-anchor="middle" fill="#b91c1c">
+      <text x="240" y="188" font-size="10" font-weight="600">V_bounce = L · di/dt</text>
+      <text x="240" y="202" font-size="9">수 ns 에 수백 mA 가 바뀌면 수십–수백 mV</text>
     </g>
 
     <!-- IC B sees lifted ground -->
